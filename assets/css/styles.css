@@ -16,7 +16,7 @@
     --secondary: #f4f4f4;
     --light: #1a1a1a;
     --dark: #f4f4f4;
-    --white: #2d2d2d;
+    --white: #ffffff; /* Keep white as white for hero text */
     --bg-color: #121212;
     --card-bg: #1e1e1e;
     --text-color: #e0e0e0;
@@ -143,6 +143,8 @@ nav {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
+    background-color: var(--card-bg);
+    color: var(--text-color);
 }
 
 .product-grid {

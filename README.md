@@ -28,14 +28,12 @@ Due to browser security (CORS), the product list will not load if you open `inde
 This website uses `products.json` as its database. You can update this file in two ways:
 
 ### 1. From QuickBooks (Automated Sync)
-QuickBooks is your "Source of Truth." To sync it with this website:
+QuickBooks is your primary inventory management tool. To sync it with this website:
 
-#### **Strategy A: QuickBooks Desktop (Recommended for Parts Stores)**
-1.  **Local Sync Script:** Run a small Python or Node.js script on the computer where QuickBooks is installed.
-    *   *Note: I've included a template called `qb_sync_example.py` in this repo. You only need to install Python if you intend to use this automation script.*
-2.  **SDK Access:** The script uses the [QuickBooks SDK (QBXML)](https://developer.intuit.com/app/developer/qbdesktop/docs/get-started) to pull `ItemInventory` queries.
-3.  **JSON Export:** The script converts the results into the `products.json` format.
-4.  **Auto-Push:** The script then runs `git add products.json`, `git commit`, and `git push` to update the website instantly.
+#### **Strategy A: QuickBooks Desktop**
+1.  **Local Sync Script:** Run the included `qb_sync_example.py` on the computer where QuickBooks is installed.
+2.  **Merge-Aware:** This script is designed to update only the "QuickBooks" products in `products.json`, preserving any data from eBay or other sources.
+3.  **Auto-Push:** You can uncomment the Git lines in the script to have it automatically push updates to your live site.
 
 #### **Strategy B: QuickBooks Online**
 1.  **API Integration:** Use a GitHub Action or a small middleware server to pull data from the QuickBooks Online API.
@@ -57,9 +55,11 @@ QuickBooks is great for numbers, but poor for images. **Do not try to store imag
 *   Your sync script will pull this URL and put it into `products.json`.
 
 ### 2. Mirroring eBay Store (Automated)
-*   You can use a **GitHub Action** (free) to automatically fetch your eBay listings once a day.
-*   The Action would run a script that calls the eBay Browse/Finding API, formats the data, and updates `products.json` directly in the repository.
-*   This keeps your website perfectly in sync with eBay without you doing anything.
+To sync your eBay store alongside your QuickBooks inventory:
+
+1.  **eBay Sync Script:** Run the included `ebay_sync_example.py`.
+2.  **GitHub Actions:** You can set this script to run automatically every night using GitHub Actions. It will pull your latest eBay listings and merge them into `products.json`.
+3.  **Cross-Source Preservation:** Like the QB script, this script only touches "eBay" source items, leaving your QuickBooks data untouched.
 
 ---
 
@@ -68,14 +68,19 @@ QuickBooks is great for numbers, but poor for images. **Do not try to store imag
 *   **Colors:** Edit `assets/css/styles.css` and change the `--primary` variable to match your branding.
 *   **Logo/Hero:** Replace the text in `index.html` and the background image URL in the CSS.
 
-## 🧪 Testing the Sync Script (Optional)
-I included `qb_sync_example.py` as a blueprint for your automation. 
-*   **If you see a prompt to install Python:** You only need to do this if you want to run the automation script on your machine.
-*   **To run the mock sync:**
-    1. Install Python from [python.org](https://python.org).
-    2. Open your terminal in this folder.
-    3. Run `python qb_sync_example.py`.
-    4. Watch `products.json` update automatically!
+## 🧪 Testing the Sync Scripts
+I've included two blueprints for your automation: `qb_sync_example.py` and `ebay_sync_example.py`.
+
+1.  **Install Python:** From [python.org](https://python.org).
+2.  **Run QuickBooks Sync:**
+    ```bash
+    python qb_sync_example.py
+    ```
+3.  **Run eBay Sync:**
+    ```bash
+    python ebay_sync_example.py
+    ```
+4.  **Observe Results:** Open `products.json` or refresh your local web server. You will see both sources successfully merged into a single storefront.
 
 ## 💡 Why this approach?
 *   **Zero Hosting Cost:** GitHub Pages is completely free.
