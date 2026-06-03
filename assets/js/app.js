@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         updateIcon(theme);
+        updateTooltip(theme);
     };
 
     const updateIcon = (theme) => {
@@ -24,6 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
         }
+    };
+
+    const updateTooltip = (theme) => {
+        themeToggle.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
     };
 
     themeToggle.addEventListener('click', () => {
