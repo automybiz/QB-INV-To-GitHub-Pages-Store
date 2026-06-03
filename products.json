@@ -1,0 +1,56 @@
+[
+    {
+        "id": "EPW-001",
+        "title": "Brake Pad Set - Front",
+        "price": 45.99,
+        "image": "https://images.unsplash.com/photo-1486006396193-c81d3afd0a3a?auto=format&fit=crop&q=80&w=400",
+        "sku": "BK-12345",
+        "source": "QuickBooks",
+        "url": "#"
+    },
+    {
+        "id": "EPW-002",
+        "title": "Oil Filter - Synthetic Blend",
+        "price": 12.50,
+        "image": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&q=80&w=400",
+        "sku": "OF-9988",
+        "source": "eBay",
+        "url": "https://ebay.com"
+    },
+    {
+        "id": "EPW-003",
+        "title": "Spark Plug - Platinum Series",
+        "price": 8.75,
+        "image": "https://images.unsplash.com/photo-1635773107091-24097471923e?auto=format&fit=crop&q=80&w=400",
+        "sku": "SP-5544",
+        "source": "QuickBooks",
+        "url": "#"
+    },
+    {
+        "id": "EPW-004",
+        "title": "Air Filter - High Flow",
+        "price": 29.95,
+        "image": "https://images.unsplash.com/photo-1621905252507-b35482cd84b0?auto=format&fit=crop&q=80&w=400",
+        "sku": "AF-7766",
+        "source": "eBay",
+        "url": "https://ebay.com"
+    },
+    {
+        "id": "EPW-005",
+        "title": "Serpentine Belt",
+        "price": 34.20,
+        "image": "https://images.unsplash.com/photo-1632823471565-1ec2c63db7f5?auto=format&fit=crop&q=80&w=400",
+        "sku": "SB-1122",
+        "source": "QuickBooks",
+        "url": "#"
+    },
+    {
+        "id": "EPW-006",
+        "title": "Headlight Assembly - LED",
+        "price": 189.00,
+        "image": "https://images.unsplash.com/photo-1506469717960-433cebe3f181?auto=format&fit=crop&q=80&w=400",
+        "sku": "HL-4433",
+        "source": "eBay",
+        "url": "https://ebay.com"
+    }
+]
