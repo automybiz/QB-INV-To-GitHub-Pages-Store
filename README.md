@@ -2,6 +2,15 @@
 
 This is a lightweight, high-performance store front designed to be hosted for free on **GitHub Pages**. It populates product data from a single `products.json` file, allowing you to mirror inventory from QuickBooks, eBay, or both.
 
+## 💻 Local Development & Testing
+
+Due to browser security (CORS), the product list will not load if you open `index.html` directly from your file system (`file://`).
+
+**To test locally:**
+1.  Open the project folder in **VS Code**.
+2.  Install the **Live Server** extension.
+3.  Right-click `index.html` and select **Open with Live Server**.
+
 ## 🚀 How to Launch on GitHub Pages (Free Hosting)
 
 1.  Create a new repository on GitHub (e.g., `euro-parts-store`).

@@ -41,16 +41,27 @@ document.addEventListener('DOMContentLoaded', () => {
     setTheme(getPreferredTheme());
 
     // Fetch products from JSON
-    fetch('products.json')
-        .then(response => response.json())
-        .then(data => {
-            allProducts = data;
-            displayProducts(allProducts);
-        })
-        .catch(error => {
-            console.error('Error loading products:', error);
-            productGrid.innerHTML = '<p class="error">Failed to load products. Please try again later.</p>';
-        });
+    if (window.location.protocol === 'file:') {
+        productGrid.innerHTML = `
+            <div class="error" style="text-align: center; padding: 40px; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--primary);">
+                <h3 style="color: var(--primary); margin-bottom: 10px;">Local Loading Restricted</h3>
+                <p>Browsers block loading data from local files for security.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">To view products locally, please use a local web server like the <strong>Live Server</strong> extension in VS Code.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">The site will work perfectly once pushed to GitHub Pages.</p>
+            </div>
+        `;
+    } else {
+        fetch('products.json')
+            .then(response => response.json())
+            .then(data => {
+                allProducts = data;
+                displayProducts(allProducts);
+            })
+            .catch(error => {
+                console.error('Error loading products:', error);
+                productGrid.innerHTML = '<p class="error">Failed to load products. Please try again later.</p>';
+            });
+    }
 
     // Display products in the grid
     function displayProducts(products) {
