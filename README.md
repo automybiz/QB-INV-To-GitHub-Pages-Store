@@ -32,6 +32,7 @@ QuickBooks is your "Source of Truth." To sync it with this website:
 
 #### **Strategy A: QuickBooks Desktop (Recommended for Parts Stores)**
 1.  **Local Sync Script:** Run a small Python or Node.js script on the computer where QuickBooks is installed.
+    *   *Note: I've included a template called `qb_sync_example.py` in this repo. You only need to install Python if you intend to use this automation script.*
 2.  **SDK Access:** The script uses the [QuickBooks SDK (QBXML)](https://developer.intuit.com/app/developer/qbdesktop/docs/get-started) to pull `ItemInventory` queries.
 3.  **JSON Export:** The script converts the results into the `products.json` format.
 4.  **Auto-Push:** The script then runs `git add products.json`, `git commit`, and `git push` to update the website instantly.
@@ -66,6 +67,15 @@ QuickBooks is great for numbers, but poor for images. **Do not try to store imag
 
 *   **Colors:** Edit `assets/css/styles.css` and change the `--primary` variable to match your branding.
 *   **Logo/Hero:** Replace the text in `index.html` and the background image URL in the CSS.
+
+## 🧪 Testing the Sync Script (Optional)
+I included `qb_sync_example.py` as a blueprint for your automation. 
+*   **If you see a prompt to install Python:** You only need to do this if you want to run the automation script on your machine.
+*   **To run the mock sync:**
+    1. Install Python from [python.org](https://python.org).
+    2. Open your terminal in this folder.
+    3. Run `python qb_sync_example.py`.
+    4. Watch `products.json` update automatically!
 
 ## 💡 Why this approach?
 *   **Zero Hosting Cost:** GitHub Pages is completely free.
