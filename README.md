@@ -27,9 +27,33 @@ Due to browser security (CORS), the product list will not load if you open `inde
 
 This website uses `products.json` as its database. You can update this file in two ways:
 
-### 1. From QuickBooks (Manual or Automated)
-*   **Manual:** Export your QuickBooks inventory to Excel/CSV. Convert that CSV to JSON format matching the structure in `products.json`.
-*   **Automated:** Use a small Python script (which can run on your local PC) that uses the QuickBooks SDK to read your database and overwrite the `products.json` file, then automatically `git push` it to GitHub.
+### 1. From QuickBooks (Automated Sync)
+QuickBooks is your "Source of Truth." To sync it with this website:
+
+#### **Strategy A: QuickBooks Desktop (Recommended for Parts Stores)**
+1.  **Local Sync Script:** Run a small Python or Node.js script on the computer where QuickBooks is installed.
+2.  **SDK Access:** The script uses the [QuickBooks SDK (QBXML)](https://developer.intuit.com/app/developer/qbdesktop/docs/get-started) to pull `ItemInventory` queries.
+3.  **JSON Export:** The script converts the results into the `products.json` format.
+4.  **Auto-Push:** The script then runs `git add products.json`, `git commit`, and `git push` to update the website instantly.
+
+#### **Strategy B: QuickBooks Online**
+1.  **API Integration:** Use a GitHub Action or a small middleware server to pull data from the QuickBooks Online API.
+2.  **Scheduled Updates:** Set the sync to run every hour or every day to keep the site current.
+
+---
+
+### 🖼️ How to Associate Images
+QuickBooks is great for numbers, but poor for images. **Do not try to store image data inside QuickBooks.** Instead, use one of these two professional methods:
+
+#### **Method 1: The "Naming Convention" (Easiest)**
+*   Name your image files exactly like your QuickBooks **Part Number** or **SKU**.
+*   *Example:* If your QB Part Number is `BK-12345`, save your image as `assets/img/products/BK-12345.jpg`.
+*   The website script can then automatically "predict" the image URL based on the SKU.
+
+#### **Method 2: Custom Fields**
+*   In QuickBooks, create a **Custom Field** named `ImageURL`.
+*   Paste the link to the image (from Imgur, AWS, or your eBay store) into that field.
+*   Your sync script will pull this URL and put it into `products.json`.
 
 ### 2. Mirroring eBay Store (Automated)
 *   You can use a **GitHub Action** (free) to automatically fetch your eBay listings once a day.
