@@ -6,6 +6,22 @@
     --white: #ffffff;
     --grey: #888;
     --shadow: 0 4px 6px rgba(0,0,0,0.1);
+    --bg-color: var(--light);
+    --card-bg: var(--white);
+    --text-color: var(--secondary);
+    --nav-bg: var(--white);
+}
+
+[data-theme="dark"] {
+    --secondary: #f4f4f4;
+    --light: #1a1a1a;
+    --dark: #f4f4f4;
+    --white: #2d2d2d;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --nav-bg: #1e1e1e;
+    --shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
 * {
@@ -17,8 +33,9 @@
 body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    color: var(--secondary);
-    background-color: var(--light);
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -28,12 +45,13 @@ body {
 }
 
 header {
-    background: var(--white);
+    background: var(--nav-bg);
     box-shadow: var(--shadow);
     padding: 20px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: background-color 0.3s;
 }
 
 nav {
@@ -61,7 +79,7 @@ nav {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--secondary);
+    color: var(--text-color);
     font-weight: 600;
     transition: color 0.3s;
 }
@@ -134,11 +152,11 @@ nav {
 }
 
 .product-card {
-    background: var(--white);
+    background: var(--card-bg);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    transition: transform 0.3s;
+    transition: transform 0.3s, background-color 0.3s;
 }
 
 .product-card:hover {
@@ -188,8 +206,28 @@ footer {
     margin-top: 60px;
 }
 
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.theme-toggle:hover {
+    color: var(--primary);
+}
+
 @media (max-width: 768px) {
     .hero h1 { font-size: 2rem; }
     .search-bar input { width: 100%; }
     .section-header { flex-direction: column; align-items: flex-start; }
+    .nav-links { margin-bottom: 10px; }
+    .theme-toggle { margin-left: 0; margin-top: 10px; }
 }
