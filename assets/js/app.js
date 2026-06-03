@@ -3,7 +3,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('productSearch');
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
+    const heroSlides = document.querySelector('.hero-slides');
     let allProducts = [];
+
+    // Slideshow images
+    const slides = [
+        'assets/img/slideshow/ebay-banner.jpg',
+        'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200',
+        'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200'
+    ];
+
+    let currentSlide = 0;
+
+    function initSlideshow() {
+        heroSlides.innerHTML = slides.map((slide, index) => `
+            <div class="hero-slide ${index === 0 ? 'active' : ''}" style="background-image: url('${slide}')"></div>
+        `).join('');
+
+        setInterval(() => {
+            const slidesElements = document.querySelectorAll('.hero-slide');
+            slidesElements[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slidesElements.length;
+            slidesElements[currentSlide].classList.add('active');
+        }, 5000);
+    }
+
+    initSlideshow();
 
     // Theme logic
     const getPreferredTheme = () => {
