@@ -178,14 +178,26 @@ nav {
     gap: 20px;
 }
 
-.search-bar input {
+.search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar input, .filter-select {
     padding: 10px 15px;
-    width: 300px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
     background-color: var(--card-bg);
     color: var(--text-color);
+}
+
+.search-bar input {
+    width: 300px;
+}
+
+.filter-select {
+    cursor: pointer;
 }
 
 .product-grid {

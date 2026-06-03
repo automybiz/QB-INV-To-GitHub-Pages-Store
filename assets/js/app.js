@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const productGrid = document.getElementById('productGrid');
     const searchInput = document.getElementById('productSearch');
+    const sourceFilter = document.getElementById('sourceFilter');
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     const heroSlides = document.querySelector('.hero-slides');
@@ -79,7 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('products.json')
             .then(response => response.json())
             .then(data => {
-                allProducts = data;
+                // Sort products: eBay items first, then QuickBooks
+                allProducts = data.sort((a, b) => {
+                    if (a.source === b.source) return 0;
+                    return a.source === 'eBay' ? -1 : 1;
+                });
                 displayProducts(allProducts);
             })
             .catch(error => {
@@ -111,13 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    // Search functionality
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredProducts = allProducts.filter(product => 
-            product.title.toLowerCase().includes(searchTerm) || 
-            product.sku.toLowerCase().includes(searchTerm)
-        );
+    // Filter and search functionality
+    function filterProducts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const sourceValue = sourceFilter.value;
+
+        const filteredProducts = allProducts.filter(product => {
+            const matchesSearch = product.title.toLowerCase().includes(searchTerm) || 
+                                 product.sku.toLowerCase().includes(searchTerm);
+            const matchesSource = sourceValue === 'all' || product.source === sourceValue;
+            return matchesSearch && matchesSource;
+        });
         displayProducts(filteredProducts);
-    });
+    }
+
+    searchInput.addEventListener('input', filterProducts);
+    sourceFilter.addEventListener('change', filterProducts);
 });
