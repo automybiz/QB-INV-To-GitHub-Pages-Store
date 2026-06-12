@@ -184,7 +184,7 @@
                     .inquiry-form-container .btn {
                         display: inline-block;
                         background: var(--primary);
-                        color: var(--white) !important;
+                        color: #ffffff !important;
                         padding: 10px 20px;
                         border: none;
                         border-radius: 5px;
@@ -198,10 +198,12 @@
                     .inquiry-form-container .btn:hover {
                         opacity: 0.9;
                         transform: translateY(-1px);
+                        color: #ffffff !important;
                     }
 
                     .inquiry-form-container .btn-blue {
                         background: var(--blue);
+                        color: #ffffff !important;
                     }
 
                     .inquiry-form-container .btn-outline-blue {
@@ -212,12 +214,12 @@
 
                     .inquiry-form-container .btn-outline-blue:hover {
                         background: var(--blue);
-                        color: white;
+                        color: white !important;
                     }
 
                     .inquiry-form-container .btn-danger {
                         background: #dc3545;
-                        color: white !important;
+                        color: #ffffff !important;
                         padding: 6px 12px;
                         font-size: 0.8rem;
                     }
@@ -285,6 +287,7 @@
                         font-size: 1.2rem;
                         margin-top: 20px;
                         background-color: var(--submit-button-bg-color);
+                        color: #ffffff !important;
                         box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
                     }
 
@@ -339,7 +342,7 @@
                         <!-- Vehicles Section -->
                         <div class="section-title">
                             <span>Vehicles & Parts Inquiry</span>
-                            <button type="button" class="btn btn-outline-blue" id="addVehicle">Add Another Vehicle</button>
+                            <button type="button" class="btn btn-blue" id="addVehicle">Add Another Vehicle</button>
                         </div>
 
                         <div id="vehiclesContainer">
@@ -496,70 +499,70 @@
                             });
                             const timePart = d.toLocaleTimeString('en-US', {
                                 hour: '2-digit', minute: '2-digit', hour12: true
-                            });
-                            return `${datePart} at ${timePart}`;
-                        }
+            });
+            return `${datePart} at ${timePart}`;
+        }
 
-                        function generateYAMLSnippet() {
-                            let fullYaml = '';
-                            let previewYaml = '';
-                            const timestamp = formatDateSnippet(new Date());
+        function generateYAMLSnippet() {
+            let fullYaml = '';
+            let previewYaml = '';
+            const timestamp = formatDateSnippet(new Date());
 
-                            vehicles.forEach(vehicle => {
-                                if (vehicle.name.trim()) {
-                                    fullYaml += `- vehicle: ${vehicle.name.trim()}\n`;
-                                    fullYaml += `  vin: ${vehicle.vin.trim()}\n`;
-                                    fullYaml += `  items:\n`;
-                                    
-                                    previewYaml += `- vehicle: ${vehicle.name.trim()}\n`;
-                                    previewYaml += `  vin: ${vehicle.vin.trim()}\n`;
-                                    previewYaml += `  items:\n`;
+            vehicles.forEach(vehicle => {
+                if (vehicle.name.trim()) {
+                    fullYaml += `- vehicle: ${vehicle.name.trim()}\n`;
+                    fullYaml += `  vin: ${vehicle.vin.trim()}\n`;
+                    fullYaml += `  items:\n`;
+                    
+                    previewYaml += `- vehicle: ${vehicle.name.trim()}\n`;
+                    previewYaml += `  vin: ${vehicle.vin.trim()}\n`;
+                    previewYaml += `  items:\n`;
 
-                                    vehicle.parts.forEach(part => {
-                                        const pName = part.name.trim() || 'Unnamed Part';
-                                        const status = part.status || 'I';
-                                        fullYaml += `    - ( ${status} )( ${part.qty} ) ${pName}:\n`;
-                                        fullYaml += `      part_no: ${part.partNo.trim()}\n`;
-                                        fullYaml += `      inquiries: 1\n`;
-                                        fullYaml += `      last_inquiry: ${timestamp}\n`;
-                                        
-                                        previewYaml += `    - ( ${part.qty} ) ${pName}:\n`;
-                                        previewYaml += `      part_no: ${part.partNo.trim()}\n`;
-                                    });
-                                }
-                            });
+                    vehicle.parts.forEach(part => {
+                        const pName = part.name.trim() || 'Unnamed Part';
+                        const status = part.status || 'I';
+                        fullYaml += `    - ( ${status} )( ${part.qty} ) ${pName}:\n`;
+                        fullYaml += `      part_no: ${part.partNo.trim()}\n`;
+                        fullYaml += `      inquiries: 1\n`;
+                        fullYaml += `      last_inquiry: ${timestamp}\n`;
+                        
+                        previewYaml += `    - ( ${part.qty} ) ${pName}:\n`;
+                        previewYaml += `      part_no: ${part.partNo.trim()}\n`;
+                    });
+                }
+            });
 
-                            yamlDisplay.textContent = previewYaml;
-                            yamlHidden.value = fullYaml;
-                        }
+            yamlDisplay.textContent = previewYaml;
+            yamlHidden.value = fullYaml;
+        }
 
-                        addVehicleBtn.addEventListener('click', addVehicleSnippet);
-                        renderVehicles();
+        addVehicleBtn.addEventListener('click', addVehicleSnippet);
+        renderVehicles();
 
-                        inquiryForm.addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            const formData = new FormData(inquiryForm);
-                            const data = Object.fromEntries(formData.entries());
-                            data.formId = 'zLET09x2oiLn3EGvsf3f'; 
-                            
-                            try {
-                                await fetch('https://services.leadconnectorhq.com/hooks/form/submit', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(data),
-                                    mode: 'no-cors'
-                                });
-                                alert('Inquiry sent! We will get back to you shortly.');
-                                inquiryForm.reset();
-                                vehicles = [{ id: Date.now(), name: '', vin: '', parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] }];
-                                renderVehicles();
-                            } catch (error) {
-                                console.error('Error submitting form:', error);
-                                alert('Thank you! Your inquiry has been received.');
-                            }
-                        });
-                    })();
-                </script>
+        inquiryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(inquiryForm);
+            const data = Object.fromEntries(formData.entries());
+            data.formId = 'zLET09x2oiLn3EGvsf3f'; 
+            
+            try {
+                await fetch('https://services.leadconnectorhq.com/hooks/form/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    mode: 'no-cors'
+                });
+                alert('Inquiry sent! We will get back to you shortly.');
+                inquiryForm.reset();
+                vehicles = [{ id: Date.now(), name: '', vin: '', parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] }];
+                renderVehicles();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('Thank you! Your inquiry has been received.');
+            }
+        });
+    })();
+</script>
                 
                 <!-- EMBEDDED FORM SNIPPET END -->
             </div>
