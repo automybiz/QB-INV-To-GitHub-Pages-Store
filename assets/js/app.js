@@ -18,19 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSlide = 0;
 
     function initSlideshow() {
+        if (!heroSlides) return;
+        
         heroSlides.innerHTML = slides.map((slide, index) => `
             <div class="hero-slide ${index === 0 ? 'active' : ''}" style="background-image: url('${slide}')"></div>
         `).join('');
 
         setInterval(() => {
             const slidesElements = document.querySelectorAll('.hero-slide');
-            slidesElements[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slidesElements.length;
-            slidesElements[currentSlide].classList.add('active');
+            if (slidesElements.length > 0) {
+                slidesElements[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slidesElements.length;
+                slidesElements[currentSlide].classList.add('active');
+            }
         }, 5000);
     }
 
-    initSlideshow();
+    if (heroSlides) {
+        initSlideshow();
+    }
 
     // Theme logic
     const getPreferredTheme = () => {
@@ -68,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTheme(getPreferredTheme());
 
     // Fetch products from JSON
-    if (window.location.protocol === 'file:') {
+    if (productGrid && window.location.protocol === 'file:') {
         productGrid.innerHTML = `
             <div class="error" style="text-align: center; padding: 40px; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--primary);">
                 <h3 style="color: var(--primary); margin-bottom: 10px;">Local Loading Restricted</h3>
@@ -77,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p style="margin-top: 10px; font-size: 0.9rem;">The site will work perfectly once pushed to GitHub Pages.</p>
             </div>
         `;
-    } else {
+    } else if (productGrid) {
         fetch('products.json')
             .then(response => response.json())
             .then(data => {

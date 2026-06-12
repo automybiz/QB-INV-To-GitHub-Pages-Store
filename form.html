@@ -9,6 +9,20 @@
         --grey: #888;
         --border: #ddd;
         --shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+        /* Semantic Input Variables */
+        --input-font-color: var(--secondary);
+        --input-bg-color: #ffffff;
+        --input-label-color: var(--secondary);
+        --input-border-color: #009999;
+        --input-border-color-focused: #00FFFF;
+        --submit-button-bg-color: #0056b3;
+    }
+
+    [data-theme="dark"] {
+        --input-font-color: #ffffff;
+        --input-bg-color: #2d2d2d;
+        --input-label-color: #e0e0e0;
     }
 
     /* Form Specific Styles */
@@ -48,6 +62,7 @@
         font-weight: 600;
         margin-bottom: 8px;
         font-size: 0.9rem;
+        color: var(--input-label-color);
     }
 
     .inquiry-form-container input[type="text"],
@@ -58,18 +73,21 @@
     .inquiry-form-container textarea {
         width: 100%;
         padding: 12px;
-        border: 1px solid var(--border);
+        border: 2px solid var(--input-border-color);
         border-radius: 5px;
         font-size: 1rem;
         font-family: inherit;
-        background-color: #fff;
+        color: var(--input-font-color);
+        background-color: var(--input-bg-color);
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    [data-theme="dark"] .inquiry-form-container input,
-    [data-theme="dark"] .inquiry-form-container select,
-    [data-theme="dark"] .inquiry-form-container textarea {
-        background-color: #2d2d2d;
-        color: #fff;
+    .inquiry-form-container input:focus,
+    .inquiry-form-container select:focus,
+    .inquiry-form-container textarea:focus {
+        outline: none;
+        border-color: var(--input-border-color-focused);
+        box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.25);
     }
 
     .inquiry-form-container .row {
@@ -223,7 +241,8 @@
         padding: 18px;
         font-size: 1.2rem;
         margin-top: 20px;
-        box-shadow: 0 4px 10px rgba(200, 16, 46, 0.3);
+        background-color: var(--submit-button-bg-color);
+        box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
     }
 
     .inquiry-form-container .hidden-field {
