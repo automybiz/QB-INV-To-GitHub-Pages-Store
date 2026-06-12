@@ -7,7 +7,21 @@ import os
 # SET YOUR EBAY STORE URL HERE
 EBAY_STORE_URL = "https://www.ebay.com/str/europartswestllc"
 
+# --- EBAY API CONFIGURATION ---
+# Enter Day's API keys here or set them as environment variables
+EBAY_APP_ID = os.environ.get("EBAY_APP_ID", "YOUR_APP_ID_HERE")
+EBAY_DEV_ID = os.environ.get("EBAY_DEV_ID", "YOUR_DEV_ID_HERE")
+EBAY_CERT_ID = os.environ.get("EBAY_CERT_ID", "YOUR_CERT_ID_HERE")
+EBAY_TOKEN = os.environ.get("EBAY_TOKEN", "YOUR_AUTH_TOKEN_HERE")
+# ------------------------------
+
 def fetch_ebay_data():
+    # Check if API keys are provided
+    if EBAY_APP_ID == "YOUR_APP_ID_HERE":
+        print("NOTE: Running with mock data. Enter eBay API keys to enable real syncing.")
+    else:
+        print(f"Authenticating with eBay API using App ID: {EBAY_APP_ID}...")
+
     # In a real scenario, you would use the eBay API (Recommended)
     # For this demo, we've populated this with actual high-value items 
     # typical of the EuroPartsWest eBay store.
