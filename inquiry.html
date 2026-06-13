@@ -504,37 +504,44 @@
         }
 
         function generateYAMLSnippet() {
-            let fullYaml = '';
-            let previewYaml = '';
+            let fullLines = [];
+            let previewLines = [];
             const timestamp = formatDateSnippet(new Date());
 
             vehicles.forEach(vehicle => {
                 if (vehicle.name.trim()) {
-                    fullYaml += `- vehicle: ${vehicle.name.trim()}\n`;
-                    fullYaml += `  vin: ${vehicle.vin.trim()}\n`;
-                    fullYaml += `  items:\n`;
+                    fullLines.push(`- vehicle: ${vehicle.name.trim()}`);
+                    fullLines.push(`  vin: ${vehicle.vin.trim()}`);
+                    fullLines.push(`  items:`);
                     
-                    previewYaml += `- vehicle: ${vehicle.name.trim()}\n`;
-                    previewYaml += `  vin: ${vehicle.vin.trim()}\n`;
-                    previewYaml += `  items:\n`;
+                    previewLines.push(`- vehicle: ${vehicle.name.trim()}`);
+                    previewLines.push(`  vin: ${vehicle.vin.trim()}`);
+                    previewLines.push(`  items:`);
 
                     vehicle.parts.forEach(part => {
                         const pName = part.name.trim() || 'Unnamed Part';
                         const status = part.status || 'I';
-                        fullYaml += `    - ( ${status} )( ${part.qty} ) ${pName}:\n`;
-                        fullYaml += `      part_no: ${part.partNo.trim()}\n`;
-                        fullYaml += `      inquiries: 1\n`;
-                        fullYaml += `      last_inquiry: ${timestamp}\n`;
+                        fullLines.push(`    - ( ${status} )( ${part.qty} ) ${pName}:`);
+                        fullLines.push(`      part_no: ${part.partNo.trim()}`);
+                        fullLines.push(`      inquiries: 1`);
+                        fullLines.push(`      last_inquiry: ${timestamp}`);
                         
-                        previewYaml += `    - ( ${part.qty} ) ${pName}:\n`;
-                        previewYaml += `      part_no: ${part.partNo.trim()}\n`;
+                        previewLines.push(`    - ( ${part.qty} ) ${pName}:`);
+                        previewLines.push(`      part_no: ${part.partNo.trim()}`);
                     });
                 }
             });
 
-            yamlDisplay.textContent = previewYaml;
-            yamlHidden.value = fullYaml;
+            yamlDisplay.textContent = previewLines.join('\n');
+            yamlHidden.value = fullLines.join('\n');
         }
+
+        // Add hidden field for source
+        const sourceInput = document.createElement('input');
+        sourceInput.type = 'hidden';
+        sourceInput.name = 'source';
+        sourceInput.value = 'Inquiry Form';
+        inquiryForm.appendChild(sourceInput);
 
         addVehicleBtn.addEventListener('click', addVehicleSnippet);
         renderVehicles();
@@ -618,7 +625,10 @@
                     headers: { 
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({
+                        ...data,
+                        source: 'Inquiry Form'
+                    })
                 });
 
                 if (response.ok) {
