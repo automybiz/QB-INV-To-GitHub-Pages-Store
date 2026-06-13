@@ -543,22 +543,44 @@
             e.preventDefault();
             const formData = new FormData(inquiryForm);
             const data = Object.fromEntries(formData.entries());
+            
+            // GoHighLevel direct form submission requirement
             data.formId = 'zLET09x2oiLn3EGvsf3f'; 
+
+            // Prep for future Webhook usage:
+            // const webhookUrl = 'YOUR_GHL_WEBHOOK_URL_HERE';
+            const ghlFormUrl = 'https://services.leadconnectorhq.com/hooks/form/submit';
             
             try {
-                await fetch('https://services.leadconnectorhq.com/hooks/form/submit', {
+                // Using 'no-cors' allows the request to be sent to GHL's server from a different origin (like GitHub Pages)
+                // even if GHL's server doesn't explicitly allow our origin.
+                // Note: We won't be able to read the response (success/fail) in 'no-cors' mode.
+                await fetch(ghlFormUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(data),
                     mode: 'no-cors'
                 });
-                alert('Inquiry sent! We will get back to you shortly.');
+
+                // Since we use no-cors, we assume success if no network error occurred
+                alert('Inquiry sent! We will get back to you soon.');
                 inquiryForm.reset();
-                vehicles = [{ id: Date.now(), name: '', vin: '', parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] }];
+                
+                // Reset state
+                vehicles = [{ 
+                    id: Date.now(), 
+                    name: '', 
+                    vin: '', 
+                    parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] 
+                }];
                 renderVehicles();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
             } catch (error) {
-                console.error('Error submitting form:', error);
-                alert('Thank you! Your inquiry has been received.');
+                console.error('Submission Error:', error);
+                alert('There was an issue sending your inquiry. Please try again or contact us directly.');
             }
         });
     })();
