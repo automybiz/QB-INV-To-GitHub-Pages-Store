@@ -539,6 +539,48 @@
         addVehicleBtn.addEventListener('click', addVehicleSnippet);
         renderVehicles();
 
+        // --- Sticky Fields Logic ---
+        const stickyFields = ['first_name', 'last_name', 'email', 'phone', 'terms'];
+        
+        // Load stored values on page load
+        stickyFields.forEach(fieldId => {
+            const storedValue = localStorage.getItem('sticky_' + fieldId);
+            if (storedValue) {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    if (field.type === 'checkbox') {
+                        field.checked = storedValue === 'true';
+                    } else {
+                        field.value = storedValue;
+                    }
+                }
+            }
+        });
+
+        // Handle first vehicle sticky field specifically
+        const storedVehicle = localStorage.getItem('sticky_vehicle_0');
+        if (storedVehicle) {
+            const firstVehicleInput = document.querySelector('input[placeholder="e.g. Porsche 911 1988"]');
+            if (firstVehicleInput) {
+                firstVehicleInput.value = storedVehicle;
+                // Update the state as well
+                if (vehicles[0]) vehicles[0].name = storedVehicle;
+                generateYAMLSnippet();
+            }
+        }
+
+        // Save values on input change
+        inquiryForm.addEventListener('input', function(e) {
+            if (stickyFields.includes(e.target.id)) {
+                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                localStorage.setItem('sticky_' + e.target.id, val);
+            }
+            // Check if it's the first vehicle input (we'll identify it by placeholder since it's dynamic)
+            if (e.target.placeholder === "e.g. Porsche 911 1988" && e.target === document.querySelectorAll('input[placeholder="e.g. Porsche 911 1988"]')[0]) {
+                localStorage.setItem('sticky_vehicle_0', e.target.value);
+            }
+        });
+
         inquiryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(inquiryForm);
