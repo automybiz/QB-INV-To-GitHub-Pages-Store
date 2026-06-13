@@ -544,39 +544,43 @@
             const formData = new FormData(inquiryForm);
             const data = Object.fromEntries(formData.entries());
             
-            // GoHighLevel direct form submission requirement
-            data.formId = 'zLET09x2oiLn3EGvsf3f'; 
-
-            // Prep for future Webhook usage:
-            // const webhookUrl = 'YOUR_GHL_WEBHOOK_URL_HERE';
-            const ghlFormUrl = 'https://services.leadconnectorhq.com/hooks/form/submit';
+            // WEBHOOK SETUP:
+            // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger.
+            // 2. Paste the provided Webhook URL below.
+            const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/55cf9179-31b6-4155-91ab-d08ac507a2ac';
             
             try {
-                // Using 'no-cors' allows the request to be sent to GHL's server from a different origin (like GitHub Pages)
-                // even if GHL's server doesn't explicitly allow our origin.
-                // Note: We won't be able to read the response (success/fail) in 'no-cors' mode.
-                await fetch(ghlFormUrl, {
+                // Check if Webhook URL is set
+                if (webhookUrl === 'REPLACE_WITH_YOUR_GHL_WEBHOOK_URL') {
+                    alert('Configuration Error: Please provide a valid GHL Webhook URL in the script.');
+                    return;
+                }
+
+                // Webhooks don't require 'no-cors' and actually return helpful error messages
+                const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data),
-                    mode: 'no-cors'
+                    body: JSON.stringify(data)
                 });
 
-                // Since we use no-cors, we assume success if no network error occurred
-                alert('Inquiry sent! We will get back to you soon.');
-                inquiryForm.reset();
-                
-                // Reset state
-                vehicles = [{ 
-                    id: Date.now(), 
-                    name: '', 
-                    vin: '', 
-                    parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] 
-                }];
-                renderVehicles();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (response.ok) {
+                    alert('Inquiry sent! We will get back to you soon.');
+                    inquiryForm.reset();
+                    
+                    // Reset state
+                    vehicles = [{ 
+                        id: Date.now(), 
+                        name: '', 
+                        vin: '', 
+                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] 
+                    }];
+                    renderVehicles();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
 
             } catch (error) {
                 console.error('Submission Error:', error);
