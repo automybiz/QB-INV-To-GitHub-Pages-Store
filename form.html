@@ -355,7 +355,7 @@
                     <button type="button" class="btn btn-danger remove-btn" onclick="removeVehicleSnippet(${vehicle.id})">Remove Vehicle</button>
                     <div class="row" style="margin-right: 120px;">
                         <div class="form-group" style="flex: 2;">
-                            <label>Vehicle Name (Year, Make, Model)</label>
+                            <label>Vehicle Name (Make, Model, Year)</label>
                             <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
                         </div>
                         <div class="form-group" style="flex: 1;">
@@ -523,9 +523,19 @@
                 firstVehicleInput.value = storedVehicle;
                 // Update the state as well
                 if (vehicles[0]) vehicles[0].name = storedVehicle;
-                generateYAMLSnippet();
             }
         }
+
+        const storedVin = localStorage.getItem('sticky_vin_0');
+        if (storedVin) {
+            const firstVinInput = document.querySelector('input[placeholder="Optional"]');
+            if (firstVinInput) {
+                firstVinInput.value = storedVin;
+                if (vehicles[0]) vehicles[0].vin = storedVin;
+            }
+        }
+
+        if (storedVehicle || storedVin) generateYAMLSnippet();
 
         // Save values on input change
         inquiryForm.addEventListener('input', function(e) {
@@ -536,6 +546,10 @@
             // Check if it's the first vehicle input (we'll identify it by placeholder since it's dynamic)
             if (e.target.placeholder === "e.g. Porsche 911 1988" && e.target === document.querySelectorAll('input[placeholder="e.g. Porsche 911 1988"]')[0]) {
                 localStorage.setItem('sticky_vehicle_0', e.target.value);
+            }
+            // Check if it's the first VIN input
+            if (e.target.placeholder === "Optional" && e.target === document.querySelectorAll('input[placeholder="Optional"]')[0]) {
+                localStorage.setItem('sticky_vin_0', e.target.value);
             }
         });
 
