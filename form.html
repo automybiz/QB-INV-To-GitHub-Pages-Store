@@ -376,7 +376,12 @@
         let vehicles = [];
         
         function saveVehiclesToLocalStorage() {
-            localStorage.setItem('persistent_vehicles', JSON.stringify(vehicles));
+            const filteredVehicles = vehicles.filter(v => 
+                v.name.trim() !== '' || 
+                v.vin.trim() !== '' || 
+                v.parts.some(p => p.name.trim() !== '')
+            );
+            localStorage.setItem('persistent_vehicles', JSON.stringify(filteredVehicles));
         }
 
         // Load persistent vehicles on init
