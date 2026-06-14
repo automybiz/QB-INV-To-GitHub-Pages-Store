@@ -377,9 +377,9 @@
         
         function saveVehiclesToLocalStorage() {
             const filteredVehicles = vehicles.filter(v => 
-                v.name.trim() !== '' || 
-                v.vin.trim() !== '' || 
-                v.parts.some(p => p.name.trim() !== '')
+                (v.name && v.name.trim() !== '') || 
+                (v.vin && v.vin.trim() !== '') || 
+                (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
             );
             localStorage.setItem('persistent_vehicles', JSON.stringify(filteredVehicles));
         }
@@ -388,7 +388,13 @@
         const storedVehicles = localStorage.getItem('persistent_vehicles');
         if (storedVehicles) {
             try {
-                vehicles = JSON.parse(storedVehicles);
+                const parsed = JSON.parse(storedVehicles);
+                // Only load vehicles that have at least one field filled
+                vehicles = parsed.filter(v => 
+                    (v.name && v.name.trim() !== '') || 
+                    (v.vin && v.vin.trim() !== '') || 
+                    (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
+                );
             } catch (e) {
                 console.error("Error parsing stored vehicles", e);
                 vehicles = [];
@@ -698,8 +704,6 @@
 
             // Validation logic
             let errors = [];
-            let validParts = false;
-
             vehicles.forEach((v, index) => {
                 const vehicleName = v.name || `Vehicle ${index + 1}`;
                 const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
