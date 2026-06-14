@@ -315,6 +315,9 @@
             <textarea id="last_things_inquired_about_form_yaml" name="last_things_inquired_about_form_yaml" class="hidden-field"></textarea>
             <!-- Hidden textarea for user-facing YAML receipt -->
             <textarea id="last_things_inquired_about_form_yaml_user" name="last_things_inquired_about_form_yaml_user" class="hidden-field"></textarea>
+            <!-- HTML formatted versions for emails -->
+            <textarea id="last_things_inquired_about_form_yaml_html" name="last_things_inquired_about_form_yaml_html" class="hidden-field"></textarea>
+            <textarea id="last_things_inquired_about_form_yaml_user_html" name="last_things_inquired_about_form_yaml_user_html" class="hidden-field"></textarea>
         </div>
 
         <!-- Terms -->
@@ -345,6 +348,8 @@
         const yamlDisplay = document.getElementById('yamlDisplay');
         const yamlHidden = document.getElementById('last_things_inquired_about_form_yaml');
         const yamlHiddenUser = document.getElementById('last_things_inquired_about_form_yaml_user');
+        const yamlHiddenHtml = document.getElementById('last_things_inquired_about_form_yaml_html');
+        const yamlHiddenUserHtml = document.getElementById('last_things_inquired_about_form_yaml_user_html');
         const addVehicleBtn = document.getElementById('addVehicle');
         const inquiryForm = document.getElementById('inquiryForm');
 
@@ -496,6 +501,8 @@
             yamlDisplay.textContent = previewLines.join('\n');
             yamlHidden.value = fullLines.join('\n');
             yamlHiddenUser.value = previewLines.join('\n');
+            yamlHiddenHtml.value = fullLines.join('<br>\n');
+            yamlHiddenUserHtml.value = previewLines.join('<br>\n');
         }
 
         // Add hidden field for source
