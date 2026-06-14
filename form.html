@@ -501,8 +501,8 @@
             yamlDisplay.textContent = previewLines.join('\n');
             yamlHidden.value = fullLines.join('\n');
             yamlHiddenUser.value = previewLines.join('\n');
-            yamlHiddenHtml.value = fullLines.join('<br>\n');
-            yamlHiddenUserHtml.value = previewLines.join('<br>\n');
+            yamlHiddenHtml.value = fullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
+            yamlHiddenUserHtml.value = previewLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
         }
 
         // Add hidden field for source
