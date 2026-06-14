@@ -353,14 +353,14 @@
                         <div class="form-group" style="margin-top: 50px;">
                             <label class="yaml-label">Inquiry Summary (Preview)</label>
                             <div id="yamlDisplay" class="yaml-preview"></div>
-            <!-- Hidden textarea for actual form submission to GHL (Full YAML) -->
-            <textarea id="last_things_inquired_about_form_yaml" name="last_things_inquired_about_form_yaml" class="hidden-field"></textarea>
-            <!-- Hidden textarea for user-facing YAML receipt -->
-            <textarea id="last_things_inquired_about_form_yaml_user" name="last_things_inquired_about_form_yaml_user" class="hidden-field"></textarea>
-            <!-- HTML formatted versions for emails -->
-            <textarea id="last_things_inquired_about_form_yaml_html" name="last_things_inquired_about_form_yaml_html" class="hidden-field"></textarea>
-            <textarea id="last_things_inquired_about_form_yaml_user_html" name="last_things_inquired_about_form_yaml_user_html" class="hidden-field"></textarea>
-        </div>
+                            <!-- Hidden textarea for actual form submission to GHL (Full YAML) -->
+                            <textarea id="last_things_inquired_about_form_yaml" name="last_things_inquired_about_form_yaml" class="hidden-field"></textarea>
+                            <!-- Hidden textarea for user-facing YAML receipt -->
+                            <textarea id="last_things_inquired_about_form_yaml_user" name="last_things_inquired_about_form_yaml_user" class="hidden-field"></textarea>
+                            <!-- HTML formatted versions for emails -->
+                            <textarea id="last_things_inquired_about_form_yaml_html" name="last_things_inquired_about_form_yaml_html" class="hidden-field"></textarea>
+                            <textarea id="last_things_inquired_about_form_yaml_user_html" name="last_things_inquired_about_form_yaml_user_html" class="hidden-field"></textarea>
+                        </div>
 
                         <!-- Terms -->
                         <div class="terms-group">
@@ -375,16 +375,36 @@
                 <script>
                     (function() {
                         // State Management
-                        let vehicles = [
-                            {
-                                id: Date.now(),
-                                name: '',
-                                vin: '',
-                                parts: [
-                                    { id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }
-                                ]
+                        let vehicles = [];
+                        
+                        function saveVehiclesToLocalStorage() {
+                            localStorage.setItem('persistent_vehicles', JSON.stringify(vehicles));
+                        }
+
+                        // Load persistent vehicles on init
+                        const storedVehicles = localStorage.getItem('persistent_vehicles');
+                        if (storedVehicles) {
+                            try {
+                                vehicles = JSON.parse(storedVehicles);
+                            } catch (e) {
+                                console.error("Error parsing stored vehicles", e);
+                                vehicles = [];
                             }
-                        ];
+                        }
+
+                        // Default if empty
+                        if (vehicles.length === 0) {
+                            vehicles = [
+                                {
+                                    id: Date.now(),
+                                    name: '',
+                                    vin: '',
+                                    parts: [
+                                        { id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }
+                                    ]
+                                }
+                            ];
+                        }
 
                         const vehiclesContainer = document.getElementById('vehiclesContainer');
                         const yamlDisplay = document.getElementById('yamlDisplay');
@@ -402,8 +422,11 @@
                                 const vBlock = document.createElement('div');
                                 vBlock.className = 'vehicle-block clearfix';
                                 vBlock.innerHTML = `
-                                    <button type="button" class="btn btn-danger remove-btn" onclick="removeVehicleSnippet(${vehicle.id})">Remove Vehicle</button>
-                                    <div class="row" style="margin-right: 120px;">
+                                    <div class="remove-btn-group" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+                                        <button type="button" class="btn btn-outline-blue" style="padding: 4px 8px; font-size: 0.7rem;" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>
+                                        <button type="button" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.7rem;" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove Permanently</button>
+                                    </div>
+                                    <div class="row" style="margin-right: 200px;">
                                         <div class="form-group" style="flex: 2;">
                                             <label>Vehicle Name (Year, Make, Model)</label>
                                             <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
@@ -453,10 +476,11 @@
                                 vin: '',
                                 parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }]
                             });
+                            saveVehiclesToLocalStorage();
                             renderVehicles();
                         };
 
-                        window.removeVehicleSnippet = function(vId) {
+                        window.removeVehicleForNowSnippet = function(vId) {
                             if (vehicles.length > 1) {
                                 vehicles = vehicles.filter(v => v.id !== vId);
                                 renderVehicles();
@@ -465,9 +489,24 @@
                             }
                         };
 
+                        window.removeVehiclePermanentlySnippet = function(vId) {
+                            if (confirm("Are you sure you want to remove this vehicle from memory permanently?")) {
+                                if (vehicles.length > 1) {
+                                    vehicles = vehicles.filter(v => v.id !== vId);
+                                    saveVehiclesToLocalStorage();
+                                    renderVehicles();
+                                } else {
+                                    alert("At least one vehicle is required.");
+                                }
+                            }
+                        };
+
                         window.updateVehicleValueSnippet = function(vId, field, value) {
                             const vehicle = vehicles.find(v => v.id === vId);
-                            if (vehicle) vehicle[field] = value;
+                            if (vehicle) {
+                                vehicle[field] = value;
+                                saveVehiclesToLocalStorage();
+                            }
                             generateYAMLSnippet();
                         };
 
@@ -475,6 +514,7 @@
                             const vehicle = vehicles.find(v => v.id === vId);
                             if (vehicle) {
                                 vehicle.parts.push({ id: Date.now(), name: '', partNo: '', qty: 1, status: 'I' });
+                                saveVehiclesToLocalStorage();
                                 renderVehicles();
                             }
                         };
@@ -495,6 +535,7 @@
                                 const part = vehicle.parts.find(p => p.id === pId);
                                 if (part) {
                                     part[field] = field === 'qty' ? parseInt(value) || 1 : value;
+                                    saveVehiclesToLocalStorage();
                                     generateYAMLSnippet();
                                 }
                             }
@@ -507,176 +548,146 @@
                             });
                             const timePart = d.toLocaleTimeString('en-US', {
                                 hour: '2-digit', minute: '2-digit', hour12: true
-            });
-            return `${datePart} at ${timePart}`;
-        }
+                            });
+                            return `${datePart} at ${timePart}`;
+                        }
 
-        function generateYAMLSnippet() {
-            let fullLines = [];
-            let previewLines = [];
-            const timestamp = formatDateSnippet(new Date());
+                        function generateYAMLSnippet() {
+                            let fullLines = [];
+                            let previewLines = [];
+                            const timestamp = formatDateSnippet(new Date());
 
-            vehicles.forEach(vehicle => {
-                if (vehicle.name.trim()) {
-                    fullLines.push(`- vehicle: ${vehicle.name.trim()}`);
-                    fullLines.push(`  vin: ${vehicle.vin.trim()}`);
-                    fullLines.push(`  items:`);
-                    
-                    previewLines.push(`- vehicle: ${vehicle.name.trim()}`);
-                    previewLines.push(`  vin: ${vehicle.vin.trim()}`);
-                    previewLines.push(`  items:`);
+                            vehicles.forEach(vehicle => {
+                                if (vehicle.name.trim()) {
+                                    fullLines.push(`- vehicle: ${vehicle.name.trim()}`);
+                                    fullLines.push(`  vin: ${vehicle.vin.trim()}`);
+                                    fullLines.push(`  items:`);
+                                    
+                                    previewLines.push(`- vehicle: ${vehicle.name.trim()}`);
+                                    previewLines.push(`  vin: ${vehicle.vin.trim()}`);
+                                    previewLines.push(`  items:`);
 
-                    vehicle.parts.forEach(part => {
-                        const pName = part.name.trim() || 'Unnamed Part';
-                        const status = part.status || 'I';
-                        fullLines.push(`    - ( ${status} )( ${part.qty} ) ${pName}:`);
-                        fullLines.push(`      part_no: ${part.partNo.trim()}`);
-                        fullLines.push(`      inquiries: 1`);
-                        fullLines.push(`      last_inquiry: ${timestamp}`);
+                                    vehicle.parts.forEach(part => {
+                                        const pName = part.name.trim() || 'Unnamed Part';
+                                        const status = part.status || 'I';
+                                        fullLines.push(`    - ( ${status} )( ${part.qty} ) ${pName}:`);
+                                        fullLines.push(`      part_no: ${part.partNo.trim()}`);
+                                        fullLines.push(`      inquiries: 1`);
+                                        fullLines.push(`      last_inquiry: ${timestamp}`);
+                                        
+                                        previewLines.push(`    - ( ${part.qty} ) ${pName}:`);
+                                        previewLines.push(`      part_no: ${part.partNo.trim()}`);
+                                    });
+                                }
+                            });
+
+                            yamlDisplay.textContent = previewLines.join('\n');
+                            yamlHidden.value = fullLines.join('\n');
+                            yamlHiddenUser.value = previewLines.join('\n');
+                            yamlHiddenHtml.value = fullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
+                            yamlHiddenUserHtml.value = previewLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
+                        }
+
+                        // Add hidden field for source
+                        const sourceInput = document.createElement('input');
+                        sourceInput.type = 'hidden';
+                        sourceInput.name = 'source';
+                        sourceInput.value = 'Product Inquiry Web Form';
+                        inquiryForm.appendChild(sourceInput);
+
+                        addVehicleBtn.addEventListener('click', addVehicleSnippet);
+                        renderVehicles();
+
+                        // --- Sticky Fields Logic ---
+                        const stickyFields = ['first_name', 'last_name', 'email', 'phone', 'terms'];
                         
-                        previewLines.push(`    - ( ${part.qty} ) ${pName}:`);
-                        previewLines.push(`      part_no: ${part.partNo.trim()}`);
-                    });
-                }
-            });
+                        // Load stored values on page load
+                        stickyFields.forEach(fieldId => {
+                            const storedValue = localStorage.getItem('sticky_' + fieldId);
+                            if (storedValue) {
+                                const field = document.getElementById(fieldId);
+                                if (field) {
+                                    if (field.type === 'checkbox') {
+                                        field.checked = storedValue === 'true';
+                                    } else {
+                                        field.value = storedValue;
+                                    }
+                                }
+                            }
+                        });
 
-            yamlDisplay.textContent = previewLines.join('\n');
-            yamlHidden.value = fullLines.join('\n');
-            yamlHiddenUser.value = previewLines.join('\n');
-            yamlHiddenHtml.value = fullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
-            yamlHiddenUserHtml.value = previewLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
-        }
+                        // Phone formatting logic
+                        const phoneInput = document.getElementById('phone');
+                        if (phoneInput) {
+                            phoneInput.addEventListener('input', function(e) {
+                                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                                if (e.target.value.startsWith('+')) {
+                                    // Keep international format if starts with +
+                                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
+                                } else {
+                                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+                                }
+                            });
+                        }
 
-        // Add hidden field for source
-        const sourceInput = document.createElement('input');
-        sourceInput.type = 'hidden';
-        sourceInput.name = 'source';
-        sourceInput.value = 'Product Inquiry Web Form';
-        inquiryForm.appendChild(sourceInput);
+                        // Save values on input change
+                        inquiryForm.addEventListener('input', function(e) {
+                            if (stickyFields.includes(e.target.id)) {
+                                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                                localStorage.setItem('sticky_' + e.target.id, val);
+                            }
+                        });
 
-        addVehicleBtn.addEventListener('click', addVehicleSnippet);
-        renderVehicles();
+                        inquiryForm.addEventListener('submit', async (e) => {
+                            e.preventDefault();
+                            const formData = new FormData(inquiryForm);
+                            const data = Object.fromEntries(formData.entries());
+                            
+                            // WEBHOOK SETUP:
+                            // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger.
+                            // 2. Paste the provided Webhook URL below.
+                            const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/55cf9179-31b6-4155-91ab-d08ac507a2ac';
+                            
+                            try {
+                                // Check if Webhook URL is set
+                                if (webhookUrl === 'REPLACE_WITH_YOUR_GHL_WEBHOOK_URL') {
+                                    alert('Configuration Error: Please provide a valid GHL Webhook URL in the script.');
+                                    return;
+                                }
 
-        // --- Sticky Fields Logic ---
-        const stickyFields = ['first_name', 'last_name', 'email', 'phone', 'terms'];
-        
-        // Load stored values on page load
-        stickyFields.forEach(fieldId => {
-            const storedValue = localStorage.getItem('sticky_' + fieldId);
-            if (storedValue) {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    if (field.type === 'checkbox') {
-                        field.checked = storedValue === 'true';
-                    } else {
-                        field.value = storedValue;
-                    }
-                }
-            }
-        });
+                                // Webhooks don't require 'no-cors' and actually return helpful error messages
+                                const response = await fetch(webhookUrl, {
+                                    method: 'POST',
+                                    headers: { 
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(data)
+                                });
 
-        // Handle first vehicle sticky field specifically
-        const storedVehicle = localStorage.getItem('sticky_vehicle_0');
-        if (storedVehicle) {
-            const firstVehicleInput = document.querySelector('input[placeholder="e.g. Porsche 911 1988"]');
-            if (firstVehicleInput) {
-                firstVehicleInput.value = storedVehicle;
-                // Update the state as well
-                if (vehicles[0]) vehicles[0].name = storedVehicle;
-            }
-        }
+                                if (response.ok) {
+                                    alert('Inquiry sent! We will get back to you soon.');
+                                    inquiryForm.reset();
+                                    
+                                    // Reset state
+                                    vehicles = [{ 
+                                        id: Date.now(), 
+                                        name: '', 
+                                        vin: '', 
+                                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] 
+                                    }];
+                                    renderVehicles();
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                } else {
+                                    throw new Error(`Server responded with ${response.status}`);
+                                }
 
-        const storedVin = localStorage.getItem('sticky_vin_0');
-        if (storedVin) {
-            const firstVinInput = document.querySelector('input[placeholder="Optional"]');
-            if (firstVinInput) {
-                firstVinInput.value = storedVin;
-                if (vehicles[0]) vehicles[0].vin = storedVin;
-            }
-        }
-
-        if (storedVehicle || storedVin) generateYAMLSnippet();
-
-        // Phone formatting logic
-        const phoneInput = document.getElementById('phone');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
-                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-                if (e.target.value.startsWith('+')) {
-                    // Keep international format if starts with +
-                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
-                } else {
-                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-                }
-            });
-        }
-
-        // Save values on input change
-        inquiryForm.addEventListener('input', function(e) {
-            if (stickyFields.includes(e.target.id)) {
-                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-                localStorage.setItem('sticky_' + e.target.id, val);
-            }
-            // Check if it's the first vehicle input (we'll identify it by placeholder since it's dynamic)
-            if (e.target.placeholder === "e.g. Porsche 911 1988" && e.target === document.querySelectorAll('input[placeholder="e.g. Porsche 911 1988"]')[0]) {
-                localStorage.setItem('sticky_vehicle_0', e.target.value);
-            }
-            // Check if it's the first VIN input
-            if (e.target.placeholder === "Optional" && e.target === document.querySelectorAll('input[placeholder="Optional"]')[0]) {
-                localStorage.setItem('sticky_vin_0', e.target.value);
-            }
-        });
-
-        inquiryForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(inquiryForm);
-            const data = Object.fromEntries(formData.entries());
-            
-            // WEBHOOK SETUP:
-            // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger.
-            // 2. Paste the provided Webhook URL below.
-            const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/55cf9179-31b6-4155-91ab-d08ac507a2ac';
-            
-            try {
-                // Check if Webhook URL is set
-                if (webhookUrl === 'REPLACE_WITH_YOUR_GHL_WEBHOOK_URL') {
-                    alert('Configuration Error: Please provide a valid GHL Webhook URL in the script.');
-                    return;
-                }
-
-                // Webhooks don't require 'no-cors' and actually return helpful error messages
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    alert('Inquiry sent! We will get back to you soon.');
-                    inquiryForm.reset();
-                    
-                    // Reset state
-                    vehicles = [{ 
-                        id: Date.now(), 
-                        name: '', 
-                        vin: '', 
-                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }] 
-                    }];
-                    renderVehicles();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
-                    throw new Error(`Server responded with ${response.status}`);
-                }
-
-            } catch (error) {
-                console.error('Submission Error:', error);
-                alert('There was an issue sending your inquiry. Please try again or contact us directly.');
-            }
-        });
-    })();
-</script>
+                            } catch (error) {
+                                console.error('Submission Error:', error);
+                                alert('There was an issue sending your inquiry. Please try again or contact us directly.');
+                            }
+                        });
+                    })();
+                </script>
                 
                 <!-- EMBEDDED FORM SNIPPET END -->
             </div>
