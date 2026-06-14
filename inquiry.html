@@ -457,18 +457,29 @@
                         const successMessage = document.getElementById('successMessage');
                         const btnSubmitAnother = document.getElementById('btnSubmitAnother');
 
-                        // Functions
-                        function renderVehicles() {
-                            vehiclesContainer.innerHTML = '';
-                            vehicles.forEach((vehicle, vIndex) => {
-                                const vBlock = document.createElement('div');
-                                vBlock.className = 'vehicle-block clearfix';
-                                vBlock.innerHTML = `
-                                    <div class="remove-btn-group" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
-                                        <button type="button" class="btn btn-outline-blue" style="padding: 4px 8px; font-size: 0.7rem;" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>
-                                        <button type="button" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.7rem;" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove Permanently</button>
-                                    </div>
-                                    <div class="row" style="margin-right: 200px;">
+        // Functions
+        function renderVehicles() {
+            vehiclesContainer.innerHTML = '';
+            
+            // Get history to check if button should show
+            let history = [];
+            try {
+                const stored = localStorage.getItem('persistent_vehicles');
+                if (stored) history = JSON.parse(stored);
+            } catch(e) {}
+
+            vehicles.forEach((vehicle, vIndex) => {
+                const isInHistory = history.some(h => h.id === vehicle.id && (h.name || h.vin));
+                const showRemoveForNow = vehicles.length > 1;
+
+                const vBlock = document.createElement('div');
+                vBlock.className = 'vehicle-block clearfix';
+                vBlock.innerHTML = `
+                    <div class="remove-btn-group" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+                        ${showRemoveForNow ? `<button type="button" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.7rem; background: #dc3545;" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>` : ''}
+                        ${isInHistory ? `<button type="button" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.7rem; background: #dc3545;" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove From History</button>` : ''}
+                    </div>
+                    <div class="row" style="margin-right: 200px;">
                                         <div class="form-group" style="flex: 2;">
                                             <label>Vehicle Name (Year, Make, Model)</label>
                                             <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
@@ -531,17 +542,33 @@
                             }
                         };
 
-                        window.removeVehiclePermanentlySnippet = function(vId) {
-                            if (confirm("Are you sure you want to remove this vehicle from memory permanently?")) {
-                                if (vehicles.length > 1) {
-                                    vehicles = vehicles.filter(v => v.id !== vId);
-                                    saveVehiclesToLocalStorage();
-                                    renderVehicles();
-                                } else {
-                                    alert("At least one vehicle is required.");
-                                }
-                            }
-                        };
+        window.removeVehiclePermanentlySnippet = function(vId) {
+            if (confirm("Are you sure you want to remove this vehicle from your history permanently?")) {
+                // Remove from current view
+                vehicles = vehicles.filter(v => v.id !== vId);
+                
+                // If we removed the last one, add a fresh one
+                if (vehicles.length === 0) {
+                    vehicles.push({
+                        id: Date.now(),
+                        name: '',
+                        vin: '',
+                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }]
+                    });
+                }
+
+                // Update persistent storage
+                let history = [];
+                try {
+                    const stored = localStorage.getItem('persistent_vehicles');
+                    if (stored) history = JSON.parse(stored);
+                } catch(e) {}
+                history = history.filter(h => h.id !== vId);
+                localStorage.setItem('persistent_vehicles', JSON.stringify(history));
+
+                renderVehicles();
+            }
+        };
 
                         window.updateVehicleValueSnippet = function(vId, field, value) {
                             const vehicle = vehicles.find(v => v.id === vId);
@@ -681,12 +708,34 @@
                             }
                         });
 
-                        inquiryForm.addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            const formData = new FormData(inquiryForm);
-                            const data = Object.fromEntries(formData.entries());
-                            
-                            // WEBHOOK SETUP:
+        inquiryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validation logic
+            let errors = [];
+            vehicles.forEach((v, index) => {
+                const vehicleName = v.name || `Vehicle ${index + 1}`;
+                const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
+                if (!hasPartName) {
+                    errors.push(`Please enter at least one part name for ${vehicleName}.`);
+                }
+                
+                v.parts.forEach((p, pIndex) => {
+                    if (p.qty < 1) {
+                        errors.push(`Quantity for part "${p.name || 'Unnamed'}" in ${vehicleName} must be at least 1.`);
+                    }
+                });
+            });
+
+            if (errors.length > 0) {
+                alert("Submission Failed:\n\n" + errors.join("\n"));
+                return;
+            }
+
+            const formData = new FormData(inquiryForm);
+            const data = Object.fromEntries(formData.entries());
+            
+            // WEBHOOK SETUP:
                             // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger.
                             // 2. Paste the provided Webhook URL below.
                             const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/55cf9179-31b6-4155-91ab-d08ac507a2ac';
