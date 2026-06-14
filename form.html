@@ -313,6 +313,8 @@
             <div id="yamlDisplay" class="yaml-preview"></div>
             <!-- Hidden textarea for actual form submission to GHL (Full YAML) -->
             <textarea id="last_things_inquired_about_form_yaml" name="last_things_inquired_about_form_yaml" class="hidden-field"></textarea>
+            <!-- Hidden textarea for user-facing YAML receipt -->
+            <textarea id="last_things_inquired_about_form_yaml_user" name="last_things_inquired_about_form_yaml_user" class="hidden-field"></textarea>
         </div>
 
         <!-- Terms -->
@@ -342,6 +344,7 @@
         const vehiclesContainer = document.getElementById('vehiclesContainer');
         const yamlDisplay = document.getElementById('yamlDisplay');
         const yamlHidden = document.getElementById('last_things_inquired_about_form_yaml');
+        const yamlHiddenUser = document.getElementById('last_things_inquired_about_form_yaml_user');
         const addVehicleBtn = document.getElementById('addVehicle');
         const inquiryForm = document.getElementById('inquiryForm');
 
@@ -492,13 +495,14 @@
 
             yamlDisplay.textContent = previewLines.join('\n');
             yamlHidden.value = fullLines.join('\n');
+            yamlHiddenUser.value = previewLines.join('\n');
         }
 
         // Add hidden field for source
         const sourceInput = document.createElement('input');
         sourceInput.type = 'hidden';
         sourceInput.name = 'source';
-        sourceInput.value = 'Inquiry Form';
+        sourceInput.value = 'Product Inquiry Web Form';
         inquiryForm.appendChild(sourceInput);
 
         addVehicleBtn.addEventListener('click', addVehicleSnippet);
@@ -544,6 +548,20 @@
 
         if (storedVehicle || storedVin) generateYAMLSnippet();
 
+        // Phone formatting logic
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                if (e.target.value.startsWith('+')) {
+                    // Keep international format if starts with +
+                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
+                } else {
+                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+                }
+            });
+        }
+
         // Save values on input change
         inquiryForm.addEventListener('input', function(e) {
             if (stickyFields.includes(e.target.id)) {
@@ -583,10 +601,7 @@
                     headers: { 
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        ...data,
-                        source: 'Inquiry Form'
-                    })
+                    body: JSON.stringify(data)
                 });
 
                 if (response.ok) {
