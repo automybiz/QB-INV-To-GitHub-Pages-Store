@@ -349,12 +349,18 @@
 
         <!-- YAML Output (Visible but Simplified Preview) -->
         <div class="form-group" style="margin-top: 50px;">
-            <label class="yaml-label">Inquiry Summary (Preview)</label>
+            <label class="yaml-label">Inquiry Summary (YAML Preview)</label>
             <div id="yamlDisplay" class="yaml-preview"></div>
+            
+            <label class="yaml-label" style="margin-top: 30px;">GSheets CSV Format (Preview)</label>
+            <div id="csvDisplay" class="yaml-preview" style="background: #2d2d2d;"></div>
+
             <!-- Hidden textarea for actual form submission to GHL (Full YAML) -->
             <textarea id="last_things_inquired_about_form_yaml" name="last_things_inquired_about_form_yaml" class="hidden-field"></textarea>
             <!-- Hidden textarea for user-facing YAML receipt -->
             <textarea id="last_things_inquired_about_form_yaml_user" name="last_things_inquired_about_form_yaml_user" class="hidden-field"></textarea>
+            <!-- Hidden textarea for GSheets CSV format -->
+            <textarea id="last_things_inquired_about_form_csv" name="last_things_inquired_about_form_csv" class="hidden-field"></textarea>
             <!-- HTML formatted versions for emails -->
             <textarea id="last_things_inquired_about_form_yaml_html" name="last_things_inquired_about_form_yaml_html" class="hidden-field"></textarea>
             <textarea id="last_things_inquired_about_form_yaml_user_html" name="last_things_inquired_about_form_yaml_user_html" class="hidden-field"></textarea>
@@ -409,7 +415,7 @@
                     name: '',
                     vin: '',
                     parts: [
-                        { id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }
+                        { id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }
                     ]
                 }
             ];
@@ -468,20 +474,24 @@
                     pBlock.className = 'part-block';
                     pBlock.innerHTML = `
                         <button type="button" class="btn btn-danger remove-btn" onclick="removePartSnippet(${vehicle.id}, ${part.id})" title="Remove Part">×</button>
-                        <div class="row">
-                            <div class="form-group" style="flex: 2.5;">
-                                <label>Part Name / Description</label>
-                                <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
-                            </div>
-                            <div class="form-group" style="flex: 1.5;">
-                                <label>Part No.</label>
-                                <input type="text" placeholder="Optional" value="${part.partNo}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'partNo', this.value)">
-                            </div>
-                            <div class="form-group" style="flex: 0.6;">
-                                <label>Qty</label>
-                                <input type="number" min="1" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
-                            </div>
+                    <div class="row">
+                        <div class="form-group" style="flex: 2.5;">
+                            <label>Part Name / Description</label>
+                            <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
                         </div>
+                        <div class="form-group" style="flex: 1.5;">
+                            <label>Part No.</label>
+                            <input type="text" placeholder="Optional" value="${part.partNo}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'partNo', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 1.2;">
+                            <label>Manufacturer</label>
+                            <input type="text" placeholder="Optional" value="${part.manufacturer || ''}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'manufacturer', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 0.6;">
+                            <label>Qty</label>
+                            <input type="number" min="1" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
+                        </div>
+                    </div>
                     `;
                     partsContainer.appendChild(pBlock);
                 });
@@ -496,7 +506,7 @@
                 id: Date.now(),
                 name: '',
                 vin: '',
-                parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }]
+                parts: [{ id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }]
             });
             saveVehiclesToLocalStorage();
             renderVehicles();
@@ -551,7 +561,7 @@
         window.addPartSnippet = function(vId) {
             const vehicle = vehicles.find(v => v.id === vId);
             if (vehicle) {
-                vehicle.parts.push({ id: Date.now(), name: '', partNo: '', qty: 1, status: 'I' });
+                vehicle.parts.push({ id: Date.now(), name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' });
                 saveVehiclesToLocalStorage();
                 renderVehicles();
             }
@@ -594,6 +604,7 @@
         function generateYAMLSnippet() {
             let fullLines = [];
             let previewLines = [];
+            let csvLines = [];
             const timestamp = formatDateSnippet(new Date());
 
             vehicles.forEach(vehicle => {
@@ -606,23 +617,39 @@
                     previewLines.push(`  vin: ${vehicle.vin.trim()}`);
                     previewLines.push(`  items:`);
 
+                    csvLines.push(`Vehicle: ${vehicle.name.trim()}`);
+
                     vehicle.parts.forEach(part => {
                         const pName = part.name.trim() || 'Unnamed Part';
+                        const pNo = part.partNo.trim() || '';
+                        const pMan = part.manufacturer ? part.manufacturer.trim() : '';
                         const status = part.status || 'I';
+                        
                         fullLines.push(`    - ( ${status} )( ${part.qty} ) ${pName}:`);
-                        fullLines.push(`      part_no: ${part.partNo.trim()}`);
+                        fullLines.push(`      part_no: ${pNo}`);
                         fullLines.push(`      inquiries: 1`);
                         fullLines.push(`      last_inquiry: ${timestamp}`);
                         
                         previewLines.push(`    - ( ${part.qty} ) ${pName}:`);
-                        previewLines.push(`      part_no: ${part.partNo.trim()}`);
+                        previewLines.push(`      part_no: ${pNo}`);
+
+                        // CSV Format: "Part Number"," : ","Part Name for Vehicle Name"," : ","Manufacturer"
+                        // Standard CSV escaping for quotes if necessary
+                        const escapeCSV = (str) => str.replace(/"/g, '""');
+                        csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vehicle.name.trim())}"," : ","${escapeCSV(pMan)}"`);
                     });
                 }
             });
 
             yamlDisplay.textContent = previewLines.join('\n');
+            const csvDisplay = document.getElementById('csvDisplay');
+            if (csvDisplay) csvDisplay.textContent = csvLines.join('\n');
+
             yamlHidden.value = fullLines.join('\n');
             yamlHiddenUser.value = previewLines.join('\n');
+            const csvHidden = document.getElementById('last_things_inquired_about_form_csv');
+            if (csvHidden) csvHidden.value = csvLines.join('\n');
+            
             yamlHiddenHtml.value = fullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
             yamlHiddenUserHtml.value = previewLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
         }
