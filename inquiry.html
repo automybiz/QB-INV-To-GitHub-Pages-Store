@@ -218,7 +218,7 @@
     .inquiry-form-container .btn-danger {
         background: #dc3545;
         color: #ffffff !important;
-        padding: 6px 12px;
+        padding: 4px 8px;
         font-size: 0.8rem;
     }
 
@@ -235,8 +235,8 @@
 
     .inquiry-form-container .remove-btn {
         position: absolute;
-        top: 15px;
-        right: 15px;
+        top: 9px;
+        right: 9px;
         z-index: 10;
     }
 
@@ -491,8 +491,8 @@
                 vBlock.className = 'vehicle-block clearfix';
                 vBlock.innerHTML = `
                     <div class="remove-btn-group" style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
-                        ${showRemoveForNow ? `<button type="button" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.7rem; background: #dc3545;" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>` : ''}
-                        ${isInHistory ? `<button type="button" class="btn btn-danger" style="padding: 4px 8px; font-size: 0.7rem; background: #dc3545;" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove From History</button>` : ''}
+                        ${showRemoveForNow ? `<button type="button" class="btn btn-danger" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>` : ''}
+                        ${isInHistory ? `<button type="button" class="btn btn-danger" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove From History</button>` : ''}
                     </div>
                     <div class="row" style="margin-right: 200px;">
                         <div class="form-group" style="flex: 2;">
