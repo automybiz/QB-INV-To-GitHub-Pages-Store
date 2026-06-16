@@ -396,14 +396,14 @@
             <div id="csvDisplay" class="yaml-preview" style="background: #2d2d2d;"></div>
 
             <!-- Hidden textarea for actual form submission to GHL (Full YAML) -->
-            <textarea id="last_things_inquired_about_form_yaml" name="last_things_inquired_about_form_yaml" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_yaml_form" name="last_inquiry_yaml_form" class="hidden-field"></textarea>
             <!-- Hidden textarea for user-facing YAML receipt -->
-            <textarea id="last_things_inquired_about_form_yaml_user" name="last_things_inquired_about_form_yaml_user" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_yaml_form_user" name="last_inquiry_yaml_form_user" class="hidden-field"></textarea>
             <!-- Hidden textarea for GSheets CSV format -->
-            <textarea id="last_things_inquired_about_form_csv" name="last_things_inquired_about_form_csv" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_csv_gsheets_form" name="last_inquiry_csv_gsheets_form" class="hidden-field"></textarea>
             <!-- HTML formatted versions for emails -->
-            <textarea id="last_things_inquired_about_form_yaml_html" name="last_things_inquired_about_form_yaml_html" class="hidden-field"></textarea>
-            <textarea id="last_things_inquired_about_form_yaml_user_html" name="last_things_inquired_about_form_yaml_user_html" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_yaml_form_html" name="last_inquiry_yaml_form_html" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_yaml_form_user_html" name="last_inquiry_yaml_form_user_html" class="hidden-field"></textarea>
         </div>
 
         <!-- Terms -->
@@ -463,10 +463,10 @@
 
         const vehiclesContainer = document.getElementById('vehiclesContainer');
         const yamlDisplay = document.getElementById('yamlDisplay');
-        const yamlHidden = document.getElementById('last_things_inquired_about_form_yaml');
-        const yamlHiddenUser = document.getElementById('last_things_inquired_about_form_yaml_user');
-        const yamlHiddenHtml = document.getElementById('last_things_inquired_about_form_yaml_html');
-        const yamlHiddenUserHtml = document.getElementById('last_things_inquired_about_form_yaml_user_html');
+        const yamlHidden = document.getElementById('last_inquiry_yaml_form');
+        const yamlHiddenUser = document.getElementById('last_inquiry_yaml_form_user');
+        const yamlHiddenHtml = document.getElementById('last_inquiry_yaml_form_html');
+        const yamlHiddenUserHtml = document.getElementById('last_inquiry_yaml_form_user_html');
         const addVehicleBtn = document.getElementById('addVehicle');
         const inquiryForm = document.getElementById('inquiryForm');
         const successMessage = document.getElementById('successMessage');
@@ -687,7 +687,7 @@
 
             yamlHidden.value = fullLines.join('\n');
             yamlHiddenUser.value = previewLines.join('\n');
-            const csvHidden = document.getElementById('last_things_inquired_about_form_csv');
+            const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
             if (csvHidden) csvHidden.value = csvLines.join('\n');
             
             yamlHiddenHtml.value = fullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
