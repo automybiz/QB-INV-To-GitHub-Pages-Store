@@ -794,8 +794,12 @@
             const data = Object.fromEntries(formData.entries());
             
             // WEBHOOK SETUP:
-            // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger.
+            // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger which will immediately generate a Webhook URL.
             // 2. Paste the provided Webhook URL below.
+            // 3. Submit the form and check your GHL Workflow to ensure the data is received correctly.
+            // 4. Then you'll be able to create a Mapping Reference in your Workflow to map the incoming data to your desired fields.
+            //    - Note: You will not be able to save the Inbound Webhook action until you've created a Mapping Reference for the incoming data.
+            
             //const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/55cf9179-31b6-4155-91ab-d08ac507a2ac';
             const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/MoKCyHuGmbjTD1dXDdOZ';
             
