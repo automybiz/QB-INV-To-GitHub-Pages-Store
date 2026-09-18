@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         .inquiry-content {
             padding: 10px 0px;
@@ -258,7 +259,7 @@
         color: #d4d4d4;
         padding: 25px;
         border-radius: 8px;
-        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-family: 'BioRhyme', serif;
         white-space: pre-wrap;
         font-size: 0.9rem;
         max-height: 500px;
@@ -669,9 +670,9 @@
                     fullLines.push(`  vin: ${vehicle.vin.trim()}`);
                     fullLines.push(`  items:`);
                     
-                    previewLines.push(`- vehicle: ${vehicle.name.trim()}`);
-                    previewLines.push(`  vin: ${vehicle.vin.trim()}`);
-                    previewLines.push(`  items:`);
+                    previewLines.push(`- <strong>Vehicle:</strong> ${vehicle.name.trim()}`);
+                    previewLines.push(`  <strong>VIN:</strong> ${vehicle.vin.trim()}`);
+                    previewLines.push(`  <strong>Items:</strong>`);
 
                     csvLines.push(`Vehicle: ${vehicle.name.trim()}`);
 
@@ -686,8 +687,7 @@
                         fullLines.push(`      inquiries: 1`);
                         fullLines.push(`      last_inquiry: ${timestamp}`);
                         
-                        previewLines.push(`    - ( ${part.qty} ) ${pName}:`);
-                        previewLines.push(`      part_no: ${pNo}`);
+                        previewLines.push(`    - <strong>Part No.:</strong> ${pNo} | <strong>Part Name / Description:</strong> ${pName} | <strong>Brand / Manufacturer:</strong> ${pMan} | <strong>Qty:</strong> ${part.qty}`);
 
                         // CSV Format: "Part Number"," : ","Part Name for Vehicle Name"," : ","Manufacturer"
                         // Standard CSV escaping for quotes if necessary
@@ -697,7 +697,7 @@
                 }
             });
 
-            yamlDisplay.textContent = previewLines.join('\n');
+            yamlDisplay.innerHTML = previewLines.join('<br>');
             const csvDisplay = document.getElementById('csvDisplay');
             if (csvDisplay) csvDisplay.textContent = csvLines.join('\n');
 
