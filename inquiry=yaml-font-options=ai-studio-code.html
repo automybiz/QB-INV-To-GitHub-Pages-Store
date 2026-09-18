@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Euro Parts West - 22 Font & Summary Showcase</title>
+
+  <!-- Google Fonts Imports for all 22 Candidates -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=Archivo:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&family=Chakra+Petch:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=Exo+2:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Lexend:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Overpass:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Red+Hat+Display:wght@400;500;700&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Titillium+Web:wght@400;600;700&family=Urbanist:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg-dark: #0d1219;
+      --panel-bg: #121822;
+      --card-bg: #161e2b;
+      --card-border: #222e42;
+      --card-border-active: #0077ff;
+      --cyan-accent: #00b4d8;
+      --blue-accent: #0066cc;
+      --text-main: #f1f5f9;
+      --text-muted: #8e9bb0;
+      --text-dim: #5c6b82;
+      --badge-bg: rgba(0, 180, 216, 0.12);
+      --badge-border: rgba(0, 180, 216, 0.35);
+      --badge-text: #38bdf8;
+      --rec-top: #10b981;
+      --rec-mid: #f59e0b;
+      --rec-low: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at top right, rgba(0, 102, 204, 0.12), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(0, 180, 216, 0.08), transparent 45%);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 30px 20px 80px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Banner */
+    .header-panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title span {
+      color: var(--cyan-accent);
+    }
+
+    .client-quote-box {
+      background: rgba(0, 0, 0, 0.35);
+      border-left: 4px solid var(--cyan-accent);
+      padding: 12px 18px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .client-quote-box strong {
+      color: #fff;
+    }
+
+    /* Filters Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--blue-accent);
+      color: #ffffff;
+      border-color: var(--blue-accent);
+    }
+
+    .counter-badge {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Grid of 22 Examples */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 900px) {
+      .showcase-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Card Styling */
+    .font-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .font-card:hover {
+      border-color: rgba(0, 180, 216, 0.5);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .card-top {
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rank-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .rank-tier-top {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--rec-top);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .rank-tier-mid {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--rec-mid);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .rank-tier-low {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--rec-low);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .font-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card-middle {
+      padding: 18px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .font-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dashed var(--card-border);
+      padding-bottom: 8px;
+    }
+
+    .font-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .font-category {
+      font-size: 11px;
+      color: var(--cyan-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+
+    /* Live Summary Box inside the Card */
+    .summary-preview-box {
+      background: #0f1622;
+      border: 1px solid #1a2536;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 4px;
+    }
+
+    .summary-header-badge {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .summary-vehicle-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .vin-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #cbd5e1;
+      letter-spacing: 0.5px;
+    }
+
+    .items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+
+    .item-desc-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-chip {
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      color: var(--badge-text);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .item-text {
+      font-size: 13.5px;
+      color: #f1f5f9;
+    }
+
+    .part-no-tag {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* Rationale & Quick Action */
+    .card-footer {
+      padding: 12px 18px;
+      background: rgba(0, 0, 0, 0.18);
+      border-top: 1px solid var(--card-border);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: var(--blue-accent);
+      color: #fff;
+      border-color: var(--blue-accent);
+    }
+
+    /* 22 Specific Font Classes */
+    .font-1  { font-family: 'Outfit', sans-serif; }
+    .font-2  { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-3  { font-family: 'Inter', sans-serif; }
+    .font-4  { font-family: 'Manrope', sans-serif; }
+    .font-5  { font-family: 'DM Sans', sans-serif; }
+    .font-6  { font-family: 'Space Grotesk', sans-serif; }
+    .font-7  { font-family: 'Barlow', sans-serif; }
+    .font-8  { font-family: 'Sora', sans-serif; }
+    .font-9  { font-family: 'Titillium Web', sans-serif; }
+    .font-10 { font-family: 'Exo 2', sans-serif; }
+    .font-11 { font-family: 'Chakra Petch', sans-serif; }
+    .font-12 { font-family: 'Rajdhani', sans-serif; }
+    .font-13 { font-family: 'Montserrat', sans-serif; }
+    .font-14 { font-family: 'Archivo', sans-serif; }
+    .font-15 { font-family: 'Red Hat Display', sans-serif; }
+    .font-16 { font-family: 'Urbanist', sans-serif; }
+    .font-17 { font-family: 'Poppins', sans-serif; }
+    .font-18 { font-family: 'Work Sans', sans-serif; }
+    .font-19 { font-family: 'Lexend', sans-serif; }
+    .font-20 { font-family: 'Albert Sans', sans-serif; }
+    .font-21 { font-family: 'Space Mono', monospace; }
+    .font-22 { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header / Brief Recap -->
+  <div class="header-panel">
+    <div class="brand-row">
+      <div class="brand-title">
+        EuroPartsWest.com <span>// Customer-Facing Typography Preview</span>
+      </div>
+      <div class="counter-badge">
+        22 Live Options • Sorted: #1 (Most Recommended) &rarr; #22 (Least)
+      </div>
+    </div>
+    
+    <div class="client-quote-box">
+      <strong>Client Objective:</strong> <em>"Make the summary body customer-facing (Title Case labels, cleaner spacing, less raw key:value / code style)"</em>.
+      <br />
+      Below are 22 curated typeface pairings loaded in real-time, matching your dark automotive UI. Click <strong>Copy CSS</strong> on your favorite option to grab the snippet immediately.
+    </div>
+  </div>
+
+  <!-- Filter Toggles -->
+  <div class="filter-bar">
+    <div class="filter-pills">
+      <button class="filter-btn active" onclick="filterTier('all')">All 22 Fonts</button>
+      <button class="filter-btn" onclick="filterTier('top')">Top Tier Recommendations (#1 - #8)</button>
+      <button class="filter-btn" onclick="filterTier('automotive')">Motorsport & Tech Grotesque (#9 - #15)</button>
+      <button class="filter-btn" onclick="filterTier('humanist')">Modern Clean (#16 - #20)</button>
+      <button class="filter-btn" onclick="filterTier('mono')">Monospace / Code Hybrid (#21 - #22)</button>
+    </div>
+  </div>
+
+  <!-- 22 Live Examples Grid -->
+  <div class="showcase-grid" id="grid">
+
+    <!-- #1 OUTFIT -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#1 Most Recommended</span>
+        <span class="font-meta">Google Font • Weight: 400, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Outfit</span>
+          <span class="font-category">Geometric Luxury</span>
+        </div>
+        <div class="summary-preview-box font-1">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Modern European automotive aesthetic; matches Porsche/Audi infotainment curves.</span>
+        <button class="copy-btn" onclick="copyCSS('Outfit', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #2 PLUS JAKARTA SANS -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#2 Highly Recommended</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Plus Jakarta Sans</span>
+          <span class="font-category">Modern Premium UI</span>
+        </div>
+        <div class="summary-preview-box font-2">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Crisp geometric warmth, extremely sharp on dark mode screens, premium customer feel.</span>
+        <button class="copy-btn" onclick="copyCSS('Plus Jakarta Sans', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #3 INTER -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#3 Highly Recommended</span>
+        <span class="font-meta">Google Font • Weight: 400, 500, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Inter</span>
+          <span class="font-category">Clean Contemporary Standard</span>
+        </div>
+        <div class="summary-preview-box font-3">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Flawless readability, tall x-height, tabular numerals, 100% neutral and professional.</span>
+        <button class="copy-btn" onclick="copyCSS('Inter', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #4 MANROPE -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#4 Highly Recommended</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Manrope</span>
+          <span class="font-category">Semi-Geometric Precision</span>
+        </div>
+        <div class="summary-preview-box font-4">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Rounded yet executive feel; gives automotive parts lists a bespoke bespoke showroom vibe.</span>
+        <button class="copy-btn" onclick="copyCSS('Manrope', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #5 DM SANS -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#5 Top Recommendation</span>
+        <span class="font-meta">Google Font • Weight: 400, 500, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">DM Sans</span>
+          <span class="font-category">Low-Contrast Minimalist</span>
+        </div>
+        <div class="summary-preview-box font-5">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Clean, high-legibility geometry that avoids looking dense or complicated.</span>
+        <button class="copy-btn" onclick="copyCSS('DM Sans', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #6 SPACE GROTESK -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#6 Top Recommendation</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Space Grotesk</span>
+          <span class="font-category">Engineered Proportional</span>
+        </div>
+        <div class="summary-preview-box font-6">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Retains high-tech engineering DNA while delivering proportional, customer-friendly spacing.</span>
+        <button class="copy-btn" onclick="copyCSS('Space Grotesk', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #7 BARLOW -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#7 Top Recommendation</span>
+        <span class="font-meta">Google Font • Weight: 400, 500, 600</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Barlow</span>
+          <span class="font-category">Industrial & Automotive</span>
+        </div>
+        <div class="summary-preview-box font-7">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Inspired by California highway signs and automotive plates; slightly condensed and sturdy.</span>
+        <button class="copy-btn" onclick="copyCSS('Barlow', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #8 SORA -->
+    <div class="font-card" data-tier="top">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-top">#8 Top Recommendation</span>
+        <span class="font-meta">Google Font • Weight: 400, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Sora</span>
+          <span class="font-category">Digital Cockpit UI</span>
+        </div>
+        <div class="summary-preview-box font-8">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Engineered explicitly for micro-interfaces and high-contrast digital displays.</span>
+        <button class="copy-btn" onclick="copyCSS('Sora', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #9 TITILLIUM WEB -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#9 Automotive Classic</span>
+        <span class="font-meta">Google Font • Weight: 400, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Titillium Web</span>
+          <span class="font-category">Italian Industrial Design</span>
+        </div>
+        <div class="summary-preview-box font-9">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Born from the Master of Visual Design in Milan; quintessential European motorsport look.</span>
+        <button class="copy-btn" onclick="copyCSS('Titillium Web', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #10 EXO 2 -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#10 Motorsport Aero</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Exo 2</span>
+          <span class="font-category">Aerodynamic Performance</span>
+        </div>
+        <div class="summary-preview-box font-10">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Subtle curves convey high speed and aerodynamic tuning without sacrificing legibility.</span>
+        <button class="copy-btn" onclick="copyCSS('Exo 2', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #11 CHAKRA PETCH -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#11 Tuner & Performance</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Chakra Petch</span>
+          <span class="font-category">Chamfered Tech</span>
+        </div>
+        <div class="summary-preview-box font-11">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Distinct 45-degree chamfered corners reminiscent of forged aftermarket wheels.</span>
+        <button class="copy-btn" onclick="copyCSS('Chakra Petch', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #12 RAJDHANI -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#12 Telemetry HUD</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Rajdhani</span>
+          <span class="font-category">Square Condensed</span>
+        </div>
+        <div class="summary-preview-box font-12">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Compact digital cluster gauge styling; excellent if parts lists are long and space is tight.</span>
+        <button class="copy-btn" onclick="copyCSS('Rajdhani', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #13 MONTSERRAT -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#13 Bold Corporate</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Montserrat</span>
+          <span class="font-category">Sturdy Geometric</span>
+        </div>
+        <div class="summary-preview-box font-13">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Widely trusted automotive branding staple, powerful presence, wide proportions.</span>
+        <button class="copy-btn" onclick="copyCSS('Montserrat', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #14 ARCHIVO -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#14 Heavy Grotesque</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Archivo</span>
+          <span class="font-category">Industrial Workhorse</span>
+        </div>
+        <div class="summary-preview-box font-14">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Heavy-duty mechanical feel; conveys solid parts manufacturing and technical reliability.</span>
+        <button class="copy-btn" onclick="copyCSS('Archivo', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #15 RED HAT DISPLAY -->
+    <div class="font-card" data-tier="automotive">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#15 Structured Grotesk</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Red Hat Display</span>
+          <span class="font-category">Sharp Enterprise</span>
+        </div>
+        <div class="summary-preview-box font-15">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Highly structured display font engineered for clarity on complex technical dashboards.</span>
+        <button class="copy-btn" onclick="copyCSS('Red Hat Display', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #16 URBANIST -->
+    <div class="font-card" data-tier="humanist">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#16 Modern Minimal</span>
+        <span class="font-meta">Google Font • Weight: 500, 600, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Urbanist</span>
+          <span class="font-category">Clean Architectural</span>
+        </div>
+        <div class="summary-preview-box font-16">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Highly geometric, clean, modern luxury lines; very crisp on high-resolution displays.</span>
+        <button class="copy-btn" onclick="copyCSS('Urbanist', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #17 POPPINS -->
+    <div class="font-card" data-tier="humanist">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#17 Friendly Approachable</span>
+        <span class="font-meta">Google Font • Weight: 500, 600</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Poppins</span>
+          <span class="font-category">Rounded Geometric</span>
+        </div>
+        <div class="summary-preview-box font-17">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Extremely friendly and customer-centric, though slightly less "motorsport/luxury" than Outfit.</span>
+        <button class="copy-btn" onclick="copyCSS('Poppins', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #18 WORK SANS -->
+    <div class="font-card" data-tier="humanist">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#18 Utilitarian</span>
+        <span class="font-meta">Google Font • Weight: 400, 500, 600</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Work Sans</span>
+          <span class="font-category">Neutral Humanist</span>
+        </div>
+        <div class="summary-preview-box font-18">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Extremely reliable across legacy devices and screens, steady and work-ready.</span>
+        <button class="copy-btn" onclick="copyCSS('Work Sans', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #19 LEXEND -->
+    <div class="font-card" data-tier="humanist">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#19 Ultra-Legible</span>
+        <span class="font-meta">Google Font • Weight: 400, 500, 600</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Lexend</span>
+          <span class="font-category">High-Speed Reading</span>
+        </div>
+        <div class="summary-preview-box font-19">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Scientifically designed to reduce cognitive strain when reviewing part numbers and data.</span>
+        <button class="copy-btn" onclick="copyCSS('Lexend', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #20 ALBERT SANS -->
+    <div class="font-card" data-tier="humanist">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-mid">#20 Modern Scandinavian</span>
+        <span class="font-meta">Google Font • Weight: 400, 500, 600</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Albert Sans</span>
+          <span class="font-category">Clean Geometric</span>
+        </div>
+        <div class="summary-preview-box font-20">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Precise modernist lines, balanced letter spacing, uncluttered presentation.</span>
+        <button class="copy-btn" onclick="copyCSS('Albert Sans', sans-serif)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #21 SPACE MONO -->
+    <div class="font-card" data-tier="mono">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-low">#21 Technical Monospace</span>
+        <span class="font-meta">Google Font • Weight: 400, 700</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">Space Mono</span>
+          <span class="font-category">Styled Monospaced</span>
+        </div>
+        <div class="summary-preview-box font-21">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> A bridge for clients who want a slight "engineer/ECU" flavor, but with Title Case structure.</span>
+        <button class="copy-btn" onclick="copyCSS('Space Mono', monospace)">Copy CSS</button>
+      </div>
+    </div>
+
+    <!-- #22 JETBRAINS MONO -->
+    <div class="font-card" data-tier="mono">
+      <div class="card-top">
+        <span class="rank-tag rank-tier-low">#22 Least Recommended</span>
+        <span class="font-meta">Google Font • Weight: 400, 600</span>
+      </div>
+      <div class="card-middle">
+        <div class="font-title-row">
+          <span class="font-name">JetBrains Mono</span>
+          <span class="font-category">Pure Code Terminal</span>
+        </div>
+        <div class="summary-preview-box font-22">
+          <div class="summary-header-badge">
+            <span class="summary-vehicle-title">2024 Porsche 911</span>
+            <span class="vin-pill">VIN: 123123123</span>
+          </div>
+          <div class="items-container">
+            <div class="item-row">
+              <div class="item-desc-wrap">
+                <span class="qty-chip">Qty 4</span>
+                <span class="item-text">Rims BBS 20 Inch Chrome</span>
+              </div>
+              <span class="part-no-tag">Part #: Not Provided</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><strong>Why:</strong> Beautiful developer font, but risks violating the client's direct rule: <em>"less raw key:value / code style"</em>.</span>
+        <button class="copy-btn" onclick="copyCSS('JetBrains Mono', monospace)">Copy CSS</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function filterTier(tier) {
+    // Update active button state
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Filter cards
+    const cards = document.querySelectorAll('.font-card');
+    cards.forEach(card => {
+      if (tier === 'all' || card.getAttribute('data-tier') === tier) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function copyCSS(fontFamily, fallback) {
+    const snippet = `font-family: '${fontFamily}', ${fallback};`;
+    navigator.clipboard.writeText(snippet).then(() => {
+      const btn = event.target;
+      const originalText = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.style.backgroundColor = '#10b981';
+      btn.style.borderColor = '#10b981';
+      btn.style.color = '#ffffff';
+
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.backgroundColor = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 1600);
+    });
+  }
+</script>
+
+</body>
+</html>
