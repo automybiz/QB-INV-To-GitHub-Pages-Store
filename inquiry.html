@@ -252,28 +252,11 @@
         z-index: 10;
     }
 
-    /* BioRhyme font styling with bold keys and normal values */
-    .inquiry-form-container .yaml-preview {
+    /* Inquiry Summary Preview Container */
+    .inquiry-form-container .summary-preview-wrap {
         margin-top: 0px;
-        background: #1e1e1e;
-        color: #d4d4d4;
-        padding: 25px;
         border-radius: 8px;
-        font-family: 'BioRhyme', serif;
-        font-weight: 400;
-        white-space: pre-wrap;
-        font-size: 0.92rem;
-        max-height: 500px;
-        overflow-y: auto;
-        border: 1px solid #333;
-        line-height: 1.7;
-    }
-
-    .inquiry-form-container .yaml-preview strong,
-    .inquiry-form-container .yaml-preview b {
-        font-family: 'BioRhyme', serif;
-        font-weight: 700;
-        color: #ffffff;
+        overflow: hidden;
     }
 
     .inquiry-form-container .yaml-label {
@@ -408,19 +391,14 @@
             <!-- Vehicle blocks will be added here -->
         </div>
 
-        <!-- YAML Output (BioRhyme font preview) -->
+        <!-- User-Facing HTML Inquiry Summary Display -->
         <div class="form-group" style="margin-top: 10px;">
             <label class="yaml-label">Inquiry Summary</label>
-            <div id="yamlDisplay" class="yaml-preview"></div>
-            
-            <div class="hidden-field">
-                <label class="yaml-label" style="margin-top: 10px;">GSheets CSV Format (Preview)</label>
-                <div id="csvDisplay" class="yaml-preview" style="background: #2d2d2d;"></div>
-            </div>
+            <div id="summaryDisplay" class="summary-preview-wrap"></div>
 
-            <!-- Hidden textarea for actual form submission to GHL (Full YAML) -->
+            <!-- Hidden textarea for actual form submission to GHL (Full Internal YAML) -->
             <textarea id="last_inquiry_yaml_form" name="last_inquiry_yaml_form" class="hidden-field"></textarea>
-            <!-- Hidden textarea for user-facing YAML receipt -->
+            <!-- Hidden textarea for user-facing YAML receipt (No inquiries or last_inquiry) -->
             <textarea id="last_inquiry_yaml_form_user" name="last_inquiry_yaml_form_user" class="hidden-field"></textarea>
             <!-- Hidden textarea for GSheets CSV format -->
             <textarea id="last_inquiry_csv_gsheets_form" name="last_inquiry_csv_gsheets_form" class="hidden-field"></textarea>
@@ -486,7 +464,7 @@
         }
 
         const vehiclesContainer = document.getElementById('vehiclesContainer');
-        const yamlDisplay = document.getElementById('yamlDisplay');
+        const summaryDisplay = document.getElementById('summaryDisplay');
         const yamlHidden = document.getElementById('last_inquiry_yaml_form');
         const yamlHiddenUser = document.getElementById('last_inquiry_yaml_form_user');
         const yamlHiddenHtml = document.getElementById('last_inquiry_yaml_form_html');
@@ -680,11 +658,10 @@
         }
 
         function generateYAMLSnippet() {
-            let yamlFullLines = [];       // Plain text official YAML for last_inquiry_yaml_form
-            let yamlUserLines = [];       // Plain text official YAML for last_inquiry_yaml_form_user
-            let previewLines = [];        // BioRhyme HTML preview with bold keys and normal values
+            let yamlFullLines = [];       // Plain text official YAML for last_inquiry_yaml_form (Admin)
+            let yamlUserLines = [];       // Plain text official YAML for last_inquiry_yaml_form_user (User - No inquiries/last_inquiry)
             let htmlFullParts = [];       // Rich HTML email block for Admin
-            let htmlUserParts = [];       // Rich HTML email block for User
+            let htmlUserParts = [];       // Rich HTML card block for User and On-Screen Summary
             let csvLines = [];
             const timestamp = formatDateSnippet(new Date());
 
@@ -693,98 +670,81 @@
                 const vVin = vehicle.vin.trim();
 
                 if (vName) {
-                    // 1. Official YAML (Full Form): lowercase keys with underscores
+                    // 1. Official Internal YAML (Admin)
                     yamlFullLines.push(`- vehicle: ${vName}`);
                     yamlFullLines.push(`  vin: ${vVin}`);
                     yamlFullLines.push(`  items:`);
 
-                    // 2. Official YAML (User): lowercase keys with underscores
+                    // 2. Official User YAML (Cleaned of inquiries & last_inquiry)
                     yamlUserLines.push(`- vehicle: ${vName}`);
                     yamlUserLines.push(`  vin: ${vVin}`);
                     yamlUserLines.push(`  items:`);
 
-                    // 3. BioRhyme YAML Preview (Bold Keys, Normal Values)
-                    previewLines.push(`- <strong>vehicle:</strong> ${escapeHtml(vName)}`);
-                    previewLines.push(`  <strong>vin:</strong> ${escapeHtml(vVin)}`);
-                    previewLines.push(`  <strong>items:</strong>`);
-
                     // CSV
                     csvLines.push(`Vehicle: ${vName}`);
 
-                    // 4. HTML Friendly email blocks
-                    let vHtmlAdmin = `
-<div style="margin-bottom: 20px; font-family: 'Inter', Arial, sans-serif;">
+                    // 3. User HTML Card for Vehicle
+                    let vHtmlUser = `
+<div style="margin-bottom: 20px;">
     <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
-        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.9rem; font-weight: normal; color: #a0a0a0;">(VIN: ${escapeHtml(vVin)})</span>` : ''}
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: #a0a0a0; margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
     </div>
     <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
 `;
 
-                    let vHtmlUser = `
-<div style="margin-bottom: 20px; font-family: 'Inter', Arial, sans-serif;">
+                    // 4. Admin HTML Email for Vehicle
+                    let vHtmlAdmin = `
+<div style="margin-bottom: 20px;">
     <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
-        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.9rem; font-weight: normal; color: #a0a0a0;">(VIN: ${escapeHtml(vVin)})</span>` : ''}
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: #a0a0a0; margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
     </div>
     <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
 `;
 
                     vehicle.parts.forEach(part => {
-                        const pName = part.name.trim() || 'Unnamed Part';
-                        const pNo = part.partNo.trim() || '';
+                        const rawName = part.name.trim() || 'Unnamed Part';
                         const pMan = part.manufacturer ? part.manufacturer.trim() : '';
+                        
+                        // Clean merged product name (Brand integrated if not already present)
+                        let pName = rawName;
+                        if (pMan && !pName.toLowerCase().includes(pMan.toLowerCase())) {
+                            pName = `${pName} ${pMan}`;
+                        }
+
+                        const pNo = part.partNo.trim() || '';
                         const pQty = part.qty || 1;
                         const pStatus = part.status || 'I';
 
-                        // Official Full YAML
+                        // Official Full Internal YAML
                         yamlFullLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
                         yamlFullLines.push(`        part_no: ${pNo}`);
-                        if (pMan) {
-                            yamlFullLines.push(`        brand_manufacturer: ${pMan}`);
-                        }
                         yamlFullLines.push(`        inquiries: 1`);
                         yamlFullLines.push(`        last_inquiry: ${timestamp}`);
 
-                        // Official User YAML
+                        // Official User YAML (No inquiries, no last_inquiry, no brand_manufacturer)
                         yamlUserLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
                         yamlUserLines.push(`        part_no: ${pNo}`);
-                        if (pMan) {
-                            yamlUserLines.push(`        brand_manufacturer: ${pMan}`);
-                        }
-                        yamlUserLines.push(`        inquiries: 1`);
-                        yamlUserLines.push(`        last_inquiry: ${timestamp}`);
 
-                        // BioRhyme YAML Preview (Bold Keys, Normal Values)
-                        previewLines.push(`    - <strong>( ${pStatus} x ${pQty} ) ${escapeHtml(pName)}:</strong>`);
-                        previewLines.push(`        <strong>part_no:</strong> ${escapeHtml(pNo)}`);
-                        if (pMan) {
-                            previewLines.push(`        <strong>brand_manufacturer:</strong> ${escapeHtml(pMan)}`);
-                        }
-                        previewLines.push(`        <strong>inquiries:</strong> 1`);
-                        previewLines.push(`        <strong>last_inquiry:</strong> ${timestamp}`);
-
-                        // Admin Friendly HTML
-                        vHtmlAdmin += `
-    <div style="margin-bottom: 16px; padding-left: 8px;">
-        <div style="margin-bottom: 8px;">
-            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 2px 10px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08); margin-right: 8px;">INQUIRY: 1</span>
-            <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
-        </div>
-        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
-        ${pMan ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🏷️ <strong>Brand:</strong> ${escapeHtml(pMan)}</div>` : ''}
-        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">📊 <strong>Inquiries:</strong> 1</div>
-        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
-    </div>`;
-
-                        // User Friendly HTML
+                        // User HTML Item (Matching Screenshot layout)
                         vHtmlUser += `
     <div style="margin-bottom: 16px; padding-left: 8px;">
-        <div style="margin-bottom: 8px;">
-            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 2px 10px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08); margin-right: 8px;">QTY: ${pQty}</span>
+        <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08);">QTY: ${pQty}</span>
             <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
         </div>
-        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
-        ${pMan ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🏷️ <strong>Brand:</strong> ${escapeHtml(pMan)}</div>` : ''}
-        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">⏰ <strong>Inquiry Date:</strong> ${timestamp}</div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+    </div>`;
+
+                        // Admin HTML Item (Includes tracking counters)
+                        vHtmlAdmin += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08);">INQUIRY: 1</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">📊 <strong>Inquiries:</strong> 1</div>
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
     </div>`;
 
                         // CSV Format
@@ -792,44 +752,43 @@
                         csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
                     });
 
-                    vHtmlAdmin += `</div>`;
                     vHtmlUser += `</div>`;
+                    vHtmlAdmin += `</div>`;
 
-                    htmlFullParts.push(vHtmlAdmin);
                     htmlUserParts.push(vHtmlUser);
+                    htmlFullParts.push(vHtmlAdmin);
                 }
             });
 
-            // Display in BioRhyme with Bold YAML Keys & Normal Values
-            yamlDisplay.innerHTML = previewLines.join('\n');
+            // Card template for user-facing HTML (Shown on page & sent in user email)
+            const userCardHtml = `
+<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
+    <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
+        📋 Inquiry Summary
+    </div>
+    ${htmlUserParts.length > 0 ? htmlUserParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
+</div>`;
 
-            const csvDisplay = document.getElementById('csvDisplay');
-            if (csvDisplay) csvDisplay.textContent = csvLines.join('\n');
+            // Card template for admin HTML email
+            const adminCardHtml = `
+<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
+    <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
+        📋 Product Inquiry Data
+    </div>
+    ${htmlFullParts.length > 0 ? htmlFullParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
+</div>`;
 
-            // Pure, official YAML strings (clean lower case keys with underscores)
+            // Render the User HTML directly into the on-page summary
+            summaryDisplay.innerHTML = userCardHtml;
+
+            // Pure, official YAML strings (clean lowercase keys with underscores)
             yamlHidden.value = yamlFullLines.join('\n');
             yamlHiddenUser.value = yamlUserLines.join('\n');
 
             const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
             if (csvHidden) csvHidden.value = csvLines.join('\n');
             
-            // Styled user-friendly HTML formatted strings for email notifications (matching Screenshot 2 layout)
-            const adminCardHtml = `
-<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 20px; font-family: 'Inter', Arial, sans-serif; max-width: 650px;">
-    <div style="border-bottom: 2px solid #009999; padding-bottom: 10px; margin-bottom: 18px; font-weight: 700; font-size: 1.1rem; color: #00ffff;">
-        📋 Inquiry Data Details
-    </div>
-    ${htmlFullParts.join('')}
-</div>`;
-
-            const userCardHtml = `
-<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 20px; font-family: 'Inter', Arial, sans-serif; max-width: 650px;">
-    <div style="border-bottom: 2px solid #009999; padding-bottom: 10px; margin-bottom: 18px; font-weight: 700; font-size: 1.1rem; color: #00ffff;">
-        📋 Product Inquiry Summary
-    </div>
-    ${htmlUserParts.join('')}
-</div>`;
-
+            // HTML formatted versions for webhook
             yamlHiddenHtml.value = adminCardHtml;
             yamlHiddenUserHtml.value = userCardHtml;
         }
@@ -984,11 +943,9 @@
     </footer>
 
     <script src="assets/js/app.js"></script>
-<!--
-        <script src="https://widgets.leadconnectorhq.com/loader.js" 
+
+    <script src="https://widgets.leadconnectorhq.com/loader.js" 
             data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" 
             data-widget-id="6aac1b9dce16b8058881fe32"></script>
--->
-
 </body>
 </html>
