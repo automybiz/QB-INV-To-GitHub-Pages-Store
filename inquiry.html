@@ -179,7 +179,7 @@
     }
 
     .inquiry-form-container .part-block {
-        border-left: 4px solid var(--border); /* Changed to Blue as requested */
+        border-left: 4px solid var(--border);
         padding: 10px 10px 0px 5px;
         margin: 15px 0 15px 25px;
         background: var(--white);
@@ -260,12 +260,20 @@
         padding: 25px;
         border-radius: 8px;
         font-family: 'BioRhyme', serif;
+        font-weight: 400;
         white-space: pre-wrap;
         font-size: 0.9rem;
         max-height: 500px;
         overflow-y: auto;
         border: 1px solid #333;
-        line-height: 1.5;
+        line-height: 1.6;
+    }
+
+    .inquiry-form-container .yaml-preview strong,
+    .inquiry-form-container .yaml-preview b {
+        font-family: 'BioRhyme', serif;
+        font-weight: 700;
+        color: #ffffff;
     }
 
     .inquiry-form-container .yaml-label {
@@ -452,7 +460,6 @@
         if (storedVehicles) {
             try {
                 const parsed = JSON.parse(storedVehicles);
-                // Only load vehicles that have at least one field filled
                 vehicles = parsed.filter(v => 
                     (v.name && v.name.trim() !== '') || 
                     (v.vin && v.vin.trim() !== '') || 
@@ -493,7 +500,6 @@
         function renderVehicles() {
             vehiclesContainer.innerHTML = '';
             
-            // Get history to check if button should show
             let history = [];
             try {
                 const stored = localStorage.getItem('persistent_vehicles');
@@ -580,10 +586,8 @@
 
         window.removeVehiclePermanentlySnippet = function(vId) {
             if (confirm("Are you sure you want to remove this vehicle from your history permanently?")) {
-                // Remove from current view
                 vehicles = vehicles.filter(v => v.id !== vId);
                 
-                // If we removed the last one, add a fresh one
                 if (vehicles.length === 0) {
                     vehicles.push({
                         id: Date.now(),
@@ -593,7 +597,6 @@
                     });
                 }
 
-                // Update persistent storage
                 let history = [];
                 try {
                     const stored = localStorage.getItem('persistent_vehicles');
@@ -658,59 +661,123 @@
             return `${datePart} at ${timePart}`;
         }
 
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         function generateYAMLSnippet() {
-            let fullLines = [];
-            let previewLines = [];
+            let yamlFullLines = [];       // Plain text official YAML for last_inquiry_yaml_form
+            let yamlUserLines = [];       // Plain text official YAML for last_inquiry_yaml_form_user
+            let previewLines = [];        // Formatted for yamlDisplay (BioRhyme, Bold YAML keys, Normal values)
+            let htmlFullLines = [];       // User-friendly HTML for email
+            let htmlUserLines = [];       // User-friendly HTML for email
             let csvLines = [];
             const timestamp = formatDateSnippet(new Date());
 
             vehicles.forEach(vehicle => {
-                if (vehicle.name.trim()) {
-                    fullLines.push(`- vehicle: ${vehicle.name.trim()}`);
-                    fullLines.push(`  vin: ${vehicle.vin.trim()}`);
-                    fullLines.push(`  items:`);
-                    
-                    previewLines.push(`- <strong>Vehicle:</strong> ${vehicle.name.trim()}`);
-                    previewLines.push(`  <strong>VIN:</strong> ${vehicle.vin.trim()}`);
-                    previewLines.push(`  <strong>Items:</strong>`);
+                const vName = vehicle.name.trim();
+                const vVin = vehicle.vin.trim();
 
-                    csvLines.push(`Vehicle: ${vehicle.name.trim()}`);
+                if (vName) {
+                    // Official YAML (Full Form)
+                    yamlFullLines.push(`- vehicle: ${vName}`);
+                    yamlFullLines.push(`  vin: ${vVin}`);
+                    yamlFullLines.push(`  items:`);
+
+                    // Official YAML (User)
+                    yamlUserLines.push(`- vehicle: ${vName}`);
+                    yamlUserLines.push(`  vin: ${vVin}`);
+                    yamlUserLines.push(`  items:`);
+
+                    // BioRhyme YAML Preview with Bold Keys & Normal Values
+                    previewLines.push(`- <strong>vehicle:</strong> ${escapeHtml(vName)}`);
+                    previewLines.push(`  <strong>vin:</strong> ${escapeHtml(vVin)}`);
+                    previewLines.push(`  <strong>items:</strong>`);
+
+                    // Friendly HTML Email Formats
+                    htmlUserLines.push(`- <strong>Vehicle:</strong> ${escapeHtml(vName)}`);
+                    htmlUserLines.push(`  <strong>VIN:</strong> ${escapeHtml(vVin)}`);
+                    htmlUserLines.push(`  <strong>Items:</strong>`);
+
+                    htmlFullLines.push(`- <strong>Vehicle:</strong> ${escapeHtml(vName)}`);
+                    htmlFullLines.push(`  <strong>VIN:</strong> ${escapeHtml(vVin)}`);
+                    htmlFullLines.push(`  <strong>Items:</strong>`);
+
+                    // CSV
+                    csvLines.push(`Vehicle: ${vName}`);
 
                     vehicle.parts.forEach(part => {
                         const pName = part.name.trim() || 'Unnamed Part';
                         const pNo = part.partNo.trim() || '';
                         const pMan = part.manufacturer ? part.manufacturer.trim() : '';
-                        const status = part.status || 'I';
-                        
-                        fullLines.push(`    - ( ${status} )( ${part.qty} ) ${pName}:`);
-                        fullLines.push(`      part_no: ${pNo}`);
-                        fullLines.push(`      inquiries: 1`);
-                        fullLines.push(`      last_inquiry: ${timestamp}`);
-                        
-                        previewLines.push(`    - <strong>Part No.:</strong> ${pNo}`);
-                        previewLines.push(`      <strong>Part Name / Description:</strong> ${pName}`);
-                        previewLines.push(`      <strong>Brand / Manufacturer:</strong> ${pMan}`);
-                        previewLines.push(`      <strong>Qty:</strong> ${part.qty}`);
+                        const pQty = part.qty || 1;
+                        const pStatus = part.status || 'I';
 
-                        // CSV Format: "Part Number"," : ","Part Name for Vehicle Name"," : ","Manufacturer"
-                        // Standard CSV escaping for quotes if necessary
+                        // 1. Official YAML (Full Form)
+                        yamlFullLines.push(`    - part_no: ${pNo}`);
+                        yamlFullLines.push(`      part_name_description: ${pName}`);
+                        yamlFullLines.push(`      brand_manufacturer: ${pMan}`);
+                        yamlFullLines.push(`      qty: ${pQty}`);
+                        yamlFullLines.push(`      status: ${pStatus}`);
+                        yamlFullLines.push(`      inquiries: 1`);
+                        yamlFullLines.push(`      last_inquiry: ${timestamp}`);
+
+                        // 2. Official YAML (User)
+                        yamlUserLines.push(`    - part_no: ${pNo}`);
+                        yamlUserLines.push(`      part_name_description: ${pName}`);
+                        yamlUserLines.push(`      brand_manufacturer: ${pMan}`);
+                        yamlUserLines.push(`      qty: ${pQty}`);
+
+                        // 3. YAML Preview (Bold YAML Keys, Normal Values)
+                        previewLines.push(`    - <strong>part_no:</strong> ${escapeHtml(pNo)}`);
+                        previewLines.push(`      <strong>part_name_description:</strong> ${escapeHtml(pName)}`);
+                        previewLines.push(`      <strong>brand_manufacturer:</strong> ${escapeHtml(pMan)}`);
+                        previewLines.push(`      <strong>qty:</strong> ${pQty}`);
+
+                        // 4. Friendly HTML (User Email)
+                        htmlUserLines.push(`    - <strong>Part No.:</strong> ${escapeHtml(pNo)}`);
+                        htmlUserLines.push(`      <strong>Part Name / Description:</strong> ${escapeHtml(pName)}`);
+                        htmlUserLines.push(`      <strong>Brand / Manufacturer:</strong> ${escapeHtml(pMan)}`);
+                        htmlUserLines.push(`      <strong>Qty:</strong> ${pQty}`);
+
+                        // 5. Friendly HTML (Admin Email)
+                        htmlFullLines.push(`    - <strong>Part No.:</strong> ${escapeHtml(pNo)}`);
+                        htmlFullLines.push(`      <strong>Part Name / Description:</strong> ${escapeHtml(pName)}`);
+                        htmlFullLines.push(`      <strong>Brand / Manufacturer:</strong> ${escapeHtml(pMan)}`);
+                        htmlFullLines.push(`      <strong>Qty:</strong> ${pQty}`);
+                        htmlFullLines.push(`      <strong>Status:</strong> ${pStatus}`);
+                        htmlFullLines.push(`      <strong>Inquiries:</strong> 1`);
+                        htmlFullLines.push(`      <strong>Last Inquiry:</strong> ${timestamp}`);
+
+                        // 6. CSV Format
                         const escapeCSV = (str) => str.replace(/"/g, '""');
-                        csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vehicle.name.trim())}"," : ","${escapeCSV(pMan)}"`);
+                        csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
                     });
                 }
             });
 
-            yamlDisplay.innerHTML = previewLines.join('<br>');
+            // Display in BioRhyme with Bold YAML Keys & Normal Values
+            yamlDisplay.innerHTML = previewLines.join('\n');
+
             const csvDisplay = document.getElementById('csvDisplay');
             if (csvDisplay) csvDisplay.textContent = csvLines.join('\n');
 
-            yamlHidden.value = fullLines.join('\n');
-            yamlHiddenUser.value = previewLines.join('\n');
+            // Pure, official YAML strings (no HTML tags)
+            yamlHidden.value = yamlFullLines.join('\n');
+            yamlHiddenUser.value = yamlUserLines.join('\n');
+
             const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
             if (csvHidden) csvHidden.value = csvLines.join('\n');
             
-            yamlHiddenHtml.value = fullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
-            yamlHiddenUserHtml.value = previewLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
+            // User-friendly HTML formatted strings for email notifications
+            yamlHiddenHtml.value = htmlFullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
+            yamlHiddenUserHtml.value = htmlUserLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
         }
 
         // Add hidden field for source
@@ -726,7 +793,6 @@
         // --- Sticky Fields Logic ---
         const stickyFields = ['first_name', 'last_name', 'email', 'phone', 'terms'];
         
-        // Load stored values on page load
         stickyFields.forEach(fieldId => {
             const storedValue = localStorage.getItem('sticky_' + fieldId);
             if (storedValue) {
@@ -747,7 +813,6 @@
             const firstVehicleInput = document.querySelector('input[placeholder="e.g. Porsche 911 1988"]');
             if (firstVehicleInput) {
                 firstVehicleInput.value = storedVehicle;
-                // Update the state as well
                 if (vehicles[0]) vehicles[0].name = storedVehicle;
             }
         }
@@ -769,7 +834,6 @@
             phoneInput.addEventListener('input', function(e) {
                 let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
                 if (e.target.value.startsWith('+')) {
-                    // Keep international format if starts with +
                     e.target.value = '+' + e.target.value.replace(/\D/g, '');
                 } else {
                     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
@@ -812,25 +876,14 @@
             const formData = new FormData(inquiryForm);
             const data = Object.fromEntries(formData.entries());
             
-            // WEBHOOK SETUP:
-            // 1. Create a Workflow in GHL with an "Inbound Webhook" trigger which will immediately generate a Webhook URL.
-            // 2. Paste the provided Webhook URL below.
-            // 3. Submit the form and check your GHL Workflow to ensure the data is received correctly.
-            // 4. Then you'll be able to create a Mapping Reference in your Workflow to map the incoming data to your desired fields.
-            //    - Note: You will not be able to save the Inbound Webhook action until you've created a Mapping Reference for the incoming data.
-            
-            //const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/55cf9179-31b6-4155-91ab-d08ac507a2ac';
-            //const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/MoKCyHuGmbjTD1dXDdOZ';
             const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/6bdeea4e-6b4e-49f7-afef-dd77d3bd3dfd';
 
             try {
-                // Check if Webhook URL is set
                 if (webhookUrl === 'REPLACE_WITH_YOUR_GHL_WEBHOOK_URL') {
                     alert('Configuration Error: Please provide a valid GHL Webhook URL in the script.');
                     return;
                 }
 
-                // Webhooks don't require 'no-cors' and actually return helpful error messages
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 
@@ -840,7 +893,6 @@
                 });
 
                 if (response.ok) {
-                    // Hide form and show success message
                     inquiryForm.style.display = 'none';
                     document.querySelector('.inquiry-form-container .header').style.display = 'none';
                     successMessage.style.display = 'block';
@@ -866,7 +918,6 @@
         }
     })();
 </script>
-                
                 <!-- EMBEDDED FORM SNIPPET END -->
             </div>
         </section>
