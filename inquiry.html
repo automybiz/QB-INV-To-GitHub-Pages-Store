@@ -425,7 +425,7 @@
             <input type="checkbox" id="terms" name="terms_and_conditions" required>
             <label for="terms">This inquiry goes only to a Euro Parts West sales associate. <br><br>
                 Confidentiality matters to us — we won’t share, sell, or use your contact info for marketing. <br><br> 
-                I agree to the terms and conditions and consent to be contacted regarding my inquiry by EuroPartsWest. *</label>
+                I agree to the terms and conditions and consent to be contacted regarding my inquiry to Euro Parts West.</label>
         </div>
 
         <button type="submit" class="btn submit-btn">Submit Inquiry</button>
@@ -531,16 +531,16 @@
                     pBlock.innerHTML = `
                         <button type="button" class="btn btn-danger remove-btn" onclick="removePartSnippet(${vehicle.id}, ${part.id})" title="Remove Part">×</button>
                     <div class="row">
-                        <div class="form-group" style="flex: 2.5;">
-                            <label>Part Name / Description</label>
-                            <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
-                        </div>
                         <div class="form-group" style="flex: 1.5;">
                             <label>Part No.</label>
                             <input type="text" placeholder="Optional" value="${part.partNo}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'partNo', this.value)">
                         </div>
+                        <div class="form-group" style="flex: 2.5;">
+                            <label>Part Name / Description</label>
+                            <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
+                        </div>
                         <div class="form-group" style="flex: 1.2;">
-                            <label>Manufacturer</label>
+                            <label>Brand / Manufacturer</label>
                             <input type="text" placeholder="Optional" value="${part.manufacturer || ''}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'manufacturer', this.value)">
                         </div>
                         <div class="form-group" style="flex: 0.6;">
