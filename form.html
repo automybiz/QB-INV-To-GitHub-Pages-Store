@@ -46,6 +46,13 @@
     .inquiry-form-container .header {
         text-align: center;
         margin-bottom: 40px;
+        /* Nested <header> must not inherit the sticky site-nav stacking */
+        position: static;
+        z-index: auto;
+        top: auto;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
     }
 
     .inquiry-form-container h1 {

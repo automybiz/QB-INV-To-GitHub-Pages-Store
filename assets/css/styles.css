@@ -54,7 +54,7 @@ body {
     padding: 0 20px;
 }
 
-header {
+body > header {
     background: var(--nav-bg);
     box-shadow: var(--shadow);
     padding: 20px 0;
