@@ -92,7 +92,6 @@
     .inquiry-form-container .header {
         text-align: center;
         margin-bottom: 40px;
-        /* Nested <header> must not inherit the sticky site-nav stacking */
         position: static;
         z-index: auto;
         top: auto;
@@ -253,6 +252,7 @@
         z-index: 10;
     }
 
+    /* BioRhyme font styling with bold keys and normal values */
     .inquiry-form-container .yaml-preview {
         margin-top: 0px;
         background: #1e1e1e;
@@ -262,11 +262,11 @@
         font-family: 'BioRhyme', serif;
         font-weight: 400;
         white-space: pre-wrap;
-        font-size: 0.9rem;
+        font-size: 0.92rem;
         max-height: 500px;
         overflow-y: auto;
         border: 1px solid #333;
-        line-height: 1.6;
+        line-height: 1.7;
     }
 
     .inquiry-form-container .yaml-preview strong,
@@ -408,7 +408,7 @@
             <!-- Vehicle blocks will be added here -->
         </div>
 
-        <!-- YAML Output (Visible but Simplified Preview) -->
+        <!-- YAML Output (BioRhyme font preview) -->
         <div class="form-group" style="margin-top: 10px;">
             <label class="yaml-label">Inquiry Summary</label>
             <div id="yamlDisplay" class="yaml-preview"></div>
@@ -650,15 +650,23 @@
             }
         };
 
+        // Formats: Tuesday 9/15/2026 at 09:04 AM
         function formatDateSnippet(date) {
             const d = new Date(date);
-            const datePart = d.toLocaleDateString('en-US', {
-                month: '2-digit', day: '2-digit', year: 'numeric'
-            });
-            const timePart = d.toLocaleTimeString('en-US', {
-                hour: '2-digit', minute: '2-digit', hour12: true
-            });
-            return `${datePart} at ${timePart}`;
+            const weekday = d.toLocaleDateString('en-US', { weekday: 'long' });
+            const month = d.getMonth() + 1;
+            const day = d.getDate();
+            const year = d.getFullYear();
+            const datePart = `${month}/${day}/${year}`;
+            
+            let hours = d.getHours();
+            const minutes = d.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const hoursStr = hours.toString().padStart(2, '0');
+            const timePart = `${hoursStr}:${minutes} ${ampm}`;
+            return `${weekday} ${datePart} at ${timePart}`;
         }
 
         function escapeHtml(str) {
@@ -674,9 +682,9 @@
         function generateYAMLSnippet() {
             let yamlFullLines = [];       // Plain text official YAML for last_inquiry_yaml_form
             let yamlUserLines = [];       // Plain text official YAML for last_inquiry_yaml_form_user
-            let previewLines = [];        // Formatted for yamlDisplay (BioRhyme, Bold YAML keys, Normal values)
-            let htmlFullLines = [];       // User-friendly HTML for email
-            let htmlUserLines = [];       // User-friendly HTML for email
+            let previewLines = [];        // BioRhyme HTML preview with bold keys and normal values
+            let htmlFullParts = [];       // Rich HTML email block for Admin
+            let htmlUserParts = [];       // Rich HTML email block for User
             let csvLines = [];
             const timestamp = formatDateSnippet(new Date());
 
@@ -685,32 +693,40 @@
                 const vVin = vehicle.vin.trim();
 
                 if (vName) {
-                    // Official YAML (Full Form)
+                    // 1. Official YAML (Full Form): lowercase keys with underscores
                     yamlFullLines.push(`- vehicle: ${vName}`);
                     yamlFullLines.push(`  vin: ${vVin}`);
                     yamlFullLines.push(`  items:`);
 
-                    // Official YAML (User)
+                    // 2. Official YAML (User): lowercase keys with underscores
                     yamlUserLines.push(`- vehicle: ${vName}`);
                     yamlUserLines.push(`  vin: ${vVin}`);
                     yamlUserLines.push(`  items:`);
 
-                    // BioRhyme YAML Preview with Bold Keys & Normal Values
+                    // 3. BioRhyme YAML Preview (Bold Keys, Normal Values)
                     previewLines.push(`- <strong>vehicle:</strong> ${escapeHtml(vName)}`);
                     previewLines.push(`  <strong>vin:</strong> ${escapeHtml(vVin)}`);
                     previewLines.push(`  <strong>items:</strong>`);
 
-                    // Friendly HTML Email Formats
-                    htmlUserLines.push(`- <strong>Vehicle:</strong> ${escapeHtml(vName)}`);
-                    htmlUserLines.push(`  <strong>VIN:</strong> ${escapeHtml(vVin)}`);
-                    htmlUserLines.push(`  <strong>Items:</strong>`);
-
-                    htmlFullLines.push(`- <strong>Vehicle:</strong> ${escapeHtml(vName)}`);
-                    htmlFullLines.push(`  <strong>VIN:</strong> ${escapeHtml(vVin)}`);
-                    htmlFullLines.push(`  <strong>Items:</strong>`);
-
                     // CSV
                     csvLines.push(`Vehicle: ${vName}`);
+
+                    // 4. HTML Friendly email blocks
+                    let vHtmlAdmin = `
+<div style="margin-bottom: 20px; font-family: 'Inter', Arial, sans-serif;">
+    <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.9rem; font-weight: normal; color: #a0a0a0;">(VIN: ${escapeHtml(vVin)})</span>` : ''}
+    </div>
+    <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
+`;
+
+                    let vHtmlUser = `
+<div style="margin-bottom: 20px; font-family: 'Inter', Arial, sans-serif;">
+    <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.9rem; font-weight: normal; color: #a0a0a0;">(VIN: ${escapeHtml(vVin)})</span>` : ''}
+    </div>
+    <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
+`;
 
                     vehicle.parts.forEach(part => {
                         const pName = part.name.trim() || 'Unnamed Part';
@@ -719,46 +735,68 @@
                         const pQty = part.qty || 1;
                         const pStatus = part.status || 'I';
 
-                        // 1. Official YAML (Full Form)
-                        yamlFullLines.push(`    - part_no: ${pNo}`);
-                        yamlFullLines.push(`      part_name_description: ${pName}`);
-                        yamlFullLines.push(`      brand_manufacturer: ${pMan}`);
-                        yamlFullLines.push(`      qty: ${pQty}`);
-                        yamlFullLines.push(`      status: ${pStatus}`);
-                        yamlFullLines.push(`      inquiries: 1`);
-                        yamlFullLines.push(`      last_inquiry: ${timestamp}`);
+                        // Official Full YAML
+                        yamlFullLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
+                        yamlFullLines.push(`        part_no: ${pNo}`);
+                        if (pMan) {
+                            yamlFullLines.push(`        brand_manufacturer: ${pMan}`);
+                        }
+                        yamlFullLines.push(`        inquiries: 1`);
+                        yamlFullLines.push(`        last_inquiry: ${timestamp}`);
 
-                        // 2. Official YAML (User)
-                        yamlUserLines.push(`    - part_no: ${pNo}`);
-                        yamlUserLines.push(`      part_name_description: ${pName}`);
-                        yamlUserLines.push(`      brand_manufacturer: ${pMan}`);
-                        yamlUserLines.push(`      qty: ${pQty}`);
+                        // Official User YAML
+                        yamlUserLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
+                        yamlUserLines.push(`        part_no: ${pNo}`);
+                        if (pMan) {
+                            yamlUserLines.push(`        brand_manufacturer: ${pMan}`);
+                        }
+                        yamlUserLines.push(`        inquiries: 1`);
+                        yamlUserLines.push(`        last_inquiry: ${timestamp}`);
 
-                        // 3. YAML Preview (Bold YAML Keys, Normal Values)
-                        previewLines.push(`    - <strong>part_no:</strong> ${escapeHtml(pNo)}`);
-                        previewLines.push(`      <strong>part_name_description:</strong> ${escapeHtml(pName)}`);
-                        previewLines.push(`      <strong>brand_manufacturer:</strong> ${escapeHtml(pMan)}`);
-                        previewLines.push(`      <strong>qty:</strong> ${pQty}`);
+                        // BioRhyme YAML Preview (Bold Keys, Normal Values)
+                        previewLines.push(`    - <strong>( ${pStatus} x ${pQty} ) ${escapeHtml(pName)}:</strong>`);
+                        previewLines.push(`        <strong>part_no:</strong> ${escapeHtml(pNo)}`);
+                        if (pMan) {
+                            previewLines.push(`        <strong>brand_manufacturer:</strong> ${escapeHtml(pMan)}`);
+                        }
+                        previewLines.push(`        <strong>inquiries:</strong> 1`);
+                        previewLines.push(`        <strong>last_inquiry:</strong> ${timestamp}`);
 
-                        // 4. Friendly HTML (User Email)
-                        htmlUserLines.push(`    - <strong>Part No.:</strong> ${escapeHtml(pNo)}`);
-                        htmlUserLines.push(`      <strong>Part Name / Description:</strong> ${escapeHtml(pName)}`);
-                        htmlUserLines.push(`      <strong>Brand / Manufacturer:</strong> ${escapeHtml(pMan)}`);
-                        htmlUserLines.push(`      <strong>Qty:</strong> ${pQty}`);
+                        // Admin Friendly HTML
+                        vHtmlAdmin += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px;">
+            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 2px 10px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08); margin-right: 8px;">INQUIRY: 1</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+        ${pMan ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🏷️ <strong>Brand:</strong> ${escapeHtml(pMan)}</div>` : ''}
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">📊 <strong>Inquiries:</strong> 1</div>
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
+    </div>`;
 
-                        // 5. Friendly HTML (Admin Email)
-                        htmlFullLines.push(`    - <strong>Part No.:</strong> ${escapeHtml(pNo)}`);
-                        htmlFullLines.push(`      <strong>Part Name / Description:</strong> ${escapeHtml(pName)}`);
-                        htmlFullLines.push(`      <strong>Brand / Manufacturer:</strong> ${escapeHtml(pMan)}`);
-                        htmlFullLines.push(`      <strong>Qty:</strong> ${pQty}`);
-                        htmlFullLines.push(`      <strong>Status:</strong> ${pStatus}`);
-                        htmlFullLines.push(`      <strong>Inquiries:</strong> 1`);
-                        htmlFullLines.push(`      <strong>Last Inquiry:</strong> ${timestamp}`);
+                        // User Friendly HTML
+                        vHtmlUser += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px;">
+            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 2px 10px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08); margin-right: 8px;">QTY: ${pQty}</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+        ${pMan ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">🏷️ <strong>Brand:</strong> ${escapeHtml(pMan)}</div>` : ''}
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 3px 0 3px 12px;">⏰ <strong>Inquiry Date:</strong> ${timestamp}</div>
+    </div>`;
 
-                        // 6. CSV Format
+                        // CSV Format
                         const escapeCSV = (str) => str.replace(/"/g, '""');
                         csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
                     });
+
+                    vHtmlAdmin += `</div>`;
+                    vHtmlUser += `</div>`;
+
+                    htmlFullParts.push(vHtmlAdmin);
+                    htmlUserParts.push(vHtmlUser);
                 }
             });
 
@@ -768,16 +806,32 @@
             const csvDisplay = document.getElementById('csvDisplay');
             if (csvDisplay) csvDisplay.textContent = csvLines.join('\n');
 
-            // Pure, official YAML strings (no HTML tags)
+            // Pure, official YAML strings (clean lower case keys with underscores)
             yamlHidden.value = yamlFullLines.join('\n');
             yamlHiddenUser.value = yamlUserLines.join('\n');
 
             const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
             if (csvHidden) csvHidden.value = csvLines.join('\n');
             
-            // User-friendly HTML formatted strings for email notifications
-            yamlHiddenHtml.value = htmlFullLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
-            yamlHiddenUserHtml.value = htmlUserLines.map(line => line.replace(/ /g, '&nbsp;')).join('<br>\n');
+            // Styled user-friendly HTML formatted strings for email notifications (matching Screenshot 2 layout)
+            const adminCardHtml = `
+<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 20px; font-family: 'Inter', Arial, sans-serif; max-width: 650px;">
+    <div style="border-bottom: 2px solid #009999; padding-bottom: 10px; margin-bottom: 18px; font-weight: 700; font-size: 1.1rem; color: #00ffff;">
+        📋 Inquiry Data Details
+    </div>
+    ${htmlFullParts.join('')}
+</div>`;
+
+            const userCardHtml = `
+<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 20px; font-family: 'Inter', Arial, sans-serif; max-width: 650px;">
+    <div style="border-bottom: 2px solid #009999; padding-bottom: 10px; margin-bottom: 18px; font-weight: 700; font-size: 1.1rem; color: #00ffff;">
+        📋 Product Inquiry Summary
+    </div>
+    ${htmlUserParts.join('')}
+</div>`;
+
+            yamlHiddenHtml.value = adminCardHtml;
+            yamlHiddenUserHtml.value = userCardHtml;
         }
 
         // Add hidden field for source
@@ -931,7 +985,7 @@
 
     <script src="assets/js/app.js"></script>
 
-    <script src="https://widgets.leadconnectorhq.com/loader.jssssssssssssssssssssssssss" 
+    <script src="https://widgets.leadconnectorhq.com/loader.js" 
             data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" 
             data-widget-id="6aac1b9dce16b8058881fe32"></script>
 </body>
