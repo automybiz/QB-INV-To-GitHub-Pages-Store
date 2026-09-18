@@ -687,7 +687,10 @@
                         fullLines.push(`      inquiries: 1`);
                         fullLines.push(`      last_inquiry: ${timestamp}`);
                         
-                        previewLines.push(`    - <strong>Part No.:</strong> ${pNo} | <strong>Part Name / Description:</strong> ${pName} | <strong>Brand / Manufacturer:</strong> ${pMan} | <strong>Qty:</strong> ${part.qty}`);
+                        previewLines.push(`    - <strong>Part No.:</strong> ${pNo}`);
+                        previewLines.push(`      <strong>Part Name / Description:</strong> ${pName}`);
+                        previewLines.push(`      <strong>Brand / Manufacturer:</strong> ${pMan}`);
+                        previewLines.push(`      <strong>Qty:</strong> ${part.qty}`);
 
                         // CSV Format: "Part Number"," : ","Part Name for Vehicle Name"," : ","Manufacturer"
                         // Standard CSV escaping for quotes if necessary
