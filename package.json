@@ -1,0 +1,15 @@
+{
+  "name": "qb-inv-to-github-pages-store",
+  "version": "1.0.0",
+  "description": "QB Invoice to GitHub Pages Store & Sync Engine",
+  "bundleConfig": {
+    "retentionDays": 30,
+    "targetFolders": [
+      "assets"
+    ],
+    "includeRootFiles": true
+  },
+  "scripts": {
+    "bundle": "node scripts/export-bundle.js"
+  }
+}
