@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EuroPartsWest - Product Inquiry Form</title>
-    <link rel="stylesheet" href="assets/css/styles.css?v=1.4">
+    <link rel="stylesheet" href="assets/css/styles.css?v=1.3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         .inquiry-content {
-            padding: 20px 0 40px 0;
+            padding: 10px 0px;
             background-color: var(--bg-color);
         }
     </style>
@@ -41,1095 +42,1071 @@
     <main>
         <section class="inquiry-content">
             <div class="container">
-                <!-- FORM STYLES & LAYOUT -->
-                <style>
-                    :root {
-                        --primary: #c8102e;
-                        --blue: #0056b3;
-                        --cyan-accent: #00e5ff;
-                        --secondary: #333;
-                        --light: #f4f4f4;
-                        --dark: #1a1a1a;
-                        --white: #ffffff;
-                        --grey: #888;
-                        --border: #ddd;
-                        --shadow: 0 4px 6px rgba(0,0,0,0.1);
+                <!-- EMBEDDED FORM SNIPPET START -->
+                
+<style>
+    :root {
+        --primary: #c8102e; /* Red */
+        --blue: #0056b3; /* Blue for Add buttons and lines */
+        --secondary: #333;
+        --light: #f4f4f4;
+        --dark: #1a1a1a;
+        --white: #ffffff;
+        --grey: #888;
+        --border: #ddd;
+        --shadow: 0 4px 6px rgba(0,0,0,0.1);
 
-                        /* Inputs */
-                        --input-font-color: var(--secondary);
-                        --input-bg-color: #ffffff;
-                        --input-label-color: var(--secondary);
-                        --input-border-color: #009999;
-                        --input-border-color-focused: #00FFFF;
-                        --submit-button-bg-color: #0056b3;
-                    }
+        /* Semantic Input Variables */
+        --input-font-color: var(--secondary);
+        --input-bg-color: #ffffff;
+        --input-label-color: var(--secondary);
+        --input-border-color: #009999;
+        --input-border-color-focused: #00FFFF;
+        --submit-button-bg-color: #0056b3;
+    }
 
-                    [data-theme="dark"] {
-                        --input-font-color: #ffffff;
-                        --input-bg-color: #242424;
-                        --input-label-color: #e0e0e0;
-                    }
+    [data-theme="dark"] {
+        --input-font-color: #ffffff;
+        --input-bg-color: #2d2d2d;
+        --input-label-color: #e0e0e0;
+    }
 
-                    .inquiry-form-container {
-                        max-width: 960px;
-                        margin: 0 auto;
-                        background: var(--white);
-                        padding: 35px;
-                        border-radius: 10px;
-                        box-shadow: var(--shadow);
-                        color: var(--secondary);
-                        text-align: left;
-                    }
+    /* Form Specific Styles */
+    .inquiry-form-container {
+        max-width: 100%;
+        margin: 0px auto;
+        background: var(--white);
+        padding: 0px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        color: var(--secondary);
+        text-align: left;
+    }
 
-                    [data-theme="dark"] .inquiry-form-container {
-                        background: #1a1a1a;
-                        color: #e0e0e0;
-                        --border: #333;
-                    }
+    [data-theme="dark"] .inquiry-form-container {
+        background: #1e1e1e;
+        color: #e0e0e0;
+        --border: #333;
+    }
 
-                    .inquiry-form-container .header {
-                        text-align: center;
-                        margin-bottom: 35px;
-                        background: transparent;
-                        box-shadow: none;
-                        padding: 0;
-                    }
+    .inquiry-form-container .header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: static;
+        z-index: auto;
+        top: auto;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+    }
 
-                    .inquiry-form-container h1 {
-                        font-size: 2rem;
-                        margin-bottom: 12px;
-                        color: var(--text-color);
-                    }
+    .inquiry-form-container h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
 
-                    .inquiry-form-container .header p {
-                        font-size: 0.95rem;
-                        line-height: 1.6;
-                        color: var(--grey);
-                        max-width: 780px;
-                        margin: 0 auto;
-                    }
+    .inquiry-form-container .form-group {
+        margin-bottom: 0px;
+    }
 
-                    .inquiry-form-container .form-group {
-                        margin-bottom: 15px;
-                    }
+    .inquiry-form-container label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        color: var(--input-label-color);
+    }
 
-                    .inquiry-form-container label {
-                        display: block;
-                        font-weight: 600;
-                        margin-bottom: 6px;
-                        font-size: 0.9rem;
-                        color: var(--input-label-color);
-                    }
+    .inquiry-form-container input[type="text"],
+    .inquiry-form-container input[type="email"],
+    .inquiry-form-container input[type="tel"],
+    .inquiry-form-container input[type="number"],
+    .inquiry-form-container select,
+    .inquiry-form-container textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--input-border-color);
+        border-radius: 5px;
+        font-size: 1rem;
+        font-family: inherit;
+        color: var(--input-font-color);
+        background-color: var(--input-bg-color);
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-                    .inquiry-form-container input[type="text"],
-                    .inquiry-form-container input[type="email"],
-                    .inquiry-form-container input[type="tel"],
-                    .inquiry-form-container input[type="number"],
-                    .inquiry-form-container select,
-                    .inquiry-form-container textarea {
-                        width: 100%;
-                        padding: 12px 14px;
-                        border: 2px solid var(--input-border-color);
-                        border-radius: 6px;
-                        font-size: 0.95rem;
-                        font-family: inherit;
-                        color: var(--input-font-color);
-                        background-color: var(--input-bg-color);
-                        transition: border-color 0.2s, box-shadow 0.2s;
-                    }
+    .inquiry-form-container input:focus,
+    .inquiry-form-container select:focus,
+    .inquiry-form-container textarea:focus {
+        outline: none;
+        border-color: var(--input-border-color-focused);
+        box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.25);
+    }
 
-                    .inquiry-form-container input:focus,
-                    .inquiry-form-container select:focus,
-                    .inquiry-form-container textarea:focus {
-                        outline: none;
-                        border-color: var(--input-border-color-focused);
-                        box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.25);
-                    }
+    .inquiry-form-container .row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
 
-                    .inquiry-form-container .row {
-                        display: flex;
-                        gap: 16px;
-                        margin-bottom: 5px;
-                    }
+    .inquiry-form-container .row > .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
 
-                    .inquiry-form-container .row > .form-group {
-                        flex: 1;
-                        margin-bottom: 15px;
-                    }
+    .inquiry-form-container .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 40px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
 
-                    .inquiry-form-container .section-title {
-                        font-size: 1.25rem;
-                        font-weight: 700;
-                        margin: 35px 0 20px;
-                        padding-bottom: 12px;
-                        border-bottom: 2px solid var(--border);
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        gap: 15px;
-                        flex-wrap: wrap;
-                    }
+    .inquiry-form-container .vehicle-block {
+        border: 1px solid var(--border);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        background: #fafafa;
+        position: relative;
+    }
 
-                    .inquiry-form-container .vehicle-block {
-                        border: 1px solid var(--border);
-                        padding: 24px;
-                        border-radius: 8px;
-                        margin-bottom: 25px;
-                        background: #fbfbfb;
-                        position: relative;
-                    }
+    [data-theme="dark"] .inquiry-form-container .vehicle-block {
+        background: #252525;
+    }
 
-                    [data-theme="dark"] .inquiry-form-container .vehicle-block {
-                        background: #222222;
-                    }
+    .inquiry-form-container .vehicle-top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
 
-                    .inquiry-form-container .vehicle-header-wrap {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 10px;
-                        margin-bottom: 15px;
-                    }
+    .inquiry-form-container .vehicle-meta-fields {
+        flex: 1;
+        min-width: 260px;
+    }
 
-                    .inquiry-form-container .vehicle-actions {
-                        display: flex;
-                        gap: 8px;
-                        justify-content: flex-end;
-                        flex-wrap: wrap;
-                    }
+    .inquiry-form-container .part-block {
+        border-left: 4px solid var(--border);
+        padding: 15px 15px 5px 15px;
+        margin: 15px 0 15px 25px;
+        background: var(--white);
+        border-radius: 0 8px 8px 0;
+        position: relative;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-                    .inquiry-form-container .part-block {
-                        border-left: 4px solid var(--cyan-accent);
-                        padding: 16px 14px 10px 14px;
-                        margin: 15px 0 15px 15px;
-                        background: var(--white);
-                        border-radius: 0 8px 8px 0;
-                        position: relative;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-                    }
+    [data-theme="dark"] .inquiry-form-container .part-block {
+        background: #2d2d2d;
+    }
 
-                    [data-theme="dark"] .inquiry-form-container .part-block {
-                        background: #2b2b2b;
-                    }
+    .inquiry-form-container .btn {
+        display: inline-block;
+        background: var(--primary);
+        color: #ffffff !important;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        text-decoration: none;
+    }
 
-                    .inquiry-form-container .part-block .remove-btn {
-                        position: absolute;
-                        top: 10px;
-                        right: 10px;
-                        z-index: 5;
-                    }
+    .inquiry-form-container .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        color: #ffffff !important;
+    }
 
-                    .inquiry-form-container .btn {
-                        display: inline-block;
-                        background: var(--primary);
-                        color: #ffffff !important;
-                        padding: 10px 20px;
-                        border: none;
-                        border-radius: 6px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.2s ease-in-out;
-                        font-size: 0.9rem;
-                        text-decoration: none;
-                    }
+    .inquiry-form-container .btn-blue {
+        background: var(--blue);
+        color: #ffffff !important;
+    }
 
-                    .inquiry-form-container .btn:hover {
-                        opacity: 0.92;
-                        transform: translateY(-1px);
-                    }
+    .inquiry-form-container .btn-outline-blue {
+        background: transparent;
+        border: 2px solid var(--blue);
+        color: var(--blue);
+    }
 
-                    .inquiry-form-container .btn-blue {
-                        background: var(--blue);
-                    }
+    .inquiry-form-container .btn-outline-blue:hover {
+        background: var(--blue);
+        color: white;
+    }
 
-                    .inquiry-form-container .btn-outline-blue {
-                        background: transparent;
-                        border: 2px solid var(--blue);
-                        color: var(--blue) !important;
-                    }
+    .inquiry-form-container .btn-danger {
+        background: #dc3545;
+        color: #ffffff !important;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
 
-                    .inquiry-form-container .btn-outline-blue:hover {
-                        background: var(--blue);
-                        color: white !important;
-                    }
+    .inquiry-form-container .btn-add-part {
+        float: right;
+        margin-top: 10px;
+    }
 
-                    .inquiry-form-container .btn-danger {
-                        background: #dc3545;
-                        color: #ffffff !important;
-                        padding: 6px 10px;
-                        font-size: 0.8rem;
-                    }
+    .inquiry-form-container .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
 
-                    .inquiry-form-container .btn-sm {
-                        padding: 5px 10px;
-                        font-size: 0.8rem;
-                    }
+    .inquiry-form-container .remove-btn {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        z-index: 10;
+        padding: 2px 8px;
+        font-size: 1rem;
+        line-height: 1.2;
+    }
 
-                    .inquiry-form-container .btn-add-part {
-                        display: block;
-                        margin-left: auto;
-                        margin-top: 15px;
-                    }
+    /* Inquiry Summary Preview Container */
+    .inquiry-form-container .summary-preview-wrap {
+        margin-top: 0px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
-                    .inquiry-form-container .clearfix::after {
-                        content: "";
-                        clear: both;
-                        display: table;
-                    }
+    .inquiry-form-container .diy-group {
+        margin: 20px 0 10px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: rgba(0, 153, 153, 0.08);
+        border: 1px solid rgba(0, 153, 153, 0.3);
+        padding: 14px 16px;
+        border-radius: 6px;
+    }
 
-                    /* Summary Preview */
-                    .inquiry-form-container .summary-preview-wrap {
-                        margin-top: 20px;
-                        border-radius: 8px;
-                        overflow: hidden;
-                    }
+    [data-theme="dark"] .inquiry-form-container .diy-group {
+        background: rgba(0, 229, 255, 0.06);
+        border-color: rgba(0, 229, 255, 0.25);
+    }
 
-                    /* Checkbox Rows */
-                    .inquiry-form-container .checkbox-row {
-                        margin: 12px 0;
-                        display: flex;
-                        align-items: flex-start;
-                        gap: 12px;
-                        padding: 14px 16px;
-                        border-radius: 6px;
-                    }
+    .inquiry-form-container .diy-group input[type="checkbox"] {
+        margin-top: 4px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--blue);
+    }
 
-                    .inquiry-form-container .diy-group {
-                        background: rgba(0, 153, 153, 0.08);
-                        border: 1px solid rgba(0, 153, 153, 0.3);
-                    }
+    .inquiry-form-container .diy-group label {
+        margin-bottom: 0;
+        font-size: 0.95rem;
+        cursor: pointer;
+        line-height: 1.4;
+    }
 
-                    .inquiry-form-container .terms-group {
-                        background: rgba(200, 16, 46, 0.05);
-                        border: 1px solid rgba(200, 16, 46, 0.2);
-                    }
+    .inquiry-form-container .terms-group {
+        margin: 10px 0 20px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: rgba(200, 16, 46, 0.05);
+        padding: 15px;
+        border-radius: 5px;
+    }
 
-                    .inquiry-form-container .checkbox-row input[type="checkbox"] {
-                        margin-top: 3px;
-                        width: 18px;
-                        height: 18px;
-                        cursor: pointer;
-                        accent-color: var(--blue);
-                        flex-shrink: 0;
-                    }
+    .inquiry-form-container .terms-group input {
+        margin-top: 5px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary);
+    }
 
-                    .inquiry-form-container .checkbox-row label {
-                        margin: 0;
-                        cursor: pointer;
-                        font-weight: normal;
-                        line-height: 1.5;
-                        color: var(--text-color);
-                    }
+    .inquiry-form-container .submit-btn {
+        width: 100%;
+        padding: 18px;
+        font-size: 1.2rem;
+        margin: 0px 0px 20px 0px;
+        background-color: var(--submit-button-bg-color);
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
+    }
 
-                    .inquiry-form-container .submit-btn {
-                        width: 100%;
-                        padding: 16px;
-                        font-size: 1.15rem;
-                        margin: 20px 0 10px 0;
-                        background-color: var(--submit-button-bg-color);
-                        color: #ffffff !important;
-                        box-shadow: 0 4px 12px rgba(0, 86, 179, 0.35);
-                    }
+    .inquiry-form-container .hidden-field {
+        display: none;
+    }
 
-                    .inquiry-form-container .hidden-field {
-                        display: none;
-                    }
+    /* Success Message Styling */
+    .success-message {
+        display: none;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 60px 40px;
+        border-radius: 12px;
+        border: 2px solid var(--blue);
+        text-align: center;
+        margin: 20px 0;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
 
-                    /* Success Message */
-                    .success-message {
-                        display: none;
-                        background: rgba(0, 0, 0, 0.85);
-                        color: white;
-                        padding: 50px 30px;
-                        border-radius: 12px;
-                        border: 2px solid var(--blue);
-                        text-align: center;
-                        margin: 20px 0;
-                    }
+    .success-message h2 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
 
-                    .success-message h2 {
-                        color: white;
-                        font-size: 2rem;
-                        margin-bottom: 15px;
-                    }
+    .success-message p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
 
-                    .success-actions {
-                        display: flex;
-                        gap: 15px;
-                        justify-content: center;
-                        flex-wrap: wrap;
-                        margin-top: 25px;
-                    }
+    .success-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 
-                    /* MOBILE RESPONSIVE TWEAKS */
-                    @media (max-width: 768px) {
-                        .inquiry-form-container {
-                            padding: 20px 15px;
-                        }
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .inquiry-content {
+            padding: 10px 0;
+        }
+        .container {
+            padding: 0 10px;
+        }
+        .inquiry-form-container {
+            padding: 15px 10px;
+        }
+        .inquiry-form-container .row {
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .inquiry-form-container .row > .form-group {
+            width: 100%;
+        }
+        .inquiry-form-container .vehicle-block {
+            padding: 16px 12px;
+        }
+        .inquiry-form-container .part-block {
+            margin-left: 5px;
+            padding: 14px 10px 10px 10px;
+        }
+        .inquiry-form-container .btn-add-part {
+            float: none;
+            width: 100%;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .inquiry-form-container .section-title button {
+            width: 100%;
+            text-align: center;
+        }
+        .remove-btn-group {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+    }
+</style>
 
-                        .inquiry-form-container input[type="text"],
-                        .inquiry-form-container input[type="email"],
-                        .inquiry-form-container input[type="tel"],
-                        .inquiry-form-container input[type="number"],
-                        .inquiry-form-container select,
-                        .inquiry-form-container textarea {
-                            font-size: 16px; /* Prevents iOS auto-zoom on focus */
-                        }
+<div class="inquiry-form-container">
+    <header class="header">
+        <h1>Product Inquiry Form</h1><br>
+        <p>Please provide details about the vehicles and parts you are interested in.<br><br>
+        The team usually responds within a couple of hours depending on current customer volume and demand.<br><br>
+        This form is the most optimal path for submitting inquiries. However, we also take orders by phone for people who prefer to call.
+        </p>
+        <p></p>
+    </header>
 
-                        .inquiry-form-container .row {
-                            flex-direction: column;
-                            gap: 0;
-                        }
+    <div id="successMessage" class="success-message">
+        <h2>Inquiry Received!</h2>
+        <p>Thank you for your interest. We will review your request and get back to you shortly.</p>
+        <div class="success-actions">
+            <button type="button" class="btn btn-blue" id="btnSubmitAnother">Submit Another Inquiry</button>
+            <a href="index.html" class="btn btn-outline-blue" style="color: white; border-color: white;">Return to Home Page</a>
+        </div>
+    </div>
 
-                        .inquiry-form-container .section-title {
-                            flex-direction: column;
-                            align-items: stretch;
-                        }
+    <form id="inquiryForm">
+        <!-- Contact Info: Row 1 -->
+        <div class="row">
+            <div class="form-group">
+                <label for="first_name">First Name *</label>
+                <input type="text" id="first_name" name="first_name" required placeholder="John">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name *</label>
+                <input type="text" id="last_name" name="last_name" required placeholder="Doe">
+            </div>
+        </div>
 
-                        .inquiry-form-container .section-title .btn {
-                            width: 100%;
-                            text-align: center;
-                        }
+        <!-- Contact Info: Row 2 -->
+        <div class="row">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="(602) 555-0123">
+            </div>
+        </div>
 
-                        .inquiry-form-container .vehicle-block {
-                            padding: 18px 14px;
-                        }
+        <!-- Contact Info: Row 3 (Workshop & PO References) -->
+        <div class="row">
+            <div class="form-group">
+                <label for="business_name">Workshop / Shop Name</label>
+                <input type="text" id="business_name" name="business_name" placeholder="Optional (e.g. Rennsport Tuning)">
+            </div>
+            <div class="form-group">
+                <label for="po_number">PO / Job #</label>
+                <input type="text" id="po_number" name="po_number" placeholder="Optional (e.g. PO-8841 / RO#204)">
+            </div>
+        </div>
 
-                        .inquiry-form-container .vehicle-actions {
-                            justify-content: stretch;
-                        }
+        <!-- Vehicles Section -->
+        <div class="section-title">
+            <span>Vehicles & Parts Inquiry</span>
+            <button type="button" class="btn btn-blue" id="addVehicle">+ Add Another Vehicle</button>
+        </div>
 
-                        .inquiry-form-container .vehicle-actions .btn {
-                            flex: 1;
-                            text-align: center;
-                        }
+        <div id="vehiclesContainer">
+            <!-- Vehicle blocks will be added here -->
+        </div>
 
-                        .inquiry-form-container .part-block {
-                            margin: 15px 0 15px 6px;
-                            padding: 20px 10px 10px 10px;
-                        }
+        <!-- User-Facing HTML Inquiry Summary Display -->
+        <div class="form-group" style="margin-top: 10px;">
+            <div id="summaryDisplay" class="summary-preview-wrap"></div>
 
-                        .inquiry-form-container .btn-add-part {
-                            width: 100%;
-                            text-align: center;
-                            float: none;
-                        }
-                    }
-                </style>
+            <!-- Hidden textarea for actual form submission to GHL (Full Internal YAML) -->
+            <textarea id="last_inquiry_yaml_form" name="last_inquiry_yaml_form" class="hidden-field"></textarea>
+            <!-- Hidden textarea for user-facing YAML receipt (No inquiries or last_inquiry) -->
+            <textarea id="last_inquiry_yaml_form_user" name="last_inquiry_yaml_form_user" class="hidden-field"></textarea>
+            <!-- Hidden textarea for GSheets CSV format -->
+            <textarea id="last_inquiry_csv_gsheets_form" name="last_inquiry_csv_gsheets_form" class="hidden-field"></textarea>
+            <!-- HTML formatted versions for emails -->
+            <textarea id="last_inquiry_yaml_form_html" name="last_inquiry_yaml_form_html" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_yaml_form_user_html" name="last_inquiry_yaml_form_user_html" class="hidden-field"></textarea>
+        </div>
 
-                <div class="inquiry-form-container">
-                    <header class="header">
-                        <h1>Product Inquiry Form</h1><br>
-                        <p>Please provide details about the vehicles and parts you are interested in.<br><br>
-                        The team usually responds within a couple of hours depending on current customer volume and demand.<br><br>
-                        This form is the most optimal path for submitting inquiries. However, we also take orders by phone for people who prefer to call.
-                        </p>
-                    </header>
+        <!-- DIY Technician Checkbox -->
+        <div class="diy-group">
+            <input type="checkbox" id="diy_tech" name="diy_tech" value="Yes">
+            <label for="diy_tech"><strong>DIY / I’m my own technician</strong> (sourcing parts directly for personal vehicle or build)</label>
+        </div>
 
-                    <div id="successMessage" class="success-message">
-                        <h2>Inquiry Received!</h2>
-                        <p>Thank you for reaching out. A parts specialist will review your request and get back to you shortly.</p>
-                        <div class="success-actions">
-                            <button type="button" class="btn btn-blue" id="btnSubmitAnother">Submit Another Inquiry</button>
-                            <a href="index.html" class="btn btn-outline-blue" style="color: white !important; border-color: white;">Return to Home Page</a>
+        <!-- Terms -->
+        <div class="terms-group">
+            <input type="checkbox" id="terms" name="terms_and_conditions" required>
+            <label for="terms">This inquiry goes only to a Euro Parts West sales associate: sales@europartswest.com <br><br>
+                Confidentiality matters to us — we won’t share, sell, or use your contact info for marketing. <br><br> 
+                I agree to the terms and conditions and consent to be contacted regarding my inquiry to Euro Parts West.</label>
+        </div>
+
+        <button type="submit" class="btn submit-btn">Submit Inquiry</button>
+    </form>
+</div>
+
+<script>
+    (function() {
+        // ==========================================
+        // CONFIGURATION VARIABLES & TOGGLES
+        // ==========================================
+        const STICKY_FIELDS_MAIN = ['first_name', 'last_name', 'email', 'phone', 'business_name', 'po_number', 'diy_tech', 'terms'];
+        const STICKY_FIELDS_MAIN_TOGGLE = true;            // Toggle persistence for main contact fields (true/false)
+        const STICK_FIELDS_MAIN_TOGGLE = STICKY_FIELDS_MAIN_TOGGLE; // Alias support
+        const STICKY_FIELDS_ITEMS_TOGGLE = false;          // Toggle persistence for vehicles & parts (Set to false per Day's request)
+
+        // State Management
+        let vehicles = [];
+        
+        function saveVehiclesToLocalStorage() {
+            if (!STICKY_FIELDS_ITEMS_TOGGLE) return;
+            const filteredVehicles = vehicles.filter(v => 
+                (v.name && v.name.trim() !== '') || 
+                (v.vin && v.vin.trim() !== '') || 
+                (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
+            );
+            localStorage.setItem('persistent_vehicles', JSON.stringify(filteredVehicles));
+        }
+
+        // Load persistent vehicles on init (if enabled)
+        if (STICKY_FIELDS_ITEMS_TOGGLE) {
+            const storedVehicles = localStorage.getItem('persistent_vehicles');
+            if (storedVehicles) {
+                try {
+                    const parsed = JSON.parse(storedVehicles);
+                    vehicles = parsed.filter(v => 
+                        (v.name && v.name.trim() !== '') || 
+                        (v.vin && v.vin.trim() !== '') || 
+                        (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
+                    );
+                } catch (e) {
+                    console.error("Error parsing stored vehicles", e);
+                    vehicles = [];
+                }
+            }
+        }
+
+        // Default if empty
+        if (vehicles.length === 0) {
+            vehicles = [
+                {
+                    id: Date.now(),
+                    name: '',
+                    vin: '',
+                    parts: [
+                        { id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }
+                    ]
+                }
+            ];
+        }
+
+        const vehiclesContainer = document.getElementById('vehiclesContainer');
+        const summaryDisplay = document.getElementById('summaryDisplay');
+        const yamlHidden = document.getElementById('last_inquiry_yaml_form');
+        const yamlHiddenUser = document.getElementById('last_inquiry_yaml_form_user');
+        const yamlHiddenHtml = document.getElementById('last_inquiry_yaml_form_html');
+        const yamlHiddenUserHtml = document.getElementById('last_inquiry_yaml_form_user_html');
+        const addVehicleBtn = document.getElementById('addVehicle');
+        const inquiryForm = document.getElementById('inquiryForm');
+        const successMessage = document.getElementById('successMessage');
+        const btnSubmitAnother = document.getElementById('btnSubmitAnother');
+
+        // Render vehicles and parts
+        function renderVehicles() {
+            vehiclesContainer.innerHTML = '';
+            
+            let history = [];
+            if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                try {
+                    const stored = localStorage.getItem('persistent_vehicles');
+                    if (stored) history = JSON.parse(stored);
+                } catch(e) {}
+            }
+
+            vehicles.forEach((vehicle, vIndex) => {
+                const isInHistory = history.some(h => h.id === vehicle.id && (h.name || h.vin));
+                const canRemoveVehicle = vehicles.length > 1;
+
+                // Build remove button block based on STICKY_FIELDS_ITEMS_TOGGLE
+                let removeButtonsHtml = '';
+                if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                    removeButtonsHtml = `
+                        <div class="remove-btn-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            ${canRemoveVehicle ? `<button type="button" class="btn btn-danger" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>` : ''}
+                            ${isInHistory ? `<button type="button" class="btn btn-danger" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove From History</button>` : ''}
+                        </div>
+                    `;
+                } else if (canRemoveVehicle) {
+                    removeButtonsHtml = `
+                        <div class="remove-btn-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-danger" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove this vehicle">Remove Vehicle</button>
+                        </div>
+                    `;
+                }
+
+                const vBlock = document.createElement('div');
+                vBlock.className = 'vehicle-block clearfix';
+                vBlock.innerHTML = `
+                    <div class="vehicle-top-bar" style="margin-bottom: 15px;">
+                        <div class="vehicle-meta-fields">
+                            <div class="row">
+                                <div class="form-group" style="flex: 2;">
+                                    <label>Vehicle Name (Make, Model, Year)</label>
+                                    <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label>VIN</label>
+                                    <input type="text" placeholder="Optional" value="${vehicle.vin}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'vin', this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        ${removeButtonsHtml}
+                    </div>
+                    <div class="parts-container" id="parts-${vehicle.id}"></div>
+                    <button type="button" class="btn btn-blue btn-add-part" onclick="addPartSnippet(${vehicle.id})">+ Add Part for this Vehicle</button>
+                `;
+                
+                const partsContainer = vBlock.querySelector('.parts-container');
+                vehicle.parts.forEach((part, pIndex) => {
+                    const pBlock = document.createElement('div');
+                    pBlock.className = 'part-block';
+                    pBlock.innerHTML = `
+                        <button type="button" class="btn btn-danger remove-btn" onclick="removePartSnippet(${vehicle.id}, ${part.id})" title="Remove Part">×</button>
+                    <div class="row">
+                        <div class="form-group" style="flex: 1.5;">
+                            <label>Part No.</label>
+                            <input type="text" placeholder="Optional" value="${part.partNo}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'partNo', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 2.5;">
+                            <label>Part Name / Description</label>
+                            <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 1.2;">
+                            <label>Brand / Manufacturer</label>
+                            <input type="text" placeholder="Optional" value="${part.manufacturer || ''}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'manufacturer', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 0.6;">
+                            <label>Qty</label>
+                            <input type="number" min="1" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
                         </div>
                     </div>
+                    `;
+                    partsContainer.appendChild(pBlock);
+                });
+                
+                vehiclesContainer.appendChild(vBlock);
+            });
+            generateYAMLSnippet();
+        }
 
-                    <form id="inquiryForm">
-                        <!-- ROW 1: Name -->
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="first_name">First Name *</label>
-                                <input type="text" id="first_name" name="first_name" required placeholder="John">
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name">Last Name *</label>
-                                <input type="text" id="last_name" name="last_name" required placeholder="Doe">
-                            </div>
-                        </div>
+        window.addVehicleSnippet = function() {
+            vehicles.push({
+                id: Date.now(),
+                name: '',
+                vin: '',
+                parts: [{ id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }]
+            });
+            saveVehiclesToLocalStorage();
+            renderVehicles();
+        };
 
-                        <!-- ROW 2: Email & Phone -->
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" required placeholder="john@example.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone *</label>
-                                <input type="tel" id="phone" name="phone" required placeholder="(602) 555-0123">
-                            </div>
-                        </div>
+        window.removeVehicleForNowSnippet = function(vId) {
+            if (vehicles.length > 1) {
+                vehicles = vehicles.filter(v => v.id !== vId);
+                renderVehicles();
+            } else {
+                alert("At least one vehicle is required.");
+            }
+        };
 
-                        <!-- ROW 3: Business Name & PO Number -->
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="business_name">Workshop / Shop Name <span style="font-weight: normal; color: var(--grey);">(Optional)</span></label>
-                                <input type="text" id="business_name" name="business_name" placeholder="e.g. Rennsport Tuning">
-                            </div>
-                            <div class="form-group">
-                                <label for="po_number">PO / Job # <span style="font-weight: normal; color: var(--grey);">(Optional)</span></label>
-                                <input type="text" id="po_number" name="po_number" placeholder="e.g. PO-8841 / RO#204">
-                            </div>
-                        </div>
+        window.removeVehiclePermanentlySnippet = function(vId) {
+            if (confirm("Are you sure you want to remove this vehicle from your history permanently?")) {
+                vehicles = vehicles.filter(v => v.id !== vId);
+                
+                if (vehicles.length === 0) {
+                    vehicles.push({
+                        id: Date.now(),
+                        name: '',
+                        vin: '',
+                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }]
+                    });
+                }
 
-                        <!-- Vehicles Section -->
-                        <div class="section-title">
-                            <span>Vehicles & Parts Inquiry</span>
-                            <button type="button" class="btn btn-blue" id="addVehicle">+ Add Another Vehicle</button>
-                        </div>
+                if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                    let history = [];
+                    try {
+                        const stored = localStorage.getItem('persistent_vehicles');
+                        if (stored) history = JSON.parse(stored);
+                    } catch(e) {}
+                    history = history.filter(h => h.id !== vId);
+                    localStorage.setItem('persistent_vehicles', JSON.stringify(history));
+                }
 
-                        <div id="vehiclesContainer">
-                            <!-- Dynamically generated vehicle cards go here -->
-                        </div>
+                renderVehicles();
+            }
+        };
 
-                        <!-- Summary Display Preview -->
-                        <div class="form-group">
-                            <div id="summaryDisplay" class="summary-preview-wrap"></div>
+        window.updateVehicleValueSnippet = function(vId, field, value) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle) {
+                vehicle[field] = value;
+                saveVehiclesToLocalStorage();
+            }
+            generateYAMLSnippet();
+        };
 
-                            <!-- Hidden Fields for GHL Webhook -->
-                            <textarea id="last_inquiry_yaml_form" name="last_inquiry_yaml_form" class="hidden-field"></textarea>
-                            <textarea id="last_inquiry_yaml_form_user" name="last_inquiry_yaml_form_user" class="hidden-field"></textarea>
-                            <textarea id="last_inquiry_csv_gsheets_form" name="last_inquiry_csv_gsheets_form" class="hidden-field"></textarea>
-                            <textarea id="last_inquiry_yaml_form_html" name="last_inquiry_yaml_form_html" class="hidden-field"></textarea>
-                            <textarea id="last_inquiry_yaml_form_user_html" name="last_inquiry_yaml_form_user_html" class="hidden-field"></textarea>
-                        </div>
+        window.addPartSnippet = function(vId) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle) {
+                vehicle.parts.push({ id: Date.now(), name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' });
+                saveVehiclesToLocalStorage();
+                renderVehicles();
+            }
+        };
 
-                        <!-- DIY Tech Checkbox -->
-                        <div class="checkbox-row diy-group">
-                            <input type="checkbox" id="diy_tech" name="diy_tech" value="Yes">
-                            <label for="diy_tech">
-                                <strong>DIY / I'm my own technician</strong> — Ordering parts for my personal build or DIY project.
-                            </label>
-                        </div>
+        window.removePartSnippet = function(vId, pId) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle && vehicle.parts.length > 1) {
+                vehicle.parts = vehicle.parts.filter(p => p.id !== pId);
+                saveVehiclesToLocalStorage();
+                renderVehicles();
+            } else {
+                alert("At least one part is required per vehicle.");
+            }
+        };
 
-                        <!-- Terms -->
-                        <div class="terms-group">
-                            <input type="checkbox" id="terms" name="terms_and_conditions" required>
-                            <label for="terms">This inquiry goes only to a Euro Parts West sales associate: sales@europartswest.com <br><br>
-                                Confidentiality matters to us — we won’t share, sell, or use your contact info for marketing. <br><br> 
-                                I agree to the terms and conditions and consent to be contacted regarding my inquiry to Euro Parts West.</label>
-                        </div>
+        window.updatePartSnippet = function(vId, pId, field, value) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle) {
+                const part = vehicle.parts.find(p => p.id === pId);
+                if (part) {
+                    part[field] = field === 'qty' ? parseInt(value) || 1 : value;
+                    saveVehiclesToLocalStorage();
+                    generateYAMLSnippet();
+                }
+            }
+        };
 
-                        <button type="submit" class="btn submit-btn">Submit Inquiry</button>
-                    </form>
-                </div>
+        // Date format: Tuesday 9/15/2026 at 09:04 AM
+        function formatDateSnippet(date) {
+            const d = new Date(date);
+            const weekday = d.toLocaleDateString('en-US', { weekday: 'long' });
+            const month = d.getMonth() + 1;
+            const day = d.getDate();
+            const year = d.getFullYear();
+            const datePart = `${month}/${day}/${year}`;
+            
+            let hours = d.getHours();
+            const minutes = d.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const hoursStr = hours.toString().padStart(2, '0');
+            const timePart = `${hoursStr}:${minutes} ${ampm}`;
+            return `${weekday} ${datePart} at ${timePart}`;
+        }
 
-                <script>
-                    (function() {
-                        // ==========================================
-                        // CONFIGURATION & TOGGLE VARIABLES
-                        // ==========================================
-                        const STICK_FIELDS_MAIN_TOGGLE = true;    // Set to true to remember main contact fields
-                        const STICKY_FIELDS_ITEMS_TOGGLE = false; // Set to true to show history buttons & remember parts across sessions
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
-                        const STICKY_FIELDS_MAIN = [
-                            'first_name', 
-                            'last_name', 
-                            'email', 
-                            'phone', 
-                            'business_name', 
-                            'po_number', 
-                            'diy_tech', 
-                            'terms'
-                        ];
+        function generateYAMLSnippet() {
+            let yamlFullLines = [];       // Plain text official YAML for last_inquiry_yaml_form (Admin)
+            let yamlUserLines = [];       // Plain text official YAML for last_inquiry_yaml_form_user (User - No inquiries/last_inquiry)
+            let htmlFullParts = [];       // Rich HTML email block for Admin
+            let htmlUserParts = [];       // Rich HTML card block for User and On-Screen Summary
+            let csvLines = [];
+            const timestamp = formatDateSnippet(new Date());
 
-                        // ==========================================
-                        // STATE MANAGEMENT: VEHICLES
-                        // ==========================================
-                        let vehicles = [];
+            vehicles.forEach(vehicle => {
+                const vName = vehicle.name.trim();
+                const vVin = vehicle.vin.trim();
 
-                        function saveVehiclesToLocalStorage() {
-                            if (!STICKY_FIELDS_ITEMS_TOGGLE) return;
-                            const filteredVehicles = vehicles.filter(v => 
-                                (v.name && v.name.trim() !== '') || 
-                                (v.vin && v.vin.trim() !== '') || 
-                                (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
-                            );
-                            localStorage.setItem('persistent_vehicles', JSON.stringify(filteredVehicles));
-                        }
+                if (vName) {
+                    // 1. Official Internal YAML (Admin)
+                    yamlFullLines.push(`- vehicle: ${vName}`);
+                    yamlFullLines.push(`  vin: ${vVin}`);
+                    yamlFullLines.push(`  items:`);
 
-                        // Load persistent vehicles only if items toggle is ON
-                        if (STICKY_FIELDS_ITEMS_TOGGLE) {
-                            const storedVehicles = localStorage.getItem('persistent_vehicles');
-                            if (storedVehicles) {
-                                try {
-                                    const parsed = JSON.parse(storedVehicles);
-                                    vehicles = parsed.filter(v => 
-                                        (v.name && v.name.trim() !== '') || 
-                                        (v.vin && v.vin.trim() !== '') || 
-                                        (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
-                                    );
-                                } catch (e) {
-                                    console.error("Error parsing stored vehicles", e);
-                                    vehicles = [];
-                                }
-                            }
-                        }
+                    // 2. Official User YAML (Cleaned of inquiries & last_inquiry)
+                    yamlUserLines.push(`- vehicle: ${vName}`);
+                    yamlUserLines.push(`  vin: ${vVin}`);
+                    yamlUserLines.push(`  items:`);
 
-                        // Default fresh vehicle if empty
-                        if (vehicles.length === 0) {
-                            vehicles = [
-                                {
-                                    id: Date.now(),
-                                    name: '',
-                                    vin: '',
-                                    parts: [
-                                        { id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }
-                                    ]
-                                }
-                            ];
-                        }
+                    // CSV
+                    csvLines.push(`Vehicle: ${vName}`);
 
-                        const vehiclesContainer = document.getElementById('vehiclesContainer');
-                        const summaryDisplay = document.getElementById('summaryDisplay');
-                        const yamlHidden = document.getElementById('last_inquiry_yaml_form');
-                        const yamlHiddenUser = document.getElementById('last_inquiry_yaml_form_user');
-                        const yamlHiddenHtml = document.getElementById('last_inquiry_yaml_form_html');
-                        const yamlHiddenUserHtml = document.getElementById('last_inquiry_yaml_form_user_html');
-                        const addVehicleBtn = document.getElementById('addVehicle');
-                        const inquiryForm = document.getElementById('inquiryForm');
-                        const successMessage = document.getElementById('successMessage');
-                        const btnSubmitAnother = document.getElementById('btnSubmitAnother');
+                    // 3. User HTML Card for Vehicle
+                    let vHtmlUser = `
+<div style="margin-bottom: 20px;">
+    <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: #a0a0a0; margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
+    </div>
+    <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
+`;
 
-                        // ==========================================
-                        // RENDER VEHICLES & PARTS
-                        // ==========================================
-                        function renderVehicles() {
-                            vehiclesContainer.innerHTML = '';
-                            
-                            let history = [];
-                            if (STICKY_FIELDS_ITEMS_TOGGLE) {
-                                try {
-                                    const stored = localStorage.getItem('persistent_vehicles');
-                                    if (stored) history = JSON.parse(stored);
-                                } catch(e) {}
-                            }
+                    // 4. Admin HTML Email for Vehicle
+                    let vHtmlAdmin = `
+<div style="margin-bottom: 20px;">
+    <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: #a0a0a0; margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
+    </div>
+    <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
+`;
 
-                            vehicles.forEach((vehicle, vIndex) => {
-                                const isInHistory = history.some(h => h.id === vehicle.id && (h.name || h.vin));
-                                const showRemoveForNow = vehicles.length > 1;
-
-                                // Build action buttons based on STICKY_FIELDS_ITEMS_TOGGLE
-                                let actionButtonsHtml = '';
-                                if (STICKY_FIELDS_ITEMS_TOGGLE) {
-                                    actionButtonsHtml = `
-                                        <div class="vehicle-actions">
-                                            ${showRemoveForNow ? `<button type="button" class="btn btn-danger btn-sm" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>` : ''}
-                                            ${isInHistory ? `<button type="button" class="btn btn-danger btn-sm" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove From History</button>` : ''}
-                                        </div>
-                                    `;
-                                } else if (vehicles.length > 1) {
-                                    // Clean simple remove button for standard non-sticky mode
-                                    actionButtonsHtml = `
-                                        <div class="vehicle-actions">
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeVehicleSnippet(${vehicle.id})" title="Remove Vehicle">Remove Vehicle</button>
-                                        </div>
-                                    `;
-                                }
-
-                                const vBlock = document.createElement('div');
-                                vBlock.className = 'vehicle-block clearfix';
-                                vBlock.innerHTML = `
-                                    <div class="vehicle-header-wrap">
-                                        <div class="row">
-                                            <div class="form-group" style="flex: 2;">
-                                                <label>Vehicle Name (Make, Model, Year)</label>
-                                                <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
-                                            </div>
-                                            <div class="form-group" style="flex: 1;">
-                                                <label>VIN</label>
-                                                <input type="text" placeholder="Optional" value="${vehicle.vin}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'vin', this.value)">
-                                            </div>
-                                        </div>
-                                        ${actionButtonsHtml}
-                                    </div>
-                                    <div class="parts-container" id="parts-${vehicle.id}"></div>
-                                    <button type="button" class="btn btn-blue btn-add-part" onclick="addPartSnippet(${vehicle.id})">+ Add Part for this Vehicle</button>
-                                `;
-                                
-                                const partsContainer = vBlock.querySelector('.parts-container');
-                                vehicle.parts.forEach((part) => {
-                                    const pBlock = document.createElement('div');
-                                    pBlock.className = 'part-block';
-                                    pBlock.innerHTML = `
-                                        <button type="button" class="btn btn-danger remove-btn" onclick="removePartSnippet(${vehicle.id}, ${part.id})" title="Remove Part">×</button>
-                                        <div class="row">
-                                            <div class="form-group" style="flex: 1.5;">
-                                                <label>Part No.</label>
-                                                <input type="text" placeholder="Optional" value="${part.partNo}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'partNo', this.value)">
-                                            </div>
-                                            <div class="form-group" style="flex: 2.5;">
-                                                <label>Part Name / Description</label>
-                                                <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
-                                            </div>
-                                            <div class="form-group" style="flex: 1.2;">
-                                                <label>Brand / Manufacturer</label>
-                                                <input type="text" placeholder="Optional" value="${part.manufacturer || ''}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'manufacturer', this.value)">
-                                            </div>
-                                            <div class="form-group" style="flex: 0.6;">
-                                                <label>Qty</label>
-                                                <input type="number" min="1" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
-                                            </div>
-                                        </div>
-                                    `;
-                                    partsContainer.appendChild(pBlock);
-                                });
-                                
-                                vehiclesContainer.appendChild(vBlock);
-                            });
-                            generateYAMLSnippet();
-                        }
-
-                        // ==========================================
-                        // VEHICLE & PART MUTATION METHODS
-                        // ==========================================
-                        window.addVehicleSnippet = function() {
-                            vehicles.push({
-                                id: Date.now(),
-                                name: '',
-                                vin: '',
-                                parts: [{ id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }]
-                            });
-                            saveVehiclesToLocalStorage();
-                            renderVehicles();
-                        };
-
-                        window.removeVehicleSnippet = function(vId) {
-                            if (vehicles.length > 1) {
-                                vehicles = vehicles.filter(v => v.id !== vId);
-                                saveVehiclesToLocalStorage();
-                                renderVehicles();
-                            }
-                        };
-
-                        window.removeVehicleForNowSnippet = function(vId) {
-                            if (vehicles.length > 1) {
-                                vehicles = vehicles.filter(v => v.id !== vId);
-                                renderVehicles();
-                            } else {
-                                alert("At least one vehicle is required.");
-                            }
-                        };
-
-                        window.removeVehiclePermanentlySnippet = function(vId) {
-                            if (confirm("Are you sure you want to remove this vehicle from your history permanently?")) {
-                                vehicles = vehicles.filter(v => v.id !== vId);
-                                if (vehicles.length === 0) {
-                                    vehicles.push({
-                                        id: Date.now(),
-                                        name: '',
-                                        vin: '',
-                                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }]
-                                    });
-                                }
-
-                                if (STICKY_FIELDS_ITEMS_TOGGLE) {
-                                    let history = [];
-                                    try {
-                                        const stored = localStorage.getItem('persistent_vehicles');
-                                        if (stored) history = JSON.parse(stored);
-                                    } catch(e) {}
-                                    history = history.filter(h => h.id !== vId);
-                                    localStorage.setItem('persistent_vehicles', JSON.stringify(history));
-                                }
-
-                                renderVehicles();
-                            }
-                        };
-
-                        window.updateVehicleValueSnippet = function(vId, field, value) {
-                            const vehicle = vehicles.find(v => v.id === vId);
-                            if (vehicle) {
-                                vehicle[field] = value;
-                                saveVehiclesToLocalStorage();
-                            }
-                            generateYAMLSnippet();
-                        };
-
-                        window.addPartSnippet = function(vId) {
-                            const vehicle = vehicles.find(v => v.id === vId);
-                            if (vehicle) {
-                                vehicle.parts.push({ id: Date.now(), name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' });
-                                saveVehiclesToLocalStorage();
-                                renderVehicles();
-                            }
-                        };
-
-                        window.removePartSnippet = function(vId, pId) {
-                            const vehicle = vehicles.find(v => v.id === vId);
-                            if (vehicle && vehicle.parts.length > 1) {
-                                vehicle.parts = vehicle.parts.filter(p => p.id !== pId);
-                                saveVehiclesToLocalStorage();
-                                renderVehicles();
-                            } else {
-                                alert("At least one part is required per vehicle.");
-                            }
-                        };
-
-                        window.updatePartSnippet = function(vId, pId, field, value) {
-                            const vehicle = vehicles.find(v => v.id === vId);
-                            if (vehicle) {
-                                const part = vehicle.parts.find(p => p.id === pId);
-                                if (part) {
-                                    part[field] = field === 'qty' ? parseInt(value) || 1 : value;
-                                    saveVehiclesToLocalStorage();
-                                    generateYAMLSnippet();
-                                }
-                            }
-                        };
-
-                        function formatDateSnippet(date) {
-                            const d = new Date(date);
-                            const weekday = d.toLocaleDateString('en-US', { weekday: 'long' });
-                            const month = d.getMonth() + 1;
-                            const day = d.getDate();
-                            const year = d.getFullYear();
-                            
-                            let hours = d.getHours();
-                            const minutes = d.getMinutes().toString().padStart(2, '0');
-                            const ampm = hours >= 12 ? 'PM' : 'AM';
-                            hours = hours % 12 || 12;
-                            const hoursStr = hours.toString().padStart(2, '0');
-                            return `${weekday} ${month}/${day}/${year} at ${hoursStr}:${minutes} ${ampm}`;
-                        }
-
-                        function escapeHtml(str) {
-                            if (!str) return '';
-                            return String(str)
-                                .replace(/&/g, '&amp;')
-                                .replace(/</g, '&lt;')
-                                .replace(/>/g, '&gt;')
-                                .replace(/"/g, '&quot;')
-                                .replace(/'/g, '&#039;');
-                        }
-
-                        // ==========================================
-                        // GENERATE YAML, CSV & HTML SUMMARIES
-                        // ==========================================
-                        function generateYAMLSnippet() {
-                            let yamlFullLines = [];
-                            let yamlUserLines = [];
-                            let htmlFullParts = [];
-                            let htmlUserParts = [];
-                            let csvLines = [];
-                            const timestamp = formatDateSnippet(new Date());
-
-                            const bName = (document.getElementById('business_name')?.value || '').trim();
-                            const poNum = (document.getElementById('po_number')?.value || '').trim();
-                            const isDiy = document.getElementById('diy_tech')?.checked;
-
-                            // Add Business Header metadata to internal YAML if present
-                            if (bName) yamlFullLines.push(`business_name: ${bName}`);
-                            if (poNum) yamlFullLines.push(`po_number: ${poNum}`);
-                            if (isDiy) yamlFullLines.push(`diy_tech: true`);
-                            if (bName || poNum || isDiy) yamlFullLines.push('---');
-
-                            vehicles.forEach(vehicle => {
-                                const vName = vehicle.name.trim();
-                                const vVin = vehicle.vin.trim();
-
-                                if (vName) {
-                                    yamlFullLines.push(`- vehicle: ${vName}`);
-                                    yamlFullLines.push(`  vin: ${vVin}`);
-                                    yamlFullLines.push(`  items:`);
-
-                                    yamlUserLines.push(`- vehicle: ${vName}`);
-                                    yamlUserLines.push(`  vin: ${vVin}`);
-                                    yamlUserLines.push(`  items:`);
-
-                                    csvLines.push(`Vehicle: ${vName}`);
-
-                                    let vHtmlUser = `
-                                        <div style="margin-bottom: 20px;">
-                                            <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
-                                                🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: #a0a0a0; margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
-                                            </div>
-                                            <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
-                                    `;
-
-                                    let vHtmlAdmin = `
-                                        <div style="margin-bottom: 20px;">
-                                            <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
-                                                🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: #a0a0a0; margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
-                                            </div>
-                                            <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
-                                    `;
-
-                                    vehicle.parts.forEach(part => {
-                                        const rawName = part.name.trim() || 'Unnamed Part';
-                                        const pMan = part.manufacturer ? part.manufacturer.trim() : '';
-                                        
-                                        let pName = rawName;
-                                        if (pMan && !pName.toLowerCase().includes(pMan.toLowerCase())) {
-                                            pName = `${pName} ${pMan}`;
-                                        }
-
-                                        const pNo = part.partNo.trim() || '';
-                                        const pQty = part.qty || 1;
-                                        const pStatus = part.status || 'I';
-
-                                        yamlFullLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
-                                        yamlFullLines.push(`        part_no: ${pNo}`);
-                                        yamlFullLines.push(`        inquiries: 1`);
-                                        yamlFullLines.push(`        last_inquiry: ${timestamp}`);
-
-                                        yamlUserLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
-                                        yamlUserLines.push(`        part_no: ${pNo}`);
-
-                                        vHtmlUser += `
-                                            <div style="margin-bottom: 16px; padding-left: 8px;">
-                                                <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
-                                                    <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08);">QTY: ${pQty}</span>
-                                                    <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
-                                                </div>
-                                                ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
-                                            </div>
-                                        `;
-
-                                        vHtmlAdmin += `
-                                            <div style="margin-bottom: 16px; padding-left: 8px;">
-                                                <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
-                                                    <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08);">INQUIRY: 1</span>
-                                                    <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
-                                                </div>
-                                                ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
-                                                <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">📊 <strong>Inquiries:</strong> 1</div>
-                                                <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
-                                            </div>
-                                        `;
-
-                                        const escapeCSV = (str) => str.replace(/"/g, '""');
-                                        csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
-                                    });
-
-                                    vHtmlUser += `</div>`;
-                                    vHtmlAdmin += `</div>`;
-
-                                    htmlUserParts.push(vHtmlUser);
-                                    htmlFullParts.push(vHtmlAdmin);
-                                }
-                            });
-
-                            // Build meta badges for top of summary
-                            let metaSummaryPills = '';
-                            if (bName || poNum || isDiy) {
-                                metaSummaryPills = `
-                                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                        ${bName ? `<span style="background: rgba(0, 229, 255, 0.1); border: 1px solid #00e5ff; border-radius: 4px; padding: 3px 8px; font-size: 0.85rem; color: #00e5ff;">🏢 Shop: ${escapeHtml(bName)}</span>` : ''}
-                                        ${poNum ? `<span style="background: rgba(255, 255, 255, 0.08); border: 1px solid #777; border-radius: 4px; padding: 3px 8px; font-size: 0.85rem; color: #fff;">🔖 PO#: ${escapeHtml(poNum)}</span>` : ''}
-                                        ${isDiy ? `<span style="background: rgba(0, 229, 255, 0.1); border: 1px solid #00e5ff; border-radius: 4px; padding: 3px 8px; font-size: 0.85rem; color: #00e5ff;">🔧 DIY Technician</span>` : ''}
-                                    </div>
-                                `;
-                            }
-
-                            const userCardHtml = `
-                                <div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
-                                    <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 16px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
-                                        📋 Inquiry Summary
-                                    </div>
-                                    ${metaSummaryPills}
-                                    ${htmlUserParts.length > 0 ? htmlUserParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
-                                </div>
-                            `;
-
-                            const adminCardHtml = `
-                                <div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
-                                    <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 16px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
-                                        📋 Product Inquiry Data
-                                    </div>
-                                    ${metaSummaryPills}
-                                    ${htmlFullParts.length > 0 ? htmlFullParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
-                                </div>
-                            `;
-
-                            summaryDisplay.innerHTML = userCardHtml;
-                            yamlHidden.value = yamlFullLines.join('\n');
-                            yamlHiddenUser.value = yamlUserLines.join('\n');
-
-                            const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
-                            if (csvHidden) csvHidden.value = csvLines.join('\n');
-                            
-                            yamlHiddenHtml.value = adminCardHtml;
-                            yamlHiddenUserHtml.value = userCardHtml;
-                        }
-
-                        // Add source hidden field
-                        const sourceInput = document.createElement('input');
-                        sourceInput.type = 'hidden';
-                        sourceInput.name = 'source';
-                        sourceInput.value = 'Product Inquiry Web Form';
-                        inquiryForm.appendChild(sourceInput);
-
-                        addVehicleBtn.addEventListener('click', addVehicleSnippet);
-                        renderVehicles();
-
-                        // ==========================================
-                        // STICKY FIELDS & URL PRE-FILLING
-                        // ==========================================
+                    vehicle.parts.forEach(part => {
+                        const rawName = part.name.trim() || 'Unnamed Part';
+                        const pMan = part.manufacturer ? part.manufacturer.trim() : '';
                         
-                        // 1. Restore Sticky Fields (if enabled)
-                        if (STICK_FIELDS_MAIN_TOGGLE) {
-                            STICKY_FIELDS_MAIN.forEach(fieldId => {
-                                const storedValue = localStorage.getItem('sticky_' + fieldId);
-                                if (storedValue !== null) {
-                                    const field = document.getElementById(fieldId);
-                                    if (field) {
-                                        if (field.type === 'checkbox') {
-                                            field.checked = (storedValue === 'true' || storedValue === 'Yes');
-                                        } else {
-                                            field.value = storedValue;
-                                        }
-                                    }
-                                }
-                            });
+                        let pName = rawName;
+                        if (pMan && !pName.toLowerCase().includes(pMan.toLowerCase())) {
+                            pName = `${pName} ${pMan}`;
                         }
 
-                        // 2. Pre-fill from URL Query Parameters (Overrides sticky)
-                        function prefillFromQueryParams() {
-                            const urlParams = new URLSearchParams(window.location.search);
-                            if (!urlParams.toString()) return;
+                        const pNo = part.partNo.trim() || '';
+                        const pQty = part.qty || 1;
+                        const pStatus = part.status || 'I';
 
-                            const paramMap = {
-                                first_name: ['first_name', 'fname', 'fn'],
-                                last_name: ['last_name', 'lname', 'ln'],
-                                email: ['email', 'mail'],
-                                phone: ['phone', 'tel', 'mobile'],
-                                business_name: ['business_name', 'shop_name', 'workshop', 'company', 'company_name', 'business'],
-                                po_number: ['po_number', 'po', 'job_number', 'ro_number'],
-                                diy_tech: ['diy_tech', 'diy', 'diy_technician'],
-                                terms: ['terms', 'terms_and_conditions']
-                            };
+                        // Official Full Internal YAML
+                        yamlFullLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
+                        yamlFullLines.push(`        part_no: ${pNo}`);
+                        yamlFullLines.push(`        inquiries: 1`);
+                        yamlFullLines.push(`        last_inquiry: ${timestamp}`);
 
-                            Object.keys(paramMap).forEach(fieldId => {
-                                const aliases = paramMap[fieldId];
-                                for (const alias of aliases) {
-                                    if (urlParams.has(alias)) {
-                                        const paramVal = urlParams.get(alias);
-                                        const el = document.getElementById(fieldId);
-                                        if (el) {
-                                            if (el.type === 'checkbox') {
-                                                const isChecked = ['1', 'true', 'yes', 'on'].includes(paramVal.toLowerCase());
-                                                el.checked = isChecked;
-                                                if (STICK_FIELDS_MAIN_TOGGLE) {
-                                                    localStorage.setItem('sticky_' + fieldId, isChecked.toString());
-                                                }
-                                            } else {
-                                                el.value = paramVal;
-                                                if (STICK_FIELDS_MAIN_TOGGLE) {
-                                                    localStorage.setItem('sticky_' + fieldId, paramVal);
-                                                }
-                                            }
-                                        }
-                                        break;
-                                    }
-                                }
-                            });
+                        // Official User YAML
+                        yamlUserLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
+                        yamlUserLines.push(`        part_no: ${pNo}`);
+
+                        // User HTML Item
+                        vHtmlUser += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08);">QTY: ${pQty}</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+    </div>`;
+
+                        // Admin HTML Item
+                        vHtmlAdmin += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: inline-block; border: 1.5px solid #00e5ff; border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: #00e5ff; background: rgba(0, 229, 255, 0.08);">INQUIRY: 1</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: #ffffff;">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">📊 <strong>Inquiries:</strong> 1</div>
+        <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
+    </div>`;
+
+                        // CSV Format
+                        const escapeCSV = (str) => str.replace(/"/g, '""');
+                        csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
+                    });
+
+                    vHtmlUser += `</div>`;
+                    vHtmlAdmin += `</div>`;
+
+                    htmlUserParts.push(vHtmlUser);
+                    htmlFullParts.push(vHtmlAdmin);
+                }
+            });
+
+            // Card template for user-facing HTML
+            const userCardHtml = `
+<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
+    <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
+        📋 Inquiry Summary
+    </div>
+    ${htmlUserParts.length > 0 ? htmlUserParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
+</div>`;
+
+            // Card template for admin HTML email
+            const adminCardHtml = `
+<div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
+    <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
+        📋 Product Inquiry Data
+    </div>
+    ${htmlFullParts.length > 0 ? htmlFullParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
+</div>`;
+
+            // Render summary preview
+            summaryDisplay.innerHTML = userCardHtml;
+
+            // Plain text YAML strings
+            yamlHidden.value = yamlFullLines.join('\n');
+            yamlHiddenUser.value = yamlUserLines.join('\n');
+
+            const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
+            if (csvHidden) csvHidden.value = csvLines.join('\n');
+            
+            // HTML formatted strings
+            yamlHiddenHtml.value = adminCardHtml;
+            yamlHiddenUserHtml.value = userCardHtml;
+        }
+
+        // Add hidden field for source
+        const sourceInput = document.createElement('input');
+        sourceInput.type = 'hidden';
+        sourceInput.name = 'source';
+        sourceInput.value = 'Product Inquiry Web Form';
+        inquiryForm.appendChild(sourceInput);
+
+        addVehicleBtn.addEventListener('click', addVehicleSnippet);
+        renderVehicles();
+
+        // ==========================================
+        // STICKY MAIN FIELDS INITIALIZATION
+        // ==========================================
+        if (STICKY_FIELDS_MAIN_TOGGLE) {
+            STICKY_FIELDS_MAIN.forEach(fieldId => {
+                const storedValue = localStorage.getItem('sticky_' + fieldId);
+                if (storedValue !== null) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        if (field.type === 'checkbox') {
+                            field.checked = storedValue === 'true';
+                        } else {
+                            field.value = storedValue;
                         }
+                    }
+                }
+            });
 
-                        prefillFromQueryParams();
-                        generateYAMLSnippet();
+            // Handle first vehicle sticky field (if items sticky enabled)
+            if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                const storedVehicle = localStorage.getItem('sticky_vehicle_0');
+                if (storedVehicle) {
+                    const firstVehicleInput = document.querySelector('input[placeholder="e.g. Porsche 911 1988"]');
+                    if (firstVehicleInput) {
+                        firstVehicleInput.value = storedVehicle;
+                        if (vehicles[0]) vehicles[0].name = storedVehicle;
+                    }
+                }
 
-                        // Phone Number Live Formatting
-                        const phoneInput = document.getElementById('phone');
-                        if (phoneInput) {
-                            phoneInput.addEventListener('input', function(e) {
-                                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-                                if (e.target.value.startsWith('+')) {
-                                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
-                                } else {
-                                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-                                }
-                            });
+                const storedVin = localStorage.getItem('sticky_vin_0');
+                if (storedVin) {
+                    const firstVinInput = document.querySelector('input[placeholder="Optional"]');
+                    if (firstVinInput) {
+                        firstVinInput.value = storedVin;
+                        if (vehicles[0]) vehicles[0].vin = storedVin;
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // GET PARAMETERS PREFILL (URL QUERY STRINGS)
+        // ==========================================
+        function prefillFromQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.toString()) return;
+
+            const paramMap = {
+                first_name: urlParams.get('first_name') || urlParams.get('first') || urlParams.get('fname'),
+                last_name: urlParams.get('last_name') || urlParams.get('last') || urlParams.get('lname'),
+                email: urlParams.get('email'),
+                phone: urlParams.get('phone') || urlParams.get('tel'),
+                business_name: urlParams.get('business_name') || urlParams.get('company') || urlParams.get('workshop') || urlParams.get('shop'),
+                po_number: urlParams.get('po_number') || urlParams.get('po') || urlParams.get('job'),
+                diy_tech: urlParams.get('diy_tech') || urlParams.get('diy')
+            };
+
+            for (const [key, val] of Object.entries(paramMap)) {
+                if (val !== null && val !== undefined) {
+                    const el = document.getElementById(key);
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            el.checked = (val === 'true' || val === '1' || val.toLowerCase() === 'yes' || val.toLowerCase() === 'on');
+                        } else {
+                            el.value = val;
                         }
+                        // Dispatch input event to trigger formatters (e.g. phone)
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+            }
+        }
 
-                        // Listen to changes to save sticky values and update summary
-                        inquiryForm.addEventListener('input', function(e) {
-                            if (STICK_FIELDS_MAIN_TOGGLE && STICKY_FIELDS_MAIN.includes(e.target.id)) {
-                                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-                                localStorage.setItem('sticky_' + e.target.id, val);
-                            }
-                            if (['business_name', 'po_number', 'diy_tech'].includes(e.target.id)) {
-                                generateYAMLSnippet();
-                            }
-                        });
+        // Run GET parameter prefill (overrides/sets query values)
+        prefillFromQueryParams();
 
-                        inquiryForm.addEventListener('change', function(e) {
-                            if (['diy_tech', 'terms'].includes(e.target.id)) {
-                                if (STICK_FIELDS_MAIN_TOGGLE) {
-                                    localStorage.setItem('sticky_' + e.target.id, e.target.checked);
-                                }
-                                generateYAMLSnippet();
-                            }
-                        });
+        // Phone formatting logic
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                if (e.target.value.startsWith('+')) {
+                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
+                } else {
+                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+                }
+            });
+        }
 
-                        // ==========================================
-                        // FORM SUBMISSION (GHL WEBHOOK)
-                        // ==========================================
-                        inquiryForm.addEventListener('submit', async (e) => {
-                            e.preventDefault();
+        // Save main sticky values on user input
+        inquiryForm.addEventListener('input', function(e) {
+            if (STICKY_FIELDS_MAIN_TOGGLE && STICKY_FIELDS_MAIN.includes(e.target.id)) {
+                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                localStorage.setItem('sticky_' + e.target.id, val);
+            }
+        });
 
-                            let errors = [];
-                            vehicles.forEach((v, index) => {
-                                const vehicleName = v.name || `Vehicle ${index + 1}`;
-                                const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
-                                if (!hasPartName) {
-                                    errors.push(`Please enter at least one part name for ${vehicleName}.`);
-                                }
-                                
-                                v.parts.forEach((p) => {
-                                    if (p.qty < 1) {
-                                        errors.push(`Quantity for part "${p.name || 'Unnamed'}" in ${vehicleName} must be at least 1.`);
-                                    }
-                                });
-                            });
+        inquiryForm.addEventListener('change', function(e) {
+            if (STICKY_FIELDS_MAIN_TOGGLE && STICKY_FIELDS_MAIN.includes(e.target.id)) {
+                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                localStorage.setItem('sticky_' + e.target.id, val);
+            }
+        });
 
-                            if (errors.length > 0) {
-                                alert("Submission Notice:\n\n" + errors.join("\n"));
-                                return;
-                            }
+        // Form submission
+        inquiryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-                            const formData = new FormData(inquiryForm);
-                            const data = Object.fromEntries(formData.entries());
+            // Validation
+            let errors = [];
+            vehicles.forEach((v, index) => {
+                const vehicleName = v.name || `Vehicle ${index + 1}`;
+                const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
+                if (!hasPartName) {
+                    errors.push(`Please enter at least one part name for ${vehicleName}.`);
+                }
+                
+                v.parts.forEach((p, pIndex) => {
+                    if (p.qty < 1) {
+                        errors.push(`Quantity for part "${p.name || 'Unnamed'}" in ${vehicleName} must be at least 1.`);
+                    }
+                });
+            });
 
-                            // Convert checkbox booleans cleanly
-                            data.diy_tech = document.getElementById('diy_tech').checked ? 'Yes' : 'No';
-                            data.terms_and_conditions = document.getElementById('terms').checked ? 'Yes' : 'No';
-                            
-                            const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/6bdeea4e-6b4e-49f7-afef-dd77d3bd3dfd';
+            if (errors.length > 0) {
+                alert("Submission Failed:\n\n" + errors.join("\n"));
+                return;
+            }
 
-                            try {
-                                const response = await fetch(webhookUrl, {
-                                    method: 'POST',
-                                    headers: { 
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(data)
-                                });
+            const formData = new FormData(inquiryForm);
+            const data = Object.fromEntries(formData.entries());
+            
+            const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/6bdeea4e-6b4e-49f7-afef-dd77d3bd3dfd';
 
-                                if (response.ok) {
-                                    inquiryForm.style.display = 'none';
-                                    document.querySelector('.inquiry-form-container .header').style.display = 'none';
-                                    successMessage.style.display = 'block';
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                } else {
-                                    throw new Error(`Server responded with ${response.status}`);
-                                }
+            try {
+                if (webhookUrl === 'REPLACE_WITH_YOUR_GHL_WEBHOOK_URL') {
+                    alert('Configuration Error: Please provide a valid GHL Webhook URL in the script.');
+                    return;
+                }
 
-                            } catch (error) {
-                                console.error('Submission Error:', error);
-                                alert('There was an issue sending your inquiry. Please try again or call us directly.');
-                            }
-                        });
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
 
-                        if (btnSubmitAnother) {
-                            btnSubmitAnother.addEventListener('click', function() {
-                                successMessage.style.display = 'none';
-                                inquiryForm.style.display = 'block';
-                                document.querySelector('.inquiry-form-container .header').style.display = 'block';
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                            });
-                        }
-                    })();
-                </script>
+                if (response.ok) {
+                    inquiryForm.style.display = 'none';
+                    document.querySelector('.inquiry-form-container .header').style.display = 'none';
+                    successMessage.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+
+            } catch (error) {
+                console.error('Submission Error:', error);
+                alert('There was an issue sending your inquiry. Please try again or contact us directly.');
+            }
+        });
+
+        // Handle "Submit Another" button
+        if (btnSubmitAnother) {
+            btnSubmitAnother.addEventListener('click', function() {
+                successMessage.style.display = 'none';
+                inquiryForm.style.display = 'block';
+                document.querySelector('.inquiry-form-container .header').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    })();
+</script>
+                <!-- EMBEDDED FORM SNIPPET END -->
             </div>
         </section>
     </main>
@@ -1141,5 +1118,6 @@
     </footer>
 
     <script src="assets/js/app.js"></script>
+
 </body>
 </html>
