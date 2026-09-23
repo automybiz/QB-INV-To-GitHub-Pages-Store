@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Euro Parts West : European Parts Distribution and Design</title>
   <meta name="description" content="Welcome to EP-West, the European Repair Specialist's complete source for auto parts. High quality German, Italian, Swedish, and British vehicle coverage." />
+  
+  <!-- Global Stylesheet & Fonts -->
+  <link rel="stylesheet" href="assets/css/styles.css?v=1.3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     /* Reset & Base Setup */
     * {
@@ -15,11 +22,11 @@
 
     body {
       min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
       font-size: 15px;
       line-height: 1.5;
       color: #f2f2f2;
-      /* Carbon fiber woven pattern simulation matching the original */
+      /* Carbon fiber woven pattern */
       background-color: #202426;
       background-image: 
         radial-gradient(rgba(0, 0, 0, 0.75) 15%, transparent 16%),
@@ -28,11 +35,23 @@
         radial-gradient(rgba(255, 255, 255, 0.08) 15%, transparent 20%);
       background-size: 16px 16px;
       background-position: 0 0, 8px 8px, 0 1px, 8px 9px;
-      padding: 40px 20px 30px;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Page Content Wrapper */
+    .page-wrapper {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 45px 20px 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      flex: 1;
     }
 
     a {
@@ -48,15 +67,6 @@
 
     .red-accent {
       color: #e52521;
-    }
-
-    .page-wrapper {
-      width: 100%;
-      max-width: 1120px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     /* Top Two-Column Header Block */
@@ -157,7 +167,7 @@
       color: #e8e8e8;
     }
 
-    /* Partners Section */
+    /* Technical Partners Section */
     .partners-section {
       width: 100%;
       max-width: 980px;
@@ -187,10 +197,10 @@
       white-space: nowrap;
     }
 
-    /* Bottom Logistics / Tracking Section */
+    /* Logistics / Tracking Section */
     .logistics-block {
       text-align: center;
-      margin-bottom: 70px;
+      margin-bottom: 50px;
       font-size: 14.5px;
       line-height: 1.6;
     }
@@ -216,10 +226,12 @@
     footer {
       width: 100%;
       text-align: center;
-      font-size: 11.5px;
+      font-size: 12px;
       color: #a0a0a0;
-      padding-top: 25px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 25px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: transparent;
+      margin-top: auto;
     }
 
     /* Responsive Adjustments */
@@ -243,17 +255,39 @@
       .partners-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-      body {
-        padding: 25px 12px 20px;
+      .page-wrapper {
+        padding: 30px 14px 20px;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- Sticky Site Navigation Header -->
+  <header>
+    <nav class="container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="assets/images/EURO-PARTS-WEST-logo-720-v1911.gif" alt="EuroPartsWest">
+        </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="https://www.ebay.com/str/europartswestllc" target="_blank" rel="noopener noreferrer">eBay Store</a></li>
+        <li><a href="inquiry.html">Inquiry</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+
   <div class="page-wrapper">
-    <!-- Top Hero Section: 2 Columns -->
-    <header class="hero-grid">
+    <!-- Top Two-Column Content Block -->
+    <section class="hero-grid">
       <!-- Left Column: EPW Crest Logo & Welcome Blurb -->
       <div class="hero-left">
         <div class="hero-logo-wrap">
@@ -305,15 +339,17 @@
             <a href="mailto:day@europartswest.com">day@europartswest.com</a>
           </div>
         </div>
-
       </div>
-    </header>
+    </section>
 
     <!-- Center Section: Product Inquiry Prompt -->
     <section class="inquiry-block">
       <div class="inquiry-title">Product Inquiry / Professional Estimates:</div>
       <div class="inquiry-desc">
         Please include the part number, discription of your project, year, make, model and VIN number if available.
+        <div style="margin-top: 14px;">
+          <a href="inquiry.html" class="btn" style="padding: 9px 22px; font-size: 0.95rem;">Open Inquiry Form &rarr;</a>
+        </div>
       </div>
     </section>
 
@@ -365,8 +401,13 @@
 
   <!-- Copyright Footer -->
   <footer>
-    &copy; 2015-2017 - Euro Parts West, LLC - All Rights Reserved
+    <div class="container">
+      <p>&copy; 2026 Euro Parts West, LLC. All rights reserved.</p>
+    </div>
   </footer>
+
+  <!-- App Script for Dark/Light Theme Switching -->
+  <script src="assets/js/app.js"></script>
 
 </body>
 </html>
