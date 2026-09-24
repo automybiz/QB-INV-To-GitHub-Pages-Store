@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // 1. Root & Directory Paths
 const ROOT_DIR = path.resolve(__dirname, '..');
@@ -41,6 +42,23 @@ function getTimestampString(date = new Date()) {
   const hours = pad(date.getHours());
   const minutes = pad(date.getMinutes());
   return `${year}-${month}-${day} ${hours}-${minutes}`;
+}
+
+// 4. Get truncated commit message (max 50 characters)
+function getTruncatedCommitMessage() {
+  try {
+    // Get the latest commit message
+    const commitMessage = execSync('git log -1 --pretty=%B', { encoding: 'utf8' }).trim();
+    
+    // Truncate to 50 characters and remove newlines
+    const truncated = commitMessage.replace(/\n/g, ' ').substring(0, 50);
+    
+    // Clean up the message (remove special characters that might cause issues in filenames)
+    return truncated.replace(/[^\w\s-]/g, '').trim();
+  } catch (err) {
+    console.warn('⚠️ Could not get commit message, using default:', err.message);
+    return 'no-commit-msg';
+  }
 }
 
 // 4. Recursively collect all files from a directory
@@ -112,35 +130,35 @@ function cleanOldBundles() {
 
   let cleanedCount = 0;
   files.forEach((file) => {
-    if (file.startsWith('_project-code-bundle') && (file.endsWith('.md') || file.endsWith('.txt'))) {
+    if (file.startsWith('_code-bundle') && (file.endsWith('.md') || file.endsWith('.txt'))) {
       const filePath = path.join(OUTPUT_DIR, file);
       try {
         const stats = fs.statSync(filePath);
-        const ageMs = now - stats.mtimeMs;
-        if (ageMs > maxAgeMs) {
+        if (now - stats.mtimeMs > maxAgeMs) {
           fs.unlinkSync(filePath);
-          console.log(`🗑️  Cleaned up old bundle (> ${retentionDays} days): ${file}`);
           cleanedCount++;
         }
       } catch (err) {
-        console.warn(`⚠️ Warning checking file ${file}:`, err.message);
+        console.warn('⚠️ Could not stat file for cleanup:', filePath, err.message);
       }
     }
   });
 
   if (cleanedCount > 0) {
-    console.log(`🧹 Auto-cleanup complete: removed ${cleanedCount} expired bundle(s).`);
+    console.log(`🧹 Cleaned ${cleanedCount} old bundle(s) older than ${retentionDays} days`);
   }
 }
 
-// 6. Generate the bundle content
+// 6. Generate the code bundle
 function generateBundle() {
   const timestamp = getTimestampString();
-  const outputFileName = `_project-code-bundle ${timestamp}.md`;
+  const commitMessage = getTruncatedCommitMessage();
+  const outputFileName = `_code-bundle ${timestamp} = ${commitMessage}.md`;
   const outputPath = path.join(OUTPUT_DIR, outputFileName);
-
-  console.log(`\n📦 [QB Store Code Bundler] Packaging project files (excluding image contents)...`);
+  
+  console.log(`📦 [QB Store Code Bundler] Packaging project files (excluding image contents)...`);
   console.log(`⚙️  Retention configuration: ${retentionDays} days`);
+  console.log(`📝 Commit message: ${commitMessage}`);
 
   let allFilePaths = [];
 
@@ -157,7 +175,7 @@ function generateBundle() {
     rootEntries.forEach((entry) => {
       if (entry.isFile()) {
         const fileName = entry.name;
-        if (fileName === '.env' || fileName.startsWith('_project-code-bundle')) return;
+        if (fileName === '.env' || fileName.startsWith('_code-bundle')) return;
         const ext = path.extname(fileName).toLowerCase();
         if (['.html', '.py', '.json', '.md', '.txt', '.yml', '.yaml', '.css', '.js', '.example', '.gitignore', '.env.example'].includes(ext) || fileName === 'CNAME' || IMAGE_EXTENSIONS.includes(ext)) {
           allFilePaths.push(path.join(ROOT_DIR, fileName));
@@ -174,6 +192,7 @@ function generateBundle() {
 
   let bundleContent = `# QB INV To GitHub Pages Store - Source Code Bundle\n`;
   bundleContent += `**Generated:** ${timestamp}\n`;
+  bundleContent += `**Commit Message:** ${commitMessage}\n`;
   bundleContent += `**Total Included Files:** ${relativeFilePaths.length}\n\n`;
 
   // Separate text files and image files for manifest clarity
