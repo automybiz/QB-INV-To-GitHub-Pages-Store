@@ -26,7 +26,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#products">Products</a></li>
+                <li><a href="store.html">Products</a></li>
                 <li><a href="https://www.ebay.com/str/europartswestllc" target="_blank">eBay Store</a></li>
                 <li><a href="inquiry.html">Inquiry</a></li>
                 <li><a href="contact.html">Contact</a></li>
@@ -340,6 +340,18 @@
         display: none;
     }
 
+    /* Honeypot field invisible to humans, irresistible to bot scrapers */
+    .inquiry-form-container .hp-middle-name-wrap {
+        position: absolute !important;
+        left: -9999px !important;
+        top: -9999px !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        z-index: -10 !important;
+    }
+
     /* Success Message Styling */
     .success-message {
         display: none;
@@ -443,6 +455,13 @@
                 <label for="first_name">First Name *</label>
                 <input type="text" id="first_name" name="first_name" required placeholder="John">
             </div>
+            
+            <!-- Honeypot field (hidden from humans, filled by bots) -->
+            <div class="hp-middle-name-wrap" aria-hidden="true">
+                <label for="middle_name">Middle Name</label>
+                <input type="text" id="middle_name" name="middle_name" tabindex="-1" autocomplete="off">
+            </div>
+
             <div class="form-group">
                 <label for="last_name">Last Name *</label>
                 <input type="text" id="last_name" name="last_name" required placeholder="Doe">
@@ -626,8 +645,8 @@
                                     <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
                                 </div>
                                 <div class="form-group" style="flex: 1;">
-                                    <label>VIN</label>
-                                    <input type="text" placeholder="Optional" value="${vehicle.vin}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'vin', this.value)">
+                                    <label>VIN (5–17 chars)</label>
+                                    <input type="text" maxlength="17" placeholder="Optional" style="text-transform: uppercase;" value="${vehicle.vin}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'vin', this.value.toUpperCase())">
                                 </div>
                             </div>
                         </div>
@@ -658,7 +677,7 @@
                         </div>
                         <div class="form-group" style="flex: 0.6;">
                             <label>Qty</label>
-                            <input type="number" min="1" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
+                            <input type="number" min="1" max="100" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
                         </div>
                     </div>
                     `;
@@ -758,7 +777,6 @@
             }
         };
 
-        // Date format: Tuesday 9/15/2026 at 09:04 AM
         function formatDateSnippet(date) {
             const d = new Date(date);
             const weekday = d.toLocaleDateString('en-US', { weekday: 'long' });
@@ -788,10 +806,10 @@
         }
 
         function generateYAMLSnippet() {
-            let yamlFullLines = [];       // Plain text official YAML for last_inquiry_yaml_form (Admin)
-            let yamlUserLines = [];       // Plain text official YAML for last_inquiry_yaml_form_user (User - No inquiries/last_inquiry)
-            let htmlFullParts = [];       // Rich HTML email block for Admin
-            let htmlUserParts = [];       // Rich HTML card block for User and On-Screen Summary
+            let yamlFullLines = [];
+            let yamlUserLines = [];
+            let htmlFullParts = [];
+            let htmlUserParts = [];
             let csvLines = [];
             const timestamp = formatDateSnippet(new Date());
 
@@ -800,20 +818,16 @@
                 const vVin = vehicle.vin.trim();
 
                 if (vName) {
-                    // 1. Official Internal YAML (Admin)
                     yamlFullLines.push(`- vehicle: ${vName}`);
                     yamlFullLines.push(`  vin: ${vVin}`);
                     yamlFullLines.push(`  items:`);
 
-                    // 2. Official User YAML (Cleaned of inquiries & last_inquiry)
                     yamlUserLines.push(`- vehicle: ${vName}`);
                     yamlUserLines.push(`  vin: ${vVin}`);
                     yamlUserLines.push(`  items:`);
 
-                    // CSV
                     csvLines.push(`Vehicle: ${vName}`);
 
-                    // 3. User HTML Card for Vehicle
                     let vHtmlUser = `
 <div style="margin-bottom: 20px;">
     <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
@@ -822,7 +836,6 @@
     <div style="border-top: 1px dashed #555555; margin: 10px 0 16px 0;"></div>
 `;
 
-                    // 4. Admin HTML Email for Vehicle
                     let vHtmlAdmin = `
 <div style="margin-bottom: 20px;">
     <div style="font-size: 1.15rem; font-weight: 700; color: #00e5ff; margin-bottom: 8px;">
@@ -844,17 +857,14 @@
                         const pQty = part.qty || 1;
                         const pStatus = part.status || 'I';
 
-                        // Official Full Internal YAML
                         yamlFullLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
                         yamlFullLines.push(`        part_no: ${pNo}`);
                         yamlFullLines.push(`        inquiries: 1`);
                         yamlFullLines.push(`        last_inquiry: ${timestamp}`);
 
-                        // Official User YAML
                         yamlUserLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
                         yamlUserLines.push(`        part_no: ${pNo}`);
 
-                        // User HTML Item
                         vHtmlUser += `
     <div style="margin-bottom: 16px; padding-left: 8px;">
         <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -864,7 +874,6 @@
         ${pNo ? `<div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
     </div>`;
 
-                        // Admin HTML Item
                         vHtmlAdmin += `
     <div style="margin-bottom: 16px; padding-left: 8px;">
         <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -876,7 +885,6 @@
         <div style="font-size: 0.92rem; color: #d0d0d0; margin: 4px 0 4px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
     </div>`;
 
-                        // CSV Format
                         const escapeCSV = (str) => str.replace(/"/g, '""');
                         csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
                     });
@@ -889,7 +897,6 @@
                 }
             });
 
-            // Card template for user-facing HTML
             const userCardHtml = `
 <div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
     <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
@@ -898,7 +905,6 @@
     ${htmlUserParts.length > 0 ? htmlUserParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
 </div>`;
 
-            // Card template for admin HTML email
             const adminCardHtml = `
 <div style="border: 2px solid #009999; border-radius: 8px; background-color: #121212; color: #ffffff; padding: 22px; font-family: 'Inter', Arial, sans-serif;">
     <div style="border-bottom: 2px solid #009999; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: #00ffff; display: flex; align-items: center; gap: 8px;">
@@ -907,22 +913,18 @@
     ${htmlFullParts.length > 0 ? htmlFullParts.join('') : '<div style="color: #888; font-style: italic;">No vehicles or parts entered yet.</div>'}
 </div>`;
 
-            // Render summary preview
             summaryDisplay.innerHTML = userCardHtml;
 
-            // Plain text YAML strings
             yamlHidden.value = yamlFullLines.join('\n');
             yamlHiddenUser.value = yamlUserLines.join('\n');
 
             const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
             if (csvHidden) csvHidden.value = csvLines.join('\n');
             
-            // HTML formatted strings
             yamlHiddenHtml.value = adminCardHtml;
             yamlHiddenUserHtml.value = userCardHtml;
         }
 
-        // Add hidden field for source
         const sourceInput = document.createElement('input');
         sourceInput.type = 'hidden';
         sourceInput.name = 'source';
@@ -950,7 +952,6 @@
                 }
             });
 
-            // Handle first vehicle sticky field (if items sticky enabled)
             if (STICKY_FIELDS_ITEMS_TOGGLE) {
                 const storedVehicle = localStorage.getItem('sticky_vehicle_0');
                 if (storedVehicle) {
@@ -998,14 +999,12 @@
                         } else {
                             el.value = val;
                         }
-                        // Dispatch input event to trigger formatters (e.g. phone)
                         el.dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 }
             }
         }
 
-        // Run GET parameter prefill (overrides/sets query values)
         prefillFromQueryParams();
 
         // Phone formatting logic
@@ -1036,24 +1035,57 @@
             }
         });
 
-        // Form submission
+        // ==========================================
+        // FORM SUBMISSION & SPAM DEFENSE
+        // ==========================================
         inquiryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Validation
+            // 1. HONEYPOT CHECK: If middle_name has any value, drop silently
+            const honeypot = document.getElementById('middle_name');
+            if (honeypot && honeypot.value.trim() !== '') {
+                console.warn("Spam bot trapped via middle_name honeypot.");
+                // Fake success to deceive the automated bot scraper without sending a webhook
+                inquiryForm.style.display = 'none';
+                document.querySelector('.inquiry-form-container .header').style.display = 'none';
+                successMessage.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // 2. VALIDATION CHECKS (Parts & VIN Integrity)
             let errors = [];
             vehicles.forEach((v, index) => {
                 const vehicleName = v.name || `Vehicle ${index + 1}`;
+                
+                // Ensure at least one part name
                 const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
                 if (!hasPartName) {
                     errors.push(`Please enter at least one part name for ${vehicleName}.`);
                 }
                 
-                v.parts.forEach((p, pIndex) => {
+                // Quantity bounds
+                v.parts.forEach((p) => {
                     if (p.qty < 1) {
                         errors.push(`Quantity for part "${p.name || 'Unnamed'}" in ${vehicleName} must be at least 1.`);
                     }
+                    if (p.qty > 50) {
+                        errors.push(`Quantity for "${p.name || 'Unnamed'}" is unusually high. For commercial orders over 50 units, please contact sales by phone.`);
+                    }
                 });
+
+                // VIN Length & Character Check
+                const rawVin = (v.vin || '').trim();
+                if (rawVin.length > 0) {
+                    const cleanVin = rawVin.replace(/[\s-]/g, '');
+                    if (cleanVin.length > 17) {
+                        errors.push(`The VIN for ${vehicleName} is too long (${cleanVin.length} characters). Standard VINs are at most 17 characters.`);
+                    } else if (cleanVin.length < 5) {
+                        errors.push(`The VIN for ${vehicleName} is too short (${cleanVin.length} characters). Classic chassis numbers are at least 5 characters.`);
+                    } else if (!/^[A-HJ-NPR-Za-hj-npr-z0-9]+$/.test(cleanVin)) {
+                        errors.push(`The VIN for ${vehicleName} contains invalid characters. VINs contain only letters and numbers (no special symbols).`);
+                    }
+                }
             });
 
             if (errors.length > 0) {
@@ -1062,6 +1094,10 @@
             }
 
             const formData = new FormData(inquiryForm);
+            
+            // Delete honeypot before sending JSON payload to GHL
+            formData.delete('middle_name');
+            
             const data = Object.fromEntries(formData.entries());
             
             const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/6bdeea4e-6b4e-49f7-afef-dd77d3bd3dfd';
