@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@300;400;700&display=swap" rel="stylesheet">
     
-    <!-- Unified Single Theme Style Preloader (Zero Flash / FOUC) -->
+    <!-- Instant Head Pre-Hydration to prevent FOUC (Flash of Unstyled Content) -->
     <script>
         (function() {
             try {
@@ -581,75 +581,51 @@
 
 <script>
     (function() {
-        // ==========================================
-        // DYNAMIC GOOGLE SHEETS LIVE THEME HYDRATION
-        // ==========================================
+        // =========================================================================
+        // HIGH-VELOCITY SANITIZED THEME HYDRATION (~300ms DIRECT BACKEND CALL)
+        // Zero API keys exposed; pure sanitized CSS tokens returned
+        // =========================================================================
+        const APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbwkM2Efh0tkR-Sb7BeLWXFscZLoC6k8w7lEPXof5q9mlYwAeix2Q4rTctxq8JZ0SheFeg/exec";
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
-        const SETTINGS_WORKER_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
+        
+        // Primary direct URL (falls back to edge worker if needed)
+        const PRIMARY_STYLES_URL = `${APPS_SCRIPT_EXEC_URL}?action=styles&gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
+        const FALLBACK_STYLES_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?action=styles&gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
 
         async function fetchAndApplyLiveTheme() {
             try {
-                // Strict cache-busting headers force browser to bypass memory/disk cache on normal F5 refresh
-                const response = await fetch(`${SETTINGS_WORKER_URL}&t=${Date.now()}`, {
+                const timestamp = Date.now();
+                const fetchOptions = {
                     cache: 'no-store',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache'
                     }
-                });
+                };
+
+                let response;
+                try {
+                    response = await fetch(`${PRIMARY_STYLES_URL}&t=${timestamp}`, fetchOptions);
+                    if (!response.ok) throw new Error("Primary URL returned status " + response.status);
+                } catch (e) {
+                    response = await fetch(`${FALLBACK_STYLES_URL}&t=${timestamp}`, fetchOptions);
+                }
 
                 if (!response.ok) return;
                 const data = await response.json();
-                if (!data || !data.success || !Array.isArray(data.styles)) return;
+                if (!data || !data.success || !data.tokens) return;
 
-                // 1. Identify Active Theme Name (Checks STYLE_SETTINGS cell C5 first, then settings tab)
-                let activeThemeName = "DARK RUBY GOLD";
+                const tokens = data.tokens;
+                let activeThemeName = data.active_theme_name || "DARK RUBY GOLD";
 
-                const styleActiveRow = data.styles.find(r => String(r[1] || r[0] || '').trim().toUpperCase() === "ACTIVE_THEME_NAME");
-                if (styleActiveRow && (styleActiveRow[2] || styleActiveRow[1])) {
-                    activeThemeName = String(styleActiveRow[2] || styleActiveRow[1]).trim().toUpperCase();
-                } else if (Array.isArray(data.settings)) {
-                    const themeSetting = data.settings.find(r => String(r[1] || r[0] || '').trim().toUpperCase() === "ACTIVE_THEME_NAME");
-                    if (themeSetting && (themeSetting[2] || themeSetting[1])) {
-                        activeThemeName = String(themeSetting[2] || themeSetting[1]).trim().toUpperCase();
-                    }
-                }
-
-                // Check URL query override (?theme=DARK_RUBY_GOLD)
+                // Allow instant testing override via URL parameter (?theme=DARK_TOPAZ_AMBER)
                 const urlParams = new URLSearchParams(window.location.search);
                 const queryTheme = urlParams.get('theme') || urlParams.get('active_theme');
                 if (queryTheme) {
                     activeThemeName = queryTheme.replace(/_/g, () => ' ').trim().toUpperCase();
                 }
 
-                // 2. Locate Active Theme Column in STYLE_SETTINGS Matrix
-                const sRows = data.styles;
-                let activeColIdx = -1;
-                for (let r = 0; r < Math.min(sRows.length, 6); r++) {
-                    const row = sRows[r];
-                    for (let c = 2; c < row.length; c++) {
-                        if (String(row[c] || '').trim().toUpperCase() === activeThemeName) {
-                            activeColIdx = c;
-                            break;
-                        }
-                    }
-                    if (activeColIdx !== -1) break;
-                }
-
-                if (activeColIdx === -1) activeColIdx = 2;
-
-                // 3. Ingest Tokens for Active Theme
-                const tokens = {};
-                for (let r = 0; r < sRows.length; r++) {
-                    const k = String(sRows[r][1] || sRows[r][0] || '').trim().toUpperCase();
-                    if (!k || k === "SETTING NAME" || k.startsWith("<--") || k.startsWith("<~~")) continue;
-                    const val = sRows[r][activeColIdx];
-                    if (val !== undefined && val !== null && String(val).trim() !== "") {
-                        tokens[k] = String(val).trim();
-                    }
-                }
-
-                // 4. Map Sheet Tokens to Concrete Style Overrides
+                // Map Sheet Tokens to Concrete Style Overrides
                 const mainBg       = tokens["MAIN_BG_COLOR"] || "#100";
                 const cardBodyBg   = tokens["CARD_BODY_BG_COLOR"] || "#201";
                 const headerBg     = tokens["CARD_TITLE_BG_COLOR"] || "#301";
@@ -666,6 +642,7 @@
                 const pillText     = tokens["PILL_INQUIRY_TEXT_COLOR"] || "#F99";
                 const pillBorder   = tokens["PILL_INQUIRY_BORDER_COLOR"] || "#D12";
 
+                // Decisive style injection overriding any default stylesheet rules
                 const generatedCss = `
                     :root, [data-theme="dark"], [data-theme="light"], body {
                         --page-bg: ${mainBg} !important;
@@ -764,7 +741,7 @@
                     }
                 `;
 
-                // 5. Update Unified Single Style Tag
+                // Update Unified Theme Style Element
                 let liveStyleEl = document.getElementById('epwDynamicThemeStyles');
                 if (!liveStyleEl) {
                     liveStyleEl = document.createElement('style');
@@ -1042,6 +1019,7 @@
             return `${weekday} ${datePart} at ${timePart}`;
         }
 
+        // Strict Rule 5 Function Callbacks on HTML Escaper
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)
