@@ -582,24 +582,19 @@
 <script>
     (function() {
         // =========================================================================
-        // PURE EDGE GATEWAY HYDRATION (SUB-300ms CONSISTENT RESILIENCE)
-        // Directly hits Cloudflare Worker with zero browser redirect stalling
+        // HIGH-VELOCITY EDGE THEME HYDRATION
+        // Unconstrained fetch allows full round-trip handshake without abort crashes
         // =========================================================================
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
         const SETTINGS_GATEWAY_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?action=styles&gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
 
         async function fetchAndApplyLiveTheme() {
+            const startTimestamp = Date.now();
             try {
-                // Short timeout controller prevents any hanging network requests
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3500);
-
-                const response = await fetch(`${SETTINGS_GATEWAY_URL}&t=${Date.now()}`, {
-                    signal: controller.signal
-                });
-                clearTimeout(timeoutId);
-
+                // Fetch directly without artificial abort timers
+                const response = await fetch(`${SETTINGS_GATEWAY_URL}&t=${startTimestamp}`);
                 if (!response.ok) return;
+
                 const data = await response.json();
                 if (!data || !data.success) return;
 
@@ -655,7 +650,8 @@
                     activeThemeName = queryTheme.replace(/_/g, () => ' ').trim().toUpperCase();
                 }
 
-                console.log("[EPW Live Theme]: Active Theme Resolved ->", activeThemeName);
+                const elapsedMs = Date.now() - startTimestamp;
+                console.log(`[EPW Live Theme]: Active Theme -> ${activeThemeName} (${elapsedMs}ms)`);
 
                 // Map Sheet Tokens to Concrete Style Overrides
                 const mainBg       = tokens["MAIN_BG_COLOR"] || "#100";
@@ -781,7 +777,7 @@
                 }
                 liveStyleEl.textContent = generatedCss;
 
-                // Sync localStorage cache
+                // Sync localStorage cache for instant next render
                 localStorage.setItem('epw_live_theme_css', generatedCss);
                 localStorage.setItem('epw_live_theme_name', activeThemeName);
 
