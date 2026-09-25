@@ -3,834 +3,980 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Dark Reader Extension Lock to Preserve Native Hub Palette -->
-    <meta name="darkreader-lock">
-    <title>Euro Parts West - Product Inquiry Form</title>
+    <title>EuroPartsWest - Product Inquiry Form</title>
+    <link rel="stylesheet" href="assets/css/styles.css?v=1.3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Instant Head Pre-Hydration to prevent FOUC (Flash of Unstyled Content) -->
+    <script>
+        (function() {
+            try {
+                var cachedThemeCss = localStorage.getItem('epw_live_theme_css');
+                if (cachedThemeCss) {
+                    var styleEl = document.createElement('style');
+                    styleEl.id = 'epwDynamicThemePreload';
+                    styleEl.textContent = cachedThemeCss;
+                    document.head.appendChild(styleEl);
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <style>
-        /* =================================================================
-           EURO PARTS WEST - DYNAMIC THEME SYSTEM (DARK RUBY GOLD DEFAULT)
-           ================================================================= */
-        :root {
-            /* Strict Color Shades Hierarchy */
-            --main-bg: #100;           /* Main Body BG <= 1 */
-            --card-body-bg: #201;      /* Card Body BG <= 2 */
-            --card-hdr-bg: #301;       /* Title/Header BG <= 3 */
-            --input-bg: #100;          /* Input Field BG <= 1 */
-            --input-border: #411;      /* Subtle Input Border */
-            
-            /* High-Voltage Motorsport Accents */
-            --accent-gold: #FA0;       /* Primary Yellow/Gold */
-            --accent-yellow: #FD0;     /* Electric Bright Gold */
-            --accent-red: #D12;        /* Pure German Racing Crimson */
-            --border-color: #D12;      /* Component Border */
-            
-            /* Typography */
-            --text-color-1: #FFF;
-            --text-color-2: #AAA;
-            --font-family: Arial, sans-serif;
-            --border-radius: 8px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--main-bg);
-            color: var(--text-color-1);
-            font-family: var(--font-family);
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 20px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Top Brand Navigation Bar */
-        .top-navbar {
-            max-width: 900px;
-            margin: 0 auto 20px auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 16px;
-            background-color: var(--card-hdr-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-        }
-
-        .brand-logo-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .brand-logo-text {
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--accent-gold);
-            letter-spacing: 0.5px;
-        }
-
-        .brand-logo-sub {
-            font-size: 10.5px;
-            color: var(--text-color-2);
-            display: block;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .nav-link {
-            color: var(--text-color-1);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: color 0.15s ease;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--accent-gold);
-        }
-
-        /* Main Form Container */
-        .form-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: var(--card-body-bg);
-            border: 1.5px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .form-header-title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--accent-gold);
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .form-header-subtitle {
-            text-align: center;
-            font-size: 12.5px;
-            color: var(--text-color-2);
-            max-width: 650px;
-            margin: 0 auto 20px auto;
-            line-height: 1.4;
-        }
-
-        /* Form Grid Rows */
-        .form-row {
-            display: flex;
-            gap: 14px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .form-col {
-            flex: 1;
-            min-width: 220px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 9px 12px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            color: var(--text-color-1);
-            font-size: 13px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .form-input:focus {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 8px rgba(255, 170, 0, 0.35);
-        }
-
-        /* Vehicles Section Bar */
-        .section-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 24px 0 12px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--input-border);
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-add-vehicle {
-            background-color: #064E3B;
-            border: 1px solid #10B981;
-            color: #FFF;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-add-vehicle:hover {
-            background-color: #047857;
-            transform: translateY(-1px);
-        }
-
-        /* Vehicle Card Container */
-        .vehicle-card {
-            background-color: var(--main-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .vehicle-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--input-border);
-        }
-
-        .vehicle-title-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent-gold);
-        }
-
-        .btn-remove-vehicle {
-            background: #500;
-            border: 1px solid #F33;
-            color: #FAA;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-remove-vehicle:hover {
-            background: #700;
-            color: #FFF;
-        }
-
-        /* Part Repeater Rows */
-        .part-row {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            margin-bottom: 10px;
-            padding: 8px 10px;
-            background-color: var(--card-body-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-        }
-
-        .btn-remove-part {
-            background: #400;
-            border: 1px solid #F33;
-            color: #F88;
-            height: 34px;
-            width: 34px;
-            border-radius: 4px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .btn-remove-part:hover {
-            background: #700;
-            color: #FFF;
-        }
-
-        .btn-add-part {
-            background-color: var(--card-hdr-bg);
-            border: 1px solid var(--border-color);
-            color: var(--accent-yellow);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 11.5px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 6px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-add-part:hover {
-            border-color: var(--accent-gold);
-            color: #FFF;
-        }
-
-        /* Live Inquiry Summary Card */
-        .summary-card {
-            background-color: var(--main-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 16px;
-            margin-top: 20px;
-        }
-
-        .summary-header {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--input-border);
-        }
-
-        .summary-content {
-            font-size: 12.5px;
-            line-height: 1.6;
-        }
-
-        .summary-vehicle-group {
-            margin-bottom: 12px;
-        }
-
-        .summary-vehicle-title {
-            color: var(--accent-yellow);
-            font-weight: 700;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background-color: var(--card-hdr-bg);
-            color: #FCA;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1px 7px;
-            font-size: 10px;
-            font-weight: 700;
-            margin-right: 6px;
-        }
-
-        /* Compliance Checkbox & Submit */
-        .compliance-wrap {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin: 20px 0 16px 0;
-            font-size: 11.5px;
-            color: var(--text-color-2);
-            line-height: 1.4;
-        }
-
-        .compliance-checkbox {
-            margin-top: 3px;
-            accent-color: var(--accent-gold);
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 13px;
-            border-radius: 6px;
-            background-color: var(--accent-red);
-            border: 1px solid var(--accent-gold);
-            color: #FFF;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
-        }
-
-        .btn-submit:hover:not(:disabled) {
-            filter: brightness(1.15);
-            transform: translateY(-1px);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .site-footer {
-            text-align: center;
-            font-size: 11.5px;
-            color: var(--text-color-2);
-            margin-top: 24px;
-        }
-
-        .live-theme-pill {
-            display: inline-block;
-            background-color: var(--card-hdr-bg);
-            border: 1px solid var(--border-color);
-            color: var(--accent-gold);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10.5px;
-            font-weight: 700;
-            margin-left: 8px;
+        .inquiry-content {
+            padding: 10px 0px;
+            background-color: var(--page-bg, var(--bg-color, #111));
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
 <body>
-
-    <!-- Top Navigation Bar -->
-    <header class="top-navbar">
-        <a href="https://europartswest.com" class="brand-logo-wrap">
-            <span style="font-size: 24px;">🦅</span>
-            <div>
-                <span class="brand-logo-text">EURO PARTS WEST</span>
-                <span class="brand-logo-sub">Precision European Parts &amp; Motorsport</span>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/images/EURO-PARTS-WEST-logo-720-v1911.gif" alt="EuroPartsWest">
+                </a>
             </div>
-        </a>
-        <nav class="nav-links">
-            <a href="https://europartswest.com" class="nav-link">Home</a>
-            <a href="https://europartswest.com/products" class="nav-link">Products</a>
-            <a href="https://europartswest.com/ebay" class="nav-link">eBay Store</a>
-            <a href="https://europartswest.com/inquiry.html" class="nav-link active">Inquiry</a>
-            <a href="https://europartswest.com/contact" class="nav-link">Contact</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="store.html">Products</a></li>
+                <li><a href="https://www.ebay.com/str/europartswestllc" target="_blank">eBay Store</a></li>
+                <li><a href="inquiry.html">Inquiry</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
         </nav>
     </header>
 
-    <!-- Main Inquiry Form Container -->
-    <main class="form-container">
-        <div class="form-header-title">
-            Product Inquiry Form
-            <span class="live-theme-pill" id="themeBadge">DARK RUBY GOLD</span>
-        </div>
-        <div class="form-header-subtitle">
-            Please provide details about the vehicles and parts you are interested in.<br>
-            Our team responds promptly with verified OEM fitment, pricing, and availability.
-        </div>
-
-        <form id="inquiryForm" onsubmit="handleFormSubmit(event)">
-            
-            <!-- Contact Details -->
-            <div class="form-row">
-                <div class="form-col">
-                    <label class="form-label" for="firstName">First Name *</label>
-                    <input type="text" class="form-input" id="firstName" required placeholder="e.g. Brian">
-                </div>
-                <div class="form-col">
-                    <label class="form-label" for="lastName">Last Name *</label>
-                    <input type="text" class="form-input" id="lastName" required placeholder="e.g. Yoda">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-col">
-                    <label class="form-label" for="email">Email Address *</label>
-                    <input type="email" class="form-input" id="email" required placeholder="e.g. master8811@gmail.com">
-                </div>
-                <div class="form-col">
-                    <label class="form-label" for="phone">Phone Number *</label>
-                    <input type="tel" class="form-input" id="phone" required placeholder="e.g. (602) 405-8586">
-                </div>
-            </div>
-
-            <!-- Business & PO Stacking Fields -->
-            <div class="form-row">
-                <div class="form-col">
-                    <label class="form-label" for="businessName">Business / Company Name</label>
-                    <input type="text" class="form-input" id="businessName" placeholder="e.g. Yoda Force LLC">
-                </div>
-                <div class="form-col">
-                    <label class="form-label" for="poNumber">PO Number / Project Tag</label>
-                    <input type="text" class="form-input" id="poNumber" placeholder="e.g. 260922-17">
-                </div>
-            </div>
-
-            <!-- Vehicles & Parts Repeater Section -->
-            <div class="section-bar">
-                <div class="section-title">
-                    <span>🚗</span> Vehicles &amp; Parts Requested
-                </div>
-                <button type="button" class="btn-add-vehicle" onclick="addVehicleCard()">+ Add Another Vehicle</button>
-            </div>
-
-            <div id="vehiclesContainer"></div>
-
-            <!-- Real-time Live Summary -->
-            <div class="summary-card">
-                <div class="summary-header">
-                    <span>📑</span> Real-Time Inquiry Summary
-                </div>
-                <div class="summary-content" id="liveSummary">
-                    <em style="color: var(--text-color-2);">Enter your vehicle and parts details above to see the compiled inquiry preview...</em>
-                </div>
-            </div>
-
-            <!-- Compliance Agreement -->
-            <div class="compliance-wrap">
-                <input type="checkbox" class="compliance-checkbox" id="complianceCheck" required checked>
-                <label for="complianceCheck">
-                    This inquiry goes directly to a Euro Parts West sales associate (sales@europartswest.com). We never sell or share your contact info. You consent to receive inquiry responses regarding this request.
-                </label>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn-submit" id="submitBtn">Submit Product Inquiry</button>
-        </form>
-    </main>
-
-    <footer class="site-footer">
-        &copy; 2026 EuroPartsWest. All rights reserved. &bull; Precision German Engineering
-    </footer>
-
-    <!-- =============================================================
-         CLIENT LOGIC: REPEATER, SUMMARY, YAML ENGINE & THEME SYNC
-         ============================================================= -->
-    <script>
-        // CONFIGURATION: Set your GHL Inbound Webhook URL here
-        const GHL_INBOUND_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/a9eEmuUJ1FM6sBhYESfO/webhook-trigger/inbound-webhook-inquiry";
+    <main>
+        <section class="inquiry-content">
+            <div class="container">
+                <!-- EMBEDDED FORM SNIPPET START -->
+                
+<style id="epwThemeStyles">
+    :root {
+        /* Default Fallback Tokens (DARK RUBY GOLD) */
+        --page-bg: #100;
+        --form-bg: #100;
+        --form-border: #D12;
+        --form-text: #FFF;
+        --form-subtext: #AAA;
+        --form-title-color: #FA0;
         
-        // Globals Hub & Proxy URL
+        --input-label-color: #FA0;
+        --input-bg-color: #100;
+        --input-font-color: #FFF;
+        --input-border-color: #411;
+        --input-border-color-focused: #FA0;
+
+        --card-box-bg: #201;
+        --card-box-border: #D12;
+
+        --btn-action-bg: #301;
+        --btn-action-border: #D12;
+        --btn-action-text: #FD0;
+
+        --submit-button-bg-color: #D12;
+        --submit-button-border-color: #FA0;
+        --submit-button-text-color: #FFF;
+
+        --summary-card-bg: #201;
+        --summary-card-border: #D12;
+        --summary-card-header: #301;
+        --summary-card-title: #FA0;
+        --summary-pill-bg: #301;
+        --summary-pill-text: #F99;
+        --summary-pill-border: #D12;
+
+        --diy-bg: rgba(69, 10, 10, 0.4);
+        --diy-border: #D12;
+        --diy-text: #FFF;
+
+        --terms-bg: rgba(69, 10, 10, 0.25);
+        --terms-border: #411;
+        --terms-text: #AAA;
+
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Form Specific Styles */
+    .inquiry-form-container {
+        max-width: 100%;
+        margin: 0px auto;
+        background: var(--form-bg);
+        border: 1.5px solid var(--form-border);
+        padding: 30px 24px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        color: var(--form-text);
+        text-align: left;
+        transition: padding 0.2s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Confirmation State: Zero padding removes awkward double-box effect */
+    .inquiry-form-container.submitted {
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .inquiry-form-container .header {
+        text-align: center;
+        margin-bottom: 30px;
+        position: static;
+        z-index: auto;
+        top: auto;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .inquiry-form-container h1 {
+        font-size: 1.85rem;
+        margin-bottom: 10px;
+        color: var(--form-title-color);
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+    .inquiry-form-container .header p {
+        color: var(--form-subtext);
+        line-height: 1.6;
+    }
+
+    .inquiry-form-container .form-group {
+        margin-bottom: 0px;
+    }
+
+    .inquiry-form-container label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+        color: var(--input-label-color);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .inquiry-form-container input[type="text"],
+    .inquiry-form-container input[type="email"],
+    .inquiry-form-container input[type="tel"],
+    .inquiry-form-container input[type="number"],
+    .inquiry-form-container select,
+    .inquiry-form-container textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1.5px solid var(--input-border-color);
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        color: var(--input-font-color);
+        background-color: var(--input-bg-color);
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+
+    .inquiry-form-container input:focus,
+    .inquiry-form-container select:focus,
+    .inquiry-form-container textarea:focus {
+        outline: none;
+        border-color: var(--input-border-color-focused);
+        box-shadow: 0 0 0 3px rgba(250, 160, 0, 0.25);
+    }
+
+    .inquiry-form-container .row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .inquiry-form-container .row > .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .inquiry-form-container .section-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin: 35px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 1.5px solid var(--form-border);
+        color: var(--form-title-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .inquiry-form-container .vehicle-block {
+        border: 1px solid var(--card-box-border);
+        padding: 22px;
+        border-radius: 8px;
+        margin-bottom: 22px;
+        background: var(--card-box-bg);
+        position: relative;
+    }
+
+    .inquiry-form-container .vehicle-top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .inquiry-form-container .vehicle-meta-fields {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .inquiry-form-container .part-block {
+        border-left: 3px solid var(--form-border);
+        padding: 14px;
+        margin: 14px 0 14px 18px;
+        background: var(--input-bg-color);
+        border-radius: 0 6px 6px 0;
+        position: relative;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .inquiry-form-container .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--btn-action-bg);
+        color: var(--btn-action-text) !important;
+        border: 1px solid var(--btn-action-border);
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.88rem;
+        text-decoration: none;
+    }
+
+    .inquiry-form-container .btn:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+    }
+
+    .inquiry-form-container .btn-blue {
+        background: var(--btn-action-bg);
+        border: 1px solid var(--btn-action-border);
+        color: var(--btn-action-text) !important;
+    }
+
+    .inquiry-form-container .btn-outline-blue {
+        background: transparent;
+        border: 1.5px solid var(--btn-action-text);
+        color: var(--btn-action-text) !important;
+    }
+
+    .inquiry-form-container .btn-outline-blue:hover {
+        background: var(--btn-action-bg);
+    }
+
+    .inquiry-form-container .btn-danger {
+        background: #500;
+        border: 1px solid #F33;
+        color: #FAA !important;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+    }
+
+    .inquiry-form-container .btn-add-part {
+        float: right;
+        margin-top: 10px;
+    }
+
+    .inquiry-form-container .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .inquiry-form-container .remove-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 10;
+        padding: 2px 8px;
+        font-size: 0.95rem;
+        line-height: 1.2;
+    }
+
+    /* Inquiry Summary Preview Container */
+    .inquiry-form-container .summary-preview-wrap {
+        margin-top: 10px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .inquiry-form-container .diy-group {
+        margin: 20px 0 10px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--diy-bg);
+        border: 1px solid var(--diy-border);
+        color: var(--diy-text);
+        padding: 14px 16px;
+        border-radius: 6px;
+    }
+
+    .inquiry-form-container .diy-group input[type="checkbox"] {
+        margin-top: 3px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--form-title-color);
+    }
+
+    .inquiry-form-container .diy-group label {
+        margin-bottom: 0;
+        font-size: 0.92rem;
+        cursor: pointer;
+        line-height: 1.4;
+        color: var(--diy-text);
+        text-transform: none;
+        font-weight: 500;
+    }
+
+    .inquiry-form-container .terms-group {
+        margin: 12px 0 20px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--terms-bg);
+        border: 1px solid var(--terms-border);
+        color: var(--terms-text);
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+    .inquiry-form-container .terms-group input {
+        margin-top: 4px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--submit-button-bg-color);
+    }
+
+    .inquiry-form-container .terms-group label {
+        margin-bottom: 0;
+        color: var(--terms-text);
+        text-transform: none;
+        font-weight: normal;
+        line-height: 1.5;
+        font-size: 0.88rem;
+    }
+
+    .inquiry-form-container .submit-btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin: 0px 0px 20px 0px;
+        background-color: var(--submit-button-bg-color);
+        border: 1.5px solid var(--submit-button-border-color);
+        color: var(--submit-button-text-color) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        letter-spacing: 0.5px;
+    }
+
+    .inquiry-form-container .hidden-field {
+        display: none;
+    }
+
+    .inquiry-form-container .hp-middle-name-wrap {
+        position: absolute !important;
+        left: -9999px !important;
+        top: -9999px !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        z-index: -10 !important;
+    }
+
+    /* Success Message Styling */
+    .success-message {
+        display: none;
+        background: var(--card-box-bg);
+        color: var(--form-text);
+        padding: 50px 30px;
+        border-radius: 10px;
+        border: 2px solid var(--form-border);
+        text-align: center;
+        margin: 20px 0;
+        box-shadow: var(--shadow);
+    }
+
+    .success-message h2 {
+        color: var(--form-title-color);
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .success-message p {
+        font-size: 1.05rem;
+        margin-bottom: 30px;
+        color: var(--form-subtext);
+    }
+
+    .success-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .inquiry-content { padding: 10px 0; }
+        .container { padding: 0 10px; }
+        .inquiry-form-container { padding: 20px 14px; }
+        .inquiry-form-container.submitted { padding: 0 !important; }
+        .inquiry-form-container .row {
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .inquiry-form-container .row > .form-group { width: 100%; }
+        .inquiry-form-container .vehicle-block { padding: 16px 12px; }
+        .inquiry-form-container .part-block {
+            margin-left: 5px;
+            padding: 14px 10px 10px 10px;
+        }
+        .inquiry-form-container .btn-add-part {
+            float: none;
+            width: 100%;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .inquiry-form-container .section-title button {
+            width: 100%;
+            text-align: center;
+        }
+        .remove-btn-group {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="inquiry-form-container">
+    <header class="header">
+        <h1>Product Inquiry Form</h1><br>
+        <p>Please provide details about the vehicles and parts you are interested in.<br><br>
+        The team usually responds within a couple of hours depending on current customer volume and demand.<br><br>
+        This form is the most optimal path for submitting inquiries. However, we also take orders by phone for people who prefer to call.
+        </p>
+        <p></p>
+    </header>
+
+    <div id="successMessage" class="success-message">
+        <h2>Inquiry Received!</h2>
+        <p>Thank you for your interest. We will review your request and get back to you shortly.</p>
+        <div class="success-actions">
+            <button type="button" class="btn btn-blue" id="btnSubmitAnother">Submit Another Inquiry</button>
+            <a href="index.html" class="btn btn-outline-blue">Return to Home Page</a>
+        </div>
+    </div>
+
+    <form id="inquiryForm">
+        <!-- Contact Info: Row 1 -->
+        <div class="row">
+            <div class="form-group">
+                <label for="first_name">First Name *</label>
+                <input type="text" id="first_name" name="first_name" required placeholder="John">
+            </div>
+            
+            <!-- Honeypot field (hidden from humans, filled by bots) -->
+            <div class="hp-middle-name-wrap" aria-hidden="true">
+                <label for="middle_name">Middle Name</label>
+                <input type="text" id="middle_name" name="middle_name" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Last Name *</label>
+                <input type="text" id="last_name" name="last_name" required placeholder="Doe">
+            </div>
+        </div>
+
+        <!-- Contact Info: Row 2 -->
+        <div class="row">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="(602) 555-0123">
+            </div>
+        </div>
+
+        <!-- Contact Info: Row 3 (Workshop & PO References) -->
+        <div class="row">
+            <div class="form-group">
+                <label for="business_name">Workshop / Shop Name</label>
+                <input type="text" id="business_name" name="business_name" placeholder="Optional (e.g. Rennsport Tuning)">
+            </div>
+            <div class="form-group">
+                <label for="po_number">PO / Job #</label>
+                <input type="text" id="po_number" name="po_number" placeholder="Optional (e.g. PO-8841 / RO#204)">
+            </div>
+        </div>
+
+        <!-- Vehicles Section -->
+        <div class="section-title">
+            <span>Vehicles & Parts Inquiry</span>
+            <button type="button" class="btn btn-blue" id="addVehicle">+ Add Another Vehicle</button>
+        </div>
+
+        <div id="vehiclesContainer">
+            <!-- Vehicle blocks will be added here -->
+        </div>
+
+        <!-- User-Facing HTML Inquiry Summary Display -->
+        <div class="form-group" style="margin-top: 10px;">
+            <div id="summaryDisplay" class="summary-preview-wrap"></div>
+
+            <!-- Hidden textarea for actual form submission to GHL (Full Internal YAML) -->
+            <textarea id="last_inquiry_yaml_form" name="last_inquiry_yaml_form" class="hidden-field"></textarea>
+            <!-- Hidden textarea for user-facing YAML receipt (No inquiries or last_inquiry) -->
+            <textarea id="last_inquiry_yaml_form_user" name="last_inquiry_yaml_form_user" class="hidden-field"></textarea>
+            <!-- Hidden textarea for GSheets CSV format -->
+            <textarea id="last_inquiry_csv_gsheets_form" name="last_inquiry_csv_gsheets_form" class="hidden-field"></textarea>
+            <!-- HTML formatted versions for emails -->
+            <textarea id="last_inquiry_yaml_form_html" name="last_inquiry_yaml_form_html" class="hidden-field"></textarea>
+            <textarea id="last_inquiry_yaml_form_user_html" name="last_inquiry_yaml_form_user_html" class="hidden-field"></textarea>
+        </div>
+
+        <!-- DIY Technician Checkbox -->
+        <div class="diy-group">
+            <input type="checkbox" id="diy_tech" name="diy_tech" value="Yes">
+            <label for="diy_tech"><strong>DIY / I’m my own technician</strong> (sourcing parts directly for personal vehicle or build)</label>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms-group">
+            <input type="checkbox" id="terms" name="terms_and_conditions" required>
+            <label for="terms">This inquiry goes only to a Euro Parts West sales associate: sales@europartswest.com <br><br>
+                Confidentiality matters to us — we won’t share, sell, or use your contact info for marketing. <br><br> 
+                I agree to the terms and conditions and consent to be contacted regarding my inquiry to Euro Parts West.</label>
+        </div>
+
+        <button type="submit" class="btn submit-btn">Submit Inquiry</button>
+    </form>
+</div>
+
+<script>
+    (function() {
+        // ==========================================
+        // DYNAMIC GOOGLE SHEETS LIVE THEME HYDRATION
+        // ==========================================
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
-        const APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbwkM2Efh0tkR-Sb7BeLWXFscZLoC6k8w7lEPXof5q9mlYwAeix2Q4rTctxq8JZ0SheFeg/exec";
+        const SETTINGS_WORKER_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}`;
 
-        let vehicleIndexCounter = 0;
-
-        // Default Initial Vehicle Setup
-        document.addEventListener('DOMContentLoaded', () => {
-            addVehicleCard("2024 Porsche 911", "123123123", [
-                { partNo: "234234234", description: "Rims 20 Inch Chrome", brand: "BBS", qty: "4" }
-            ]);
-            updateLiveSummary();
-            fetchLiveThemeFromHub();
-        });
-
-        // =============================================================
-        // VEHICLE & PART REPEATER DOM BUILDER
-        // =============================================================
-        function addVehicleCard(defaultName = "", defaultVin = "", defaultParts = []) {
-            vehicleIndexCounter++;
-            const vId = vehicleIndexCounter;
-            const container = document.getElementById('vehiclesContainer');
-
-            const card = document.createElement('div');
-            card.className = 'vehicle-card';
-            card.id = `vehicle_card_${vId}`;
-
-            card.innerHTML = `
-                <div class="vehicle-card-header">
-                    <span class="vehicle-title-label">Vehicle #${vId}</span>
-                    <button type="button" class="btn-remove-vehicle" onclick="removeVehicleCard(${vId})">✕ Remove Vehicle</button>
-                </div>
-                <div class="form-row">
-                    <div class="form-col" style="flex:2;">
-                        <label class="form-label">Vehicle Name (Make, Model, Year) *</label>
-                        <input type="text" class="form-input vehicle-name-input" value="${escapeHtml(defaultName)}" placeholder="e.g. 2024 Porsche 911" required oninput="updateLiveSummary()">
-                    </div>
-                    <div class="form-col">
-                        <label class="form-label">VIN (Optional)</label>
-                        <input type="text" class="form-input vehicle-vin-input" value="${escapeHtml(defaultVin)}" placeholder="e.g. 123123123" oninput="updateLiveSummary()">
-                    </div>
-                </div>
-                <div class="parts-repeater-container" id="parts_container_${vId}"></div>
-                <button type="button" class="btn-add-part" onclick="addPartRow(${vId})">+ Add Part for this Vehicle</button>
-            `;
-
-            container.appendChild(card);
-
-            if (defaultParts.length > 0) {
-                defaultParts.forEach(p => addPartRow(vId, p.partNo, p.description, p.brand, p.qty));
-            } else {
-                addPartRow(vId);
-            }
-        }
-
-        function removeVehicleCard(vId) {
-            const card = document.getElementById(`vehicle_card_${vId}`);
-            if (card) {
-                card.remove();
-                updateLiveSummary();
-            }
-        }
-
-        function addPartRow(vId, partNo = "", description = "", brand = "", qty = "1") {
-            const container = document.getElementById(`parts_container_${vId}`);
-            if (!container) return;
-
-            const row = document.createElement('div');
-            row.className = 'part-row';
-
-            row.innerHTML = `
-                <div class="form-col" style="flex: 1.2;">
-                    <label class="form-label">Part No.</label>
-                    <input type="text" class="form-input part-no-input" value="${escapeHtml(partNo)}" placeholder="e.g. 992-121-013" oninput="updateLiveSummary()">
-                </div>
-                <div class="form-col" style="flex: 2;">
-                    <label class="form-label">Part Name / Description *</label>
-                    <input type="text" class="form-input part-desc-input" value="${escapeHtml(description)}" placeholder="e.g. Water Pump" required oninput="updateLiveSummary()">
-                </div>
-                <div class="form-col" style="flex: 1.2;">
-                    <label class="form-label">Brand / Manufacturer</label>
-                    <input type="text" class="form-input part-brand-input" value="${escapeHtml(brand)}" placeholder="e.g. OEM / BBS" oninput="updateLiveSummary()">
-                </div>
-                <div class="form-col" style="flex: 0.6; min-width: 65px;">
-                    <label class="form-label">Qty</label>
-                    <input type="number" class="form-input part-qty-input" min="1" max="999" value="${escapeHtml(qty)}" oninput="updateLiveSummary()">
-                </div>
-                <button type="button" class="btn-remove-part" title="Remove Part" onclick="removePartRow(this)">✕</button>
-            `;
-
-            container.appendChild(row);
-            updateLiveSummary();
-        }
-
-        function removePartRow(btn) {
-            const row = btn.closest('.part-row');
-            if (row) {
-                row.remove();
-                updateLiveSummary();
-            }
-        }
-
-        // =============================================================
-        // REAL-TIME INQUIRY SUMMARY & STANDARDIZED YAML ENGINE
-        // =============================================================
-        function updateLiveSummary() {
-            const liveSummaryEl = document.getElementById('liveSummary');
-            const vehicleCards = document.querySelectorAll('.vehicle-card');
-
-            if (vehicleCards.length === 0) {
-                liveSummaryEl.innerHTML = '<em style="color: var(--text-color-2);">No vehicles added yet. Click "+ Add Another Vehicle" above.</em>';
-                return;
-            }
-
-            let summaryHtml = '';
-            vehicleCards.forEach(card => {
-                const vName = (card.querySelector('.vehicle-name-input')?.value || '').trim() || 'Unspecified Vehicle';
-                const vVin = (card.querySelector('.vehicle-vin-input')?.value || '').trim();
-
-                const partRows = card.querySelectorAll('.part-row');
-                let partsHtml = '';
-
-                partRows.forEach(pRow => {
-                    const desc = (pRow.querySelector('.part-desc-input')?.value || '').trim();
-                    const partNo = (pRow.querySelector('.part-no-input')?.value || '').trim();
-                    const brand = (pRow.querySelector('.part-brand-input')?.value || '').trim();
-                    const qty = (pRow.querySelector('.part-qty-input')?.value || '1').trim();
-
-                    if (desc) {
-                        partsHtml += `
-                            <div style="padding-left: 14px; margin-top: 4px;">
-                                <span class="status-badge">QTY: ${escapeHtml(qty)}</span>
-                                <strong>${escapeHtml(desc)}</strong> ${brand ? `(${escapeHtml(brand)})` : ''}
-                                ${partNo ? `<span style="color: var(--text-color-2); font-size: 11px;">&bull; Part #: <code>${escapeHtml(partNo)}</code></span>` : ''}
-                            </div>
-                        `;
-                    }
-                });
-
-                summaryHtml += `
-                    <div class="summary-vehicle-group">
-                        <div class="summary-vehicle-title">🚗 ${escapeHtml(vName)} ${vVin ? `| VIN: <code>${escapeHtml(vVin)}</code>` : ''}</div>
-                        ${partsHtml || '<div style="padding-left: 14px; color: var(--text-color-2); font-style: italic;">No specific parts entered yet.</div>'}
-                    </div>
-                `;
-            });
-
-            liveSummaryEl.innerHTML = summaryHtml || '<em style="color: var(--text-color-2);">Enter details above to see the live summary...</em>';
-        }
-
-        function generateStandardYaml() {
-            const vehicleCards = document.querySelectorAll('.vehicle-card');
-            let yamlBlocks = [];
-
-            vehicleCards.forEach(card => {
-                const vName = (card.querySelector('.vehicle-name-input')?.value || '').trim() || 'Unspecified Vehicle';
-                const vVin = (card.querySelector('.vehicle-vin-input')?.value || '').trim();
-
-                let block = `- VEHICLE: ${vName}\n`;
-                if (vVin) block += `  vin: ${vVin}\n`;
-                block += `  items:\n`;
-
-                const partRows = card.querySelectorAll('.part-row');
-                let hasItems = false;
-
-                partRows.forEach(pRow => {
-                    const desc = (pRow.querySelector('.part-desc-input')?.value || '').trim();
-                    const partNo = (pRow.querySelector('.part-no-input')?.value || '').trim();
-                    const brand = (pRow.querySelector('.part-brand-input')?.value || '').trim();
-                    const qty = (pRow.querySelector('.part-qty-input')?.value || '1').trim();
-
-                    if (desc) {
-                        hasItems = true;
-                        block += `  - (I x ${qty}) ${desc}:\n`;
-                        if (partNo) block += `      part_no: ${partNo}\n`;
-                        if (brand) block += `      brand: ${brand}\n`;
-                    }
-                });
-
-                if (hasItems) {
-                    yamlBlocks.push(block.trimEnd());
-                }
-            });
-
-            return yamlBlocks.join('\n\n');
-        }
-
-        // =============================================================
-        // SUBMIT HANDLER: POSTS TO GHL INBOUND WEBHOOK
-        // =============================================================
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Transmitting to Euro Parts West...";
-
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const businessName = document.getElementById('businessName').value.trim();
-            const poNumber = document.getElementById('poNumber').value.trim();
-
-            const compiledYaml = generateStandardYaml();
-
-            const payload = {
-                first_name: firstName,
-                last_name: lastName,
-                name: `${firstName} ${lastName}`.trim(),
-                email: email,
-                phone: phone,
-                business_name: businessName,
-                po_number: poNumber,
-                last_inquiry_yaml_form: compiledYaml,
-                source: "Product Inquiry Web Form"
-            };
-
+        async function fetchAndApplyLiveTheme() {
             try {
-                if (GHL_INBOUND_WEBHOOK_URL && !GHL_INBOUND_WEBHOOK_URL.includes("leadconnectorhq.com/hooks/a9eEmu")) {
-                    await fetch(GHL_INBOUND_WEBHOOK_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                } else {
-                    console.log("Mock Webhook Dispatch Payload:", payload);
-                }
-
-                submitBtn.textContent = "✓ Inquiry Transmitted Successfully!";
-                submitBtn.style.backgroundColor = "#047857";
-                submitBtn.style.borderColor = "#10B981";
-
-                setTimeout(() => {
-                    alert("Thank you! Your product inquiry has been received by Euro Parts West. Our specialists will review your parts list and reply promptly.");
-                }, 300);
-
-            } catch (err) {
-                console.error("Submission error:", err);
-                submitBtn.textContent = "Transmit Error - Please Call (602) 405-8586";
-                submitBtn.style.backgroundColor = "#991B1B";
-                submitBtn.disabled = false;
-            }
-        }
-
-        // =============================================================
-        // DYNAMIC THEME HYDRATION FROM GLOBALS HUB SHEET
-        // =============================================================
-        async function fetchLiveThemeFromHub() {
-            try {
-                const targetUrl = `${APPS_SCRIPT_EXEC_URL}?gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&t=${Date.now()}`;
-                const resp = await fetch(targetUrl);
-                if (!resp.ok) return;
-
-                const data = await resp.json();
+                const response = await fetch(`${SETTINGS_WORKER_URL}&t=${Date.now()}`);
+                if (!response.ok) return;
+                const data = await response.json();
                 if (!data || !data.success || !Array.isArray(data.styles)) return;
 
-                // Find active theme
-                let activeTheme = "DARK RUBY GOLD";
-                const activeThemeRow = data.styles.find(r => String(r[1] || r[0]).trim().toUpperCase() === "ACTIVE_THEME_NAME");
-                if (activeThemeRow && (activeThemeRow[2] || activeThemeRow[1])) {
-                    activeTheme = String(activeThemeRow[2] || activeThemeRow[1]).trim().toUpperCase();
+                // 1. Identify Active Theme Name
+                let activeThemeName = "DARK RUBY GOLD";
+                if (Array.isArray(data.settings)) {
+                    const themeSetting = data.settings.find(r => String(r[1] || r[0]).trim().toUpperCase() === "ACTIVE_THEME_NAME");
+                    if (themeSetting && (themeSetting[2] || themeSetting[1])) {
+                        activeThemeName = String(themeSetting[2] || themeSetting[1]).trim().toUpperCase();
+                    }
                 }
 
-                const badge = document.getElementById('themeBadge');
-                if (badge) badge.textContent = activeTheme;
-
-                // Find column index of active theme
+                // 2. Locate Active Theme Column in STYLE_SETTINGS Matrix
                 const sRows = data.styles;
-                let themeColIdx = 2;
-                for (let rIdx = 0; rIdx < Math.min(sRows.length, 6); rIdx++) {
-                    const r = sRows[rIdx];
-                    for (let cIdx = 2; cIdx < r.length; cIdx++) {
-                        if (String(r[cIdx] || "").trim().toUpperCase() === activeTheme) {
-                            themeColIdx = cIdx;
+                let activeColIdx = -1;
+                for (let r = 0; r < Math.min(sRows.length, 6); r++) {
+                    const row = sRows[r];
+                    for (let c = 2; c < row.length; c++) {
+                        if (String(row[c] || '').trim().toUpperCase() === activeThemeName) {
+                            activeColIdx = c;
                             break;
                         }
                     }
+                    if (activeColIdx !== -1) break;
                 }
 
-                // Ingest and map theme tokens
-                const themeMap = {};
-                sRows.forEach(row => {
-                    const key = String(row[1] || row[0]).trim().toUpperCase();
-                    let val = row[themeColIdx];
-                    if (val === undefined || val === null || String(val).trim() === "") val = row[2];
-                    if (key && val) themeMap[key] = String(val).trim();
-                });
+                if (activeColIdx === -1) activeColIdx = 2; // Fallback to first theme column
 
-                // Apply mapped variables
-                const root = document.documentElement;
-                if (themeMap.MAIN_BG_COLOR) root.style.setProperty('--main-bg', themeMap.MAIN_BG_COLOR);
-                if (themeMap.CARD_BODY_BG_COLOR) root.style.setProperty('--card-body-bg', themeMap.CARD_BODY_BG_COLOR);
-                if (themeMap.CARD_TITLE_BG_COLOR) root.style.setProperty('--card-hdr-bg', themeMap.CARD_TITLE_BG_COLOR);
-                if (themeMap.CARD_BORDER_COLOR) root.style.setProperty('--border-color', themeMap.CARD_BORDER_COLOR);
-                if (themeMap.MAIN_BORDER_COLOR && !themeMap.CARD_BORDER_COLOR) root.style.setProperty('--border-color', themeMap.MAIN_BORDER_COLOR);
-                if (themeMap.INPUT_BG_COLOR_1) root.style.setProperty('--input-bg', themeMap.INPUT_BG_COLOR_1);
-                if (themeMap.INPUT_BORDER_COLOR) root.style.setProperty('--input-border', themeMap.INPUT_BORDER_COLOR);
-                if (themeMap.ACCENT_COLOR_1) root.style.setProperty('--accent-red', themeMap.ACCENT_COLOR_1);
-                if (themeMap.ACCENT_COLOR_2) root.style.setProperty('--accent-gold', themeMap.ACCENT_COLOR_2);
-                if (themeMap.CARD_TITLE_TEXT_COLOR_1) root.style.setProperty('--accent-yellow', themeMap.CARD_TITLE_TEXT_COLOR_1);
+                // 3. Ingest Tokens for Active Theme
+                const tokens = {};
+                for (let r = 0; r < sRows.length; r++) {
+                    const k = String(sRows[r][1] || sRows[r][0] || '').trim().toUpperCase();
+                    if (!k || k === "SETTING NAME" || k.startsWith("<--")) continue;
+                    const val = sRows[r][activeColIdx];
+                    if (val !== undefined && val !== null && String(val).trim() !== "") {
+                        tokens[k] = String(val).trim();
+                    }
+                }
 
-            } catch (e) {
-                console.log("Notice: Offline/Cached Theme Active (DARK RUBY GOLD Default)");
+                // 4. Map Sheet Tokens to CSS Variables
+                const mainBg      = tokens["MAIN_BG_COLOR"] || "#100";
+                const cardBodyBg  = tokens["CARD_BODY_BG_COLOR"] || "#201";
+                const headerBg    = tokens["CARD_TITLE_BG_COLOR"] || "#301";
+                const borderClr   = tokens["CARD_BORDER_COLOR"] || tokens["MAIN_BORDER_COLOR"] || "#D12";
+                const titleClr    = tokens["MAIN_TITLE_TEXT_COLOR_1"] || "#FA0";
+                const textPrimary = tokens["MAIN_TEXT_COLOR_1"] || "#FFF";
+                const textMuted   = tokens["MAIN_TEXT_COLOR_2"] || "#AAA";
+                const inputBg     = tokens["INPUT_BG_COLOR_1"] || "#100";
+                const inputBorder = tokens["INPUT_BORDER_COLOR"] || "#411";
+                const inputFocus  = tokens["INPUT_FOCUS_BORDER_COLOR"] || "#FA0";
+                const submitBg    = tokens["BTN_SAVE_BG_COLOR"] || tokens["ACCENT_COLOR_1"] || "#D12";
+                const submitBorder= tokens["MAIN_LINK_COLOR_1"] || "#FA0";
+                const pillBg      = tokens["PILL_INQUIRY_BG_COLOR_1"] || "#301";
+                const pillText    = tokens["PILL_INQUIRY_TEXT_COLOR"] || "#F99";
+                const pillBorder  = tokens["PILL_INQUIRY_BORDER_COLOR"] || "#D12";
+
+                const generatedCss = `
+                    :root {
+                        --page-bg: ${mainBg};
+                        --form-bg: ${mainBg};
+                        --form-border: ${borderClr};
+                        --form-text: ${textPrimary};
+                        --form-subtext: ${textMuted};
+                        --form-title-color: ${titleClr};
+
+                        --input-label-color: ${titleClr};
+                        --input-bg-color: ${inputBg};
+                        --input-font-color: ${textPrimary};
+                        --input-border-color: ${inputBorder};
+                        --input-border-color-focused: ${inputFocus};
+
+                        --card-box-bg: ${cardBodyBg};
+                        --card-box-border: ${borderClr};
+
+                        --btn-action-bg: ${headerBg};
+                        --btn-action-border: ${borderClr};
+                        --btn-action-text: ${titleClr};
+
+                        --submit-button-bg-color: ${submitBg};
+                        --submit-button-border-color: ${submitBorder};
+                        --submit-button-text-color: #FFF;
+
+                        --summary-card-bg: ${cardBodyBg};
+                        --summary-card-border: ${borderClr};
+                        --summary-card-header: ${headerBg};
+                        --summary-card-title: ${titleClr};
+                        --summary-pill-bg: ${pillBg};
+                        --summary-pill-text: ${pillText};
+                        --summary-pill-border: ${pillBorder};
+
+                        --diy-bg: rgba(69, 10, 10, 0.4);
+                        --diy-border: ${borderClr};
+                        --diy-text: ${textPrimary};
+
+                        --terms-bg: rgba(69, 10, 10, 0.25);
+                        --terms-border: ${inputBorder};
+                        --terms-text: ${textMuted};
+                    }
+                `;
+
+                // 5. Inject styles and update localStorage cache for instant next render
+                let liveStyleEl = document.getElementById('epwDynamicThemeLive');
+                if (!liveStyleEl) {
+                    liveStyleEl = document.createElement('style');
+                    liveStyleEl.id = 'epwDynamicThemeLive';
+                    document.head.appendChild(liveStyleEl);
+                }
+                liveStyleEl.textContent = generatedCss;
+                localStorage.setItem('epw_live_theme_css', generatedCss);
+
+                // Refresh Summary Box with updated colors
+                generateYAMLSnippet();
+
+            } catch (err) {
+                console.warn("[EPW Theme Hydration]:", err);
             }
         }
 
-        // Strict Rule 5 Function Callback Guard
+        // Trigger dynamic theme fetch on page load
+        fetchAndApplyLiveTheme();
+
+        // ==========================================
+        // CONFIGURATION VARIABLES & TOGGLES
+        // ==========================================
+        const STICKY_FIELDS_MAIN = ['first_name', 'last_name', 'email', 'phone', 'business_name', 'po_number', 'diy_tech', 'terms'];
+        const STICKY_FIELDS_MAIN_TOGGLE = true;            // Toggle persistence for main contact fields (true/false)
+        const STICK_FIELDS_MAIN_TOGGLE = STICKY_FIELDS_MAIN_TOGGLE; // Alias support
+        const STICKY_FIELDS_ITEMS_TOGGLE = false;          // Toggle persistence for vehicles & parts (Set to false per Day's request)
+
+        // State Management
+        let vehicles = [];
+        
+        function saveVehiclesToLocalStorage() {
+            if (!STICKY_FIELDS_ITEMS_TOGGLE) return;
+            const filteredVehicles = vehicles.filter(v => 
+                (v.name && v.name.trim() !== '') || 
+                (v.vin && v.vin.trim() !== '') || 
+                (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
+            );
+            localStorage.setItem('persistent_vehicles', JSON.stringify(filteredVehicles));
+        }
+
+        // Load persistent vehicles on init (if enabled)
+        if (STICKY_FIELDS_ITEMS_TOGGLE) {
+            const storedVehicles = localStorage.getItem('persistent_vehicles');
+            if (storedVehicles) {
+                try {
+                    const parsed = JSON.parse(storedVehicles);
+                    vehicles = parsed.filter(v => 
+                        (v.name && v.name.trim() !== '') || 
+                        (v.vin && v.vin.trim() !== '') || 
+                        (v.parts && v.parts.some(p => p.name && p.name.trim() !== ''))
+                    );
+                } catch (e) {
+                    console.error("Error parsing stored vehicles", e);
+                    vehicles = [];
+                }
+            }
+        }
+
+        // Default if empty
+        if (vehicles.length === 0) {
+            vehicles = [
+                {
+                    id: Date.now(),
+                    name: '',
+                    vin: '',
+                    parts: [
+                        { id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }
+                    ]
+                }
+            ];
+        }
+
+        const vehiclesContainer = document.getElementById('vehiclesContainer');
+        const summaryDisplay = document.getElementById('summaryDisplay');
+        const yamlHidden = document.getElementById('last_inquiry_yaml_form');
+        const yamlHiddenUser = document.getElementById('last_inquiry_yaml_form_user');
+        const yamlHiddenHtml = document.getElementById('last_inquiry_yaml_form_html');
+        const yamlHiddenUserHtml = document.getElementById('last_inquiry_yaml_form_user_html');
+        const addVehicleBtn = document.getElementById('addVehicle');
+        const inquiryForm = document.getElementById('inquiryForm');
+        const successMessage = document.getElementById('successMessage');
+        const btnSubmitAnother = document.getElementById('btnSubmitAnother');
+
+        // Render vehicles and parts
+        function renderVehicles() {
+            vehiclesContainer.innerHTML = '';
+            
+            let history = [];
+            if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                try {
+                    const stored = localStorage.getItem('persistent_vehicles');
+                    if (stored) history = JSON.parse(stored);
+                } catch(e) {}
+            }
+
+            vehicles.forEach((vehicle, vIndex) => {
+                const isInHistory = history.some(h => h.id === vehicle.id && (h.name || h.vin));
+                const canRemoveVehicle = vehicles.length > 1;
+
+                let removeButtonsHtml = '';
+                if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                    removeButtonsHtml = `
+                        <div class="remove-btn-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            ${canRemoveVehicle ? `<button type="button" class="btn btn-danger" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove from form but keep in memory for next time">Remove Vehicle For Now</button>` : ''}
+                            ${isInHistory ? `<button type="button" class="btn btn-danger" onclick="removeVehiclePermanentlySnippet(${vehicle.id})" title="Delete from memory entirely">Remove From History</button>` : ''}
+                        </div>
+                    `;
+                } else if (canRemoveVehicle) {
+                    removeButtonsHtml = `
+                        <div class="remove-btn-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-danger" onclick="removeVehicleForNowSnippet(${vehicle.id})" title="Remove this vehicle">Remove Vehicle</button>
+                        </div>
+                    `;
+                }
+
+                const vBlock = document.createElement('div');
+                vBlock.className = 'vehicle-block clearfix';
+                vBlock.innerHTML = `
+                    <div class="vehicle-top-bar" style="margin-bottom: 15px;">
+                        <div class="vehicle-meta-fields">
+                            <div class="row">
+                                <div class="form-group" style="flex: 2;">
+                                    <label>Vehicle Name (Make, Model, Year)</label>
+                                    <input type="text" placeholder="e.g. Porsche 911 1988" value="${vehicle.name}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'name', this.value)">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label>VIN (5–17 chars)</label>
+                                    <input type="text" maxlength="17" placeholder="Optional" style="text-transform: uppercase;" value="${vehicle.vin}" oninput="updateVehicleValueSnippet(${vehicle.id}, 'vin', this.value.toUpperCase())">
+                                </div>
+                            </div>
+                        </div>
+                        ${removeButtonsHtml}
+                    </div>
+                    <div class="parts-container" id="parts-${vehicle.id}"></div>
+                    <button type="button" class="btn btn-blue btn-add-part" onclick="addPartSnippet(${vehicle.id})">+ Add Part for this Vehicle</button>
+                `;
+                
+                const partsContainer = vBlock.querySelector('.parts-container');
+                vehicle.parts.forEach((part, pIndex) => {
+                    const pBlock = document.createElement('div');
+                    pBlock.className = 'part-block';
+                    pBlock.innerHTML = `
+                        <button type="button" class="btn btn-danger remove-btn" onclick="removePartSnippet(${vehicle.id}, ${part.id})" title="Remove Part">×</button>
+                    <div class="row">
+                        <div class="form-group" style="flex: 1.5;">
+                            <label>Part No.</label>
+                            <input type="text" placeholder="Optional" value="${part.partNo}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'partNo', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 2.5;">
+                            <label>Part Name / Description</label>
+                            <input type="text" placeholder="e.g. Rims BBS 20 Inch Chrome Front" value="${part.name}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'name', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 1.2;">
+                            <label>Brand / Manufacturer</label>
+                            <input type="text" placeholder="Optional" value="${part.manufacturer || ''}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'manufacturer', this.value)">
+                        </div>
+                        <div class="form-group" style="flex: 0.6;">
+                            <label>Qty</label>
+                            <input type="number" min="1" max="100" value="${part.qty}" oninput="updatePartSnippet(${vehicle.id}, ${part.id}, 'qty', this.value)">
+                        </div>
+                    </div>
+                    `;
+                    partsContainer.appendChild(pBlock);
+                });
+                
+                vehiclesContainer.appendChild(vBlock);
+            });
+            generateYAMLSnippet();
+        }
+
+        window.addVehicleSnippet = function() {
+            vehicles.push({
+                id: Date.now(),
+                name: '',
+                vin: '',
+                parts: [{ id: Date.now() + 1, name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' }]
+            });
+            saveVehiclesToLocalStorage();
+            renderVehicles();
+        };
+
+        window.removeVehicleForNowSnippet = function(vId) {
+            if (vehicles.length > 1) {
+                vehicles = vehicles.filter(v => v.id !== vId);
+                renderVehicles();
+            } else {
+                alert("At least one vehicle is required.");
+            }
+        };
+
+        window.removeVehiclePermanentlySnippet = function(vId) {
+            if (confirm("Are you sure you want to remove this vehicle from your history permanently?")) {
+                vehicles = vehicles.filter(v => v.id !== vId);
+                
+                if (vehicles.length === 0) {
+                    vehicles.push({
+                        id: Date.now(),
+                        name: '',
+                        vin: '',
+                        parts: [{ id: Date.now() + 1, name: '', partNo: '', qty: 1, status: 'I' }]
+                    });
+                }
+
+                if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                    let history = [];
+                    try {
+                        const stored = localStorage.getItem('persistent_vehicles');
+                        if (stored) history = JSON.parse(stored);
+                    } catch(e) {}
+                    history = history.filter(h => h.id !== vId);
+                    localStorage.setItem('persistent_vehicles', JSON.stringify(history));
+                }
+
+                renderVehicles();
+            }
+        };
+
+        window.updateVehicleValueSnippet = function(vId, field, value) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle) {
+                vehicle[field] = value;
+                saveVehiclesToLocalStorage();
+            }
+            generateYAMLSnippet();
+        };
+
+        window.addPartSnippet = function(vId) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle) {
+                vehicle.parts.push({ id: Date.now(), name: '', partNo: '', manufacturer: '', qty: 1, status: 'I' });
+                saveVehiclesToLocalStorage();
+                renderVehicles();
+            }
+        };
+
+        window.removePartSnippet = function(vId, pId) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle && vehicle.parts.length > 1) {
+                vehicle.parts = vehicle.parts.filter(p => p.id !== pId);
+                saveVehiclesToLocalStorage();
+                renderVehicles();
+            } else {
+                alert("At least one part is required per vehicle.");
+            }
+        };
+
+        window.updatePartSnippet = function(vId, pId, field, value) {
+            const vehicle = vehicles.find(v => v.id === vId);
+            if (vehicle) {
+                const part = vehicle.parts.find(p => p.id === pId);
+                if (part) {
+                    part[field] = field === 'qty' ? parseInt(value) || 1 : value;
+                    saveVehiclesToLocalStorage();
+                    generateYAMLSnippet();
+                }
+            }
+        };
+
+        function formatDateSnippet(date) {
+            const d = new Date(date);
+            const weekday = d.toLocaleDateString('en-US', { weekday: 'long' });
+            const month = d.getMonth() + 1;
+            const day = d.getDate();
+            const year = d.getFullYear();
+            const datePart = `${month}/${day}/${year}`;
+            
+            let hours = d.getHours();
+            const minutes = d.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const hoursStr = hours.toString().padStart(2, '0');
+            const timePart = `${hoursStr}:${minutes} ${ampm}`;
+            return `${weekday} ${datePart} at ${timePart}`;
+        }
+
+        // Strict Rule 5 Function Callbacks on HTML Escaper
         function escapeHtml(str) {
-            if (str === null || str === undefined) return '';
+            if (!str) return '';
             return String(str)
                 .replace(/&/g, () => '&amp;')
                 .replace(/</g, () => '&lt;')
@@ -838,6 +984,355 @@
                 .replace(/"/g, () => '&quot;')
                 .replace(/'/g, () => '&#039;');
         }
-    </script>
+
+        function generateYAMLSnippet() {
+            let yamlFullLines = [];
+            let yamlUserLines = [];
+            let htmlFullParts = [];
+            let htmlUserParts = [];
+            let csvLines = [];
+            const timestamp = formatDateSnippet(new Date());
+
+            vehicles.forEach(vehicle => {
+                const vName = vehicle.name.trim();
+                const vVin = vehicle.vin.trim();
+
+                if (vName) {
+                    yamlFullLines.push(`- vehicle: ${vName}`);
+                    yamlFullLines.push(`  vin: ${vVin}`);
+                    yamlFullLines.push(`  items:`);
+
+                    yamlUserLines.push(`- vehicle: ${vName}`);
+                    yamlUserLines.push(`  vin: ${vVin}`);
+                    yamlUserLines.push(`  items:`);
+
+                    csvLines.push(`Vehicle: ${vName}`);
+
+                    let vHtmlUser = `
+<div style="margin-bottom: 20px;">
+    <div style="font-size: 1.15rem; font-weight: 700; color: var(--form-title-color); margin-bottom: 8px;">
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: var(--form-subtext); margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
+    </div>
+    <div style="border-top: 1px dashed var(--card-box-border); margin: 10px 0 16px 0;"></div>
+`;
+
+                    let vHtmlAdmin = `
+<div style="margin-bottom: 20px;">
+    <div style="font-size: 1.15rem; font-weight: 700; color: var(--form-title-color); margin-bottom: 8px;">
+        🚗 Vehicle: ${escapeHtml(vName)} ${vVin ? `<span style="font-size: 0.95rem; font-weight: normal; color: var(--form-subtext); margin-left: 10px;">|&nbsp;&nbsp;VIN: ${escapeHtml(vVin)}</span>` : ''}
+    </div>
+    <div style="border-top: 1px dashed var(--card-box-border); margin: 10px 0 16px 0;"></div>
+`;
+
+                    vehicle.parts.forEach(part => {
+                        const rawName = part.name.trim() || 'Unnamed Part';
+                        const pMan = part.manufacturer ? part.manufacturer.trim() : '';
+                        
+                        let pName = rawName;
+                        if (pMan && !pName.toLowerCase().includes(pMan.toLowerCase())) {
+                            pName = `${pName} ${pMan}`;
+                        }
+
+                        const pNo = part.partNo.trim() || '';
+                        const pQty = part.qty || 1;
+                        const pStatus = part.status || 'I';
+
+                        yamlFullLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
+                        yamlFullLines.push(`        part_no: ${pNo}`);
+                        yamlFullLines.push(`        inquiries: 1`);
+                        yamlFullLines.push(`        last_inquiry: ${timestamp}`);
+
+                        yamlUserLines.push(`    - ( ${pStatus} x ${pQty} ) ${pName}:`);
+                        yamlUserLines.push(`        part_no: ${pNo}`);
+
+                        vHtmlUser += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: inline-block; border: 1.5px solid var(--summary-pill-border); border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: var(--summary-pill-text); background: var(--summary-pill-bg);">QTY: ${pQty}</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: var(--form-text);">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: var(--form-subtext); margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+    </div>`;
+
+                        vHtmlAdmin += `
+    <div style="margin-bottom: 16px; padding-left: 8px;">
+        <div style="margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: inline-block; border: 1.5px solid var(--summary-pill-border); border-radius: 18px; padding: 3px 12px; font-weight: 700; font-size: 0.85rem; color: var(--summary-pill-text); background: var(--summary-pill-bg);">INQUIRY: 1</span>
+            <span style="font-weight: 700; font-size: 1.05rem; color: var(--form-text);">${escapeHtml(pName)}</span>
+        </div>
+        ${pNo ? `<div style="font-size: 0.92rem; color: var(--form-subtext); margin: 4px 0 4px 12px;">🔢 <strong>Part No:</strong> ${escapeHtml(pNo)}</div>` : ''}
+        <div style="font-size: 0.92rem; color: var(--form-subtext); margin: 4px 0 4px 12px;">📊 <strong>Inquiries:</strong> 1</div>
+        <div style="font-size: 0.92rem; color: var(--form-subtext); margin: 4px 0 4px 12px;">⏰ <strong>Last Inquiry:</strong> ${timestamp}</div>
+    </div>`;
+
+                        const escapeCSV = (str) => str.replace(/"/g, () => '""');
+                        csvLines.push(`"${escapeCSV(pNo)}"," : ","${escapeCSV(pName)} for ${escapeCSV(vName)}"," : ","${escapeCSV(pMan)}"`);
+                    });
+
+                    vHtmlUser += `</div>`;
+                    vHtmlAdmin += `</div>`;
+
+                    htmlUserParts.push(vHtmlUser);
+                    htmlFullParts.push(vHtmlAdmin);
+                }
+            });
+
+            const userCardHtml = `
+<div style="border: 2px solid var(--summary-card-border); border-radius: 8px; background-color: var(--summary-card-bg); color: var(--form-text); padding: 22px; font-family: inherit;">
+    <div style="border-bottom: 2px solid var(--summary-card-border); padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: var(--summary-card-title); display: flex; align-items: center; gap: 8px;">
+        📋 Inquiry Summary
+    </div>
+    ${htmlUserParts.length > 0 ? htmlUserParts.join('') : '<div style="color: var(--form-subtext); font-style: italic;">No vehicles or parts entered yet.</div>'}
+</div>`;
+
+            const adminCardHtml = `
+<div style="border: 2px solid var(--summary-card-border); border-radius: 8px; background-color: var(--summary-card-bg); color: var(--form-text); padding: 22px; font-family: inherit;">
+    <div style="border-bottom: 2px solid var(--summary-card-border); padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; font-size: 1.15rem; color: var(--summary-card-title); display: flex; align-items: center; gap: 8px;">
+        📋 Product Inquiry Data
+    </div>
+    ${htmlFullParts.length > 0 ? htmlFullParts.join('') : '<div style="color: var(--form-subtext); font-style: italic;">No vehicles or parts entered yet.</div>'}
+</div>`;
+
+            summaryDisplay.innerHTML = userCardHtml;
+
+            yamlHidden.value = yamlFullLines.join('\n');
+            yamlHiddenUser.value = yamlUserLines.join('\n');
+
+            const csvHidden = document.getElementById('last_inquiry_csv_gsheets_form');
+            if (csvHidden) csvHidden.value = csvLines.join('\n');
+            
+            yamlHiddenHtml.value = adminCardHtml;
+            yamlHiddenUserHtml.value = userCardHtml;
+        }
+
+        const sourceInput = document.createElement('input');
+        sourceInput.type = 'hidden';
+        sourceInput.name = 'source';
+        sourceInput.value = 'Product Inquiry Web Form';
+        inquiryForm.appendChild(sourceInput);
+
+        addVehicleBtn.addEventListener('click', addVehicleSnippet);
+        renderVehicles();
+
+        // ==========================================
+        // STICKY MAIN FIELDS INITIALIZATION
+        // ==========================================
+        if (STICKY_FIELDS_MAIN_TOGGLE) {
+            STICKY_FIELDS_MAIN.forEach(fieldId => {
+                const storedValue = localStorage.getItem('sticky_' + fieldId);
+                if (storedValue !== null) {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        if (field.type === 'checkbox') {
+                            field.checked = storedValue === 'true';
+                        } else {
+                            field.value = storedValue;
+                        }
+                    }
+                }
+            });
+
+            if (STICKY_FIELDS_ITEMS_TOGGLE) {
+                const storedVehicle = localStorage.getItem('sticky_vehicle_0');
+                if (storedVehicle) {
+                    const firstVehicleInput = document.querySelector('input[placeholder="e.g. Porsche 911 1988"]');
+                    if (firstVehicleInput) {
+                        firstVehicleInput.value = storedVehicle;
+                        if (vehicles[0]) vehicles[0].name = storedVehicle;
+                    }
+                }
+
+                const storedVin = localStorage.getItem('sticky_vin_0');
+                if (storedVin) {
+                    const firstVinInput = document.querySelector('input[placeholder="Optional"]');
+                    if (firstVinInput) {
+                        firstVinInput.value = storedVin;
+                        if (vehicles[0]) vehicles[0].vin = storedVin;
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // GET PARAMETERS PREFILL (URL QUERY STRINGS)
+        // ==========================================
+        function prefillFromQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.toString()) return;
+
+            const paramMap = {
+                first_name: urlParams.get('first_name') || urlParams.get('first') || urlParams.get('fname'),
+                last_name: urlParams.get('last_name') || urlParams.get('last') || urlParams.get('lname'),
+                email: urlParams.get('email'),
+                phone: urlParams.get('phone') || urlParams.get('tel'),
+                business_name: urlParams.get('business_name') || urlParams.get('company') || urlParams.get('workshop') || urlParams.get('shop'),
+                po_number: urlParams.get('po_number') || urlParams.get('po') || urlParams.get('job'),
+                diy_tech: urlParams.get('diy_tech') || urlParams.get('diy')
+            };
+
+            for (const [key, val] of Object.entries(paramMap)) {
+                if (val !== null && val !== undefined) {
+                    const el = document.getElementById(key);
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            el.checked = (val === 'true' || val === '1' || val.toLowerCase() === 'yes' || val.toLowerCase() === 'on');
+                        } else {
+                            el.value = val;
+                        }
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+            }
+        }
+
+        prefillFromQueryParams();
+
+        // Phone formatting logic
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+                if (e.target.value.startsWith('+')) {
+                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
+                } else {
+                    e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+                }
+            });
+        }
+
+        // Save main sticky values on user input
+        inquiryForm.addEventListener('input', function(e) {
+            if (STICKY_FIELDS_MAIN_TOGGLE && STICKY_FIELDS_MAIN.includes(e.target.id)) {
+                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                localStorage.setItem('sticky_' + e.target.id, val);
+            }
+        });
+
+        inquiryForm.addEventListener('change', function(e) {
+            if (STICKY_FIELDS_MAIN_TOGGLE && STICKY_FIELDS_MAIN.includes(e.target.id)) {
+                const val = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+                localStorage.setItem('sticky_' + e.target.id, val);
+            }
+        });
+
+        // ==========================================
+        // FORM SUBMISSION & SPAM DEFENSE
+        // ==========================================
+        inquiryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 1. HONEYPOT CHECK: If middle_name has any value, drop silently and trigger confirmation screen
+            const honeypot = document.getElementById('middle_name');
+            if (honeypot && honeypot.value.trim() !== '') {
+                console.warn("Spam bot trapped via middle_name honeypot.");
+                document.querySelector('.inquiry-form-container').classList.add('submitted');
+                inquiryForm.style.display = 'none';
+                document.querySelector('.inquiry-form-container .header').style.display = 'none';
+                successMessage.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // 2. VALIDATION CHECKS (Parts & VIN Integrity)
+            let errors = [];
+            vehicles.forEach((v, index) => {
+                const vehicleName = v.name || `Vehicle ${index + 1}`;
+                
+                // Ensure at least one part name
+                const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
+                if (!hasPartName) {
+                    errors.push(`Please enter at least one part name for ${vehicleName}.`);
+                }
+                
+                // Quantity bounds
+                v.parts.forEach((p) => {
+                    if (p.qty < 1) {
+                        errors.push(`Quantity for part "${p.name || 'Unnamed'}" in ${vehicleName} must be at least 1.`);
+                    }
+                    if (p.qty > 50) {
+                        errors.push(`Quantity for "${p.name || 'Unnamed'}" is unusually high. For commercial orders over 50 units, please contact sales by phone.`);
+                    }
+                });
+
+                // VIN Length & Character Check
+                const rawVin = (v.vin || '').trim();
+                if (rawVin.length > 0) {
+                    const cleanVin = rawVin.replace(/[\s-]/g, () => '');
+                    if (cleanVin.length > 17) {
+                        errors.push(`The VIN for ${vehicleName} is too long (${cleanVin.length} characters). Standard VINs are at most 17 characters.`);
+                    } else if (cleanVin.length < 5) {
+                        errors.push(`The VIN for ${vehicleName} is too short (${cleanVin.length} characters). Classic chassis numbers are at least 5 characters.`);
+                    } else if (!/^[A-HJ-NPR-Za-hj-npr-z0-9]+$/.test(cleanVin)) {
+                        errors.push(`The VIN for ${vehicleName} contains invalid characters. VINs contain only letters and numbers (no special symbols).`);
+                    }
+                }
+            });
+
+            if (errors.length > 0) {
+                alert("Submission Failed:\n\n" + errors.join("\n"));
+                return;
+            }
+
+            const formData = new FormData(inquiryForm);
+            formData.delete('middle_name');
+            const data = Object.fromEntries(formData.entries());
+            
+            const webhookUrl = 'https://services.leadconnectorhq.com/hooks/A9eEmuUJ1FM6sBhYESfO/webhook-trigger/6bdeea4e-6b4e-49f7-afef-dd77d3bd3dfd';
+
+            try {
+                if (webhookUrl === 'REPLACE_WITH_YOUR_GHL_WEBHOOK_URL') {
+                    alert('Configuration Error: Please provide a valid GHL Webhook URL in the script.');
+                    return;
+                }
+
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    document.querySelector('.inquiry-form-container').classList.add('submitted');
+                    inquiryForm.style.display = 'none';
+                    document.querySelector('.inquiry-form-container .header').style.display = 'none';
+                    successMessage.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+
+            } catch (error) {
+                console.error('Submission Error:', error);
+                alert('There was an issue sending your inquiry. Please try again or contact us directly.');
+            }
+        });
+
+        // Handle "Submit Another" button
+        if (btnSubmitAnother) {
+            btnSubmitAnother.addEventListener('click', function() {
+                document.querySelector('.inquiry-form-container').classList.remove('submitted');
+                successMessage.style.display = 'none';
+                inquiryForm.style.display = 'block';
+                document.querySelector('.inquiry-form-container .header').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    })();
+</script>
+                <!-- EMBEDDED FORM SNIPPET END -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 EuroPartsWest. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/app.js"></script>
+
 </body>
 </html>
