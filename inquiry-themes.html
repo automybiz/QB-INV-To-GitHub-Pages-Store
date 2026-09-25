@@ -10,14 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=BioRhyme:wght@300;400;700&display=swap" rel="stylesheet">
     
-    <!-- Instant Head Pre-Hydration to prevent FOUC (Flash of Unstyled Content) -->
+    <!-- Unified Single Theme Style Preloader (Zero Flash / FOUC) -->
     <script>
         (function() {
             try {
                 var cachedThemeCss = localStorage.getItem('epw_live_theme_css');
                 if (cachedThemeCss) {
                     var styleEl = document.createElement('style');
-                    styleEl.id = 'epwDynamicThemePreload';
+                    styleEl.id = 'epwDynamicThemeStyles';
                     styleEl.textContent = cachedThemeCss;
                     document.head.appendChild(styleEl);
                 }
@@ -61,7 +61,7 @@
             <div class="container">
                 <!-- EMBEDDED FORM SNIPPET START -->
                 
-<style id="epwThemeStyles">
+<style id="epwThemeStylesFallback">
     :root {
         --page-bg: #100;
         --form-bg: #100;
@@ -585,12 +585,19 @@
         // DYNAMIC GOOGLE SHEETS LIVE THEME HYDRATION
         // ==========================================
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
-        // Cache-busting refresh=1 forces Apps Script & Cloudflare to serve fresh GSheet values
         const SETTINGS_WORKER_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
 
         async function fetchAndApplyLiveTheme() {
             try {
-                const response = await fetch(`${SETTINGS_WORKER_URL}&t=${Date.now()}`);
+                // Strict cache-busting headers force browser to bypass memory/disk cache on normal F5 refresh
+                const response = await fetch(`${SETTINGS_WORKER_URL}&t=${Date.now()}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                });
+
                 if (!response.ok) return;
                 const data = await response.json();
                 if (!data || !data.success || !Array.isArray(data.styles)) return;
@@ -598,7 +605,6 @@
                 // 1. Identify Active Theme Name (Checks STYLE_SETTINGS cell C5 first, then settings tab)
                 let activeThemeName = "DARK RUBY GOLD";
 
-                // Check in STYLE_SETTINGS rows (Row 5 cell C5 in Google Sheets)
                 const styleActiveRow = data.styles.find(r => String(r[1] || r[0] || '').trim().toUpperCase() === "ACTIVE_THEME_NAME");
                 if (styleActiveRow && (styleActiveRow[2] || styleActiveRow[1])) {
                     activeThemeName = String(styleActiveRow[2] || styleActiveRow[1]).trim().toUpperCase();
@@ -630,7 +636,7 @@
                     if (activeColIdx !== -1) break;
                 }
 
-                if (activeColIdx === -1) activeColIdx = 2; // Fallback to first theme column
+                if (activeColIdx === -1) activeColIdx = 2;
 
                 // 3. Ingest Tokens for Active Theme
                 const tokens = {};
@@ -660,7 +666,6 @@
                 const pillText     = tokens["PILL_INQUIRY_TEXT_COLOR"] || "#F99";
                 const pillBorder   = tokens["PILL_INQUIRY_BORDER_COLOR"] || "#D12";
 
-                // High-specificity CSS that decisively overrides any default light/dark mode sheet rules
                 const generatedCss = `
                     :root, [data-theme="dark"], [data-theme="light"], body {
                         --page-bg: ${mainBg} !important;
@@ -759,17 +764,20 @@
                     }
                 `;
 
-                // 5. Inject styles and update localStorage cache for instant next render
-                let liveStyleEl = document.getElementById('epwDynamicThemeLive');
+                // 5. Update Unified Single Style Tag
+                let liveStyleEl = document.getElementById('epwDynamicThemeStyles');
                 if (!liveStyleEl) {
                     liveStyleEl = document.createElement('style');
-                    liveStyleEl.id = 'epwDynamicThemeLive';
+                    liveStyleEl.id = 'epwDynamicThemeStyles';
                     document.head.appendChild(liveStyleEl);
                 }
                 liveStyleEl.textContent = generatedCss;
-                localStorage.setItem('epw_live_theme_css', generatedCss);
 
-                // Refresh Summary Box with updated colors
+                // Sync localStorage cache for instant next render
+                localStorage.setItem('epw_live_theme_css', generatedCss);
+                localStorage.setItem('epw_live_theme_name', activeThemeName);
+
+                // Refresh Summary Box
                 generateYAMLSnippet();
 
             } catch (err) {
@@ -784,9 +792,9 @@
         // CONFIGURATION VARIABLES & TOGGLES
         // ==========================================
         const STICKY_FIELDS_MAIN = ['first_name', 'last_name', 'email', 'phone', 'business_name', 'po_number', 'diy_tech', 'terms'];
-        const STICKY_FIELDS_MAIN_TOGGLE = true;            // Toggle persistence for main contact fields (true/false)
-        const STICK_FIELDS_MAIN_TOGGLE = STICKY_FIELDS_MAIN_TOGGLE; // Alias support
-        const STICKY_FIELDS_ITEMS_TOGGLE = false;          // Toggle persistence for vehicles & parts (Set to false per Day's request)
+        const STICKY_FIELDS_MAIN_TOGGLE = true;
+        const STICK_FIELDS_MAIN_TOGGLE = STICKY_FIELDS_MAIN_TOGGLE;
+        const STICKY_FIELDS_ITEMS_TOGGLE = false;
 
         // State Management
         let vehicles = [];
@@ -801,7 +809,6 @@
             localStorage.setItem('persistent_vehicles', JSON.stringify(filteredVehicles));
         }
 
-        // Load persistent vehicles on init (if enabled)
         if (STICKY_FIELDS_ITEMS_TOGGLE) {
             const storedVehicles = localStorage.getItem('persistent_vehicles');
             if (storedVehicles) {
@@ -819,7 +826,6 @@
             }
         }
 
-        // Default if empty
         if (vehicles.length === 0) {
             vehicles = [
                 {
@@ -844,7 +850,6 @@
         const successMessage = document.getElementById('successMessage');
         const btnSubmitAnother = document.getElementById('btnSubmitAnother');
 
-        // Render vehicles and parts
         function renderVehicles() {
             vehiclesContainer.innerHTML = '';
             
@@ -1037,7 +1042,6 @@
             return `${weekday} ${datePart} at ${timePart}`;
         }
 
-        // Strict Rule 5 Function Callbacks on HTML Escaper
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)
@@ -1284,7 +1288,7 @@
         inquiryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // 1. HONEYPOT CHECK: If middle_name has any value, drop silently and trigger confirmation screen
+            // 1. HONEYPOT CHECK
             const honeypot = document.getElementById('middle_name');
             if (honeypot && honeypot.value.trim() !== '') {
                 console.warn("Spam bot trapped via middle_name honeypot.");
