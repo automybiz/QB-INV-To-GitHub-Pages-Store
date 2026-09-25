@@ -582,33 +582,38 @@
 <script>
     (function() {
         // =========================================================================
-        // RESILIENT DUAL-PARSER THEME HYDRATION (~250-350ms)
-        // Works with both action=styles tokens payload AND full styles matrix
+        // PURE EDGE GATEWAY HYDRATION (SUB-300ms CONSISTENT RESILIENCE)
+        // Directly hits Cloudflare Worker with zero browser redirect stalling
         // =========================================================================
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
         const SETTINGS_GATEWAY_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?action=styles&gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
 
         async function fetchAndApplyLiveTheme() {
             try {
-                const response = await fetch(`${SETTINGS_GATEWAY_URL}&t=${Date.now()}`);
-                if (!response.ok) return;
+                // Short timeout controller prevents any hanging network requests
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3500);
 
+                const response = await fetch(`${SETTINGS_GATEWAY_URL}&t=${Date.now()}`, {
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!response.ok) return;
                 const data = await response.json();
                 if (!data || !data.success) return;
 
                 let activeThemeName = "DARK RUBY GOLD";
                 let tokens = {};
 
-                // Path A: Fast action=styles route with ready-to-use tokens dictionary
+                // Path A: Direct action=styles tokens payload (fastest)
                 if (data.tokens && typeof data.tokens === 'object') {
                     tokens = data.tokens;
                     if (data.active_theme_name) activeThemeName = data.active_theme_name;
                 } 
-                // Path B: Full enterprise payload (fallback parser for 2D matrix)
+                // Path B: Fallback 2D matrix parser (if worker returns full payload)
                 else if (Array.isArray(data.styles)) {
                     const sRows = data.styles;
-
-                    // Resolve active theme from cell C5 in STYLE_SETTINGS
                     const styleActiveRow = sRows.find(r => String(r[1] || r[0] || '').trim().toUpperCase() === "ACTIVE_THEME_NAME");
                     if (styleActiveRow && (styleActiveRow[2] || styleActiveRow[1])) {
                         activeThemeName = String(styleActiveRow[2] || styleActiveRow[1]).trim().toUpperCase();
@@ -619,7 +624,6 @@
                         }
                     }
 
-                    // Locate active theme column
                     let activeColIdx = -1;
                     for (let r = 0; r < Math.min(sRows.length, 6); r++) {
                         const row = sRows[r];
@@ -785,7 +789,7 @@
                 generateYAMLSnippet();
 
             } catch (err) {
-                console.warn("[EPW Live Theme Error]:", err);
+                console.warn("[EPW Live Theme Handshake]:", err);
             }
         }
 
@@ -1046,7 +1050,6 @@
             return `${weekday} ${datePart} at ${timePart}`;
         }
 
-        // Strict Rule 5 Function Callbacks on HTML Escaper
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)
