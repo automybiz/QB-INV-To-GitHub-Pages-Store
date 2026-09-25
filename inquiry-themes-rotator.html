@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euro Parts West - Interactive Theme Rotator</title>
+    <style>
+        /* Developer Dark Mode Criteria */
+        body {
+            background-color: #011;
+            color: #FFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            line-height: 1.5;
+        }
+
+        h1, h2, h3 {
+            color: #0FF;
+            margin-top: 0;
+        }
+
+        /* Criteria-Compliant Accordions */
+        .custom-accordion {
+            margin-bottom: 18px;
+            border: 1px solid #0FF;
+            border-radius: 11px;
+            overflow: hidden;
+            background-color: #022;
+        }
+
+        .accordion-header {
+            background-color: #022;
+            color: #0FF;
+            padding: 14px 20px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            background-color: #033;
+        }
+
+        .accordion-header .chevron {
+            transition: transform 0.25s ease;
+            font-size: 12px;
+            color: #0FF;
+        }
+
+        .custom-accordion.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            background-color: #301;
+            color: #FFF;
+            padding: 20px;
+            display: none; /* Controlled by JS / default state */
+            border-top: 1px solid #0FF;
+        }
+
+        /* Criteria-Compliant Dark Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        table.dark-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #0FF;
+            border-radius: 11px;
+            overflow: hidden;
+            background-color: #301;
+            color: #FFF;
+        }
+
+        table.dark-table th {
+            background-color: #022;
+            color: #0FF;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13.5px;
+            font-weight: 700;
+            border-bottom: 1px solid #0FF;
+            border-right: 1px solid #0FF;
+        }
+
+        table.dark-table th:last-child { border-right: none; }
+
+        table.dark-table td {
+            background-color: #301;
+            color: #FFF;
+            padding: 10px 14px;
+            font-size: 13px;
+            border-bottom: 1px solid #0FF;
+            border-right: 1px solid #0FF;
+            vertical-align: middle;
+        }
+
+        table.dark-table tr:last-child td { border-bottom: none; }
+        table.dark-table td:last-child { border-right: none; }
+
+        .swatch-pill {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 3px;
+            border: 1px solid rgba(255,255,255,0.25);
+            font-family: monospace;
+        }
+
+        /* Criteria-Compliant Lists */
+        .info-card {
+            background-color: #022;
+            border: 1px solid #0FF;
+            border-radius: 11px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-card ul, .info-card ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+
+        .info-card li { margin-bottom: 6px; }
+
+        /* =================================================================
+           CAROUSEL CONTROLS BAR (Auto-Rotate & Speed Slider)
+           ================================================================= */
+        .carousel-controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #022;
+            border: 1px solid #0FF;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            background: #011;
+            border: 1.5px solid #0FF;
+            color: #0FF;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            background: #033;
+            color: #FFF;
+        }
+
+        .toggle-btn.playing {
+            background: #084;
+            color: #FFF;
+            border-color: #0F8;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+        }
+
+        .speed-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #0FF;
+            font-weight: 700;
+        }
+
+        .speed-slider {
+            -webkit-appearance: none;
+            width: 140px;
+            height: 6px;
+            border-radius: 3px;
+            background: #011;
+            border: 1px solid #0FF;
+            outline: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #0FF;
+            cursor: pointer;
+            box-shadow: 0 0 6px #0FF;
+        }
+
+        .speed-display {
+            min-width: 38px;
+            color: #FFF;
+            font-family: monospace;
+        }
+
+        .theme-pill-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .theme-pill-btn {
+            background: #011;
+            border: 1px solid #0FF;
+            color: #0FF;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-pill-btn:hover {
+            background: #033;
+            color: #FFF;
+        }
+
+        .theme-pill-btn.active {
+            background: #301;
+            border-color: #FFF;
+            color: #FFF;
+            box-shadow: 0 0 10px #0FF;
+        }
+
+        .carousel-viewport {
+            overflow: hidden;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1);
+            width: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            padding: 4px;
+        }
+
+        .arrow-nav-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .arrow-btn {
+            background: #011;
+            border: 1px solid #0FF;
+            color: #0FF;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .arrow-btn:hover {
+            background: #0FF;
+            color: #011;
+        }
+
+        /* =================================================================
+           FORM PREVIEW SIMULATOR (Euro Parts West Styling)
+           ================================================================= */
+        .form-canvas {
+            border-radius: 8px;
+            padding: 22px;
+            max-width: 840px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .form-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-subtext {
+            text-align: center;
+            font-size: 11.5px;
+            margin-bottom: 18px;
+            opacity: 0.85;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-col { flex: 1; }
+
+        .form-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .section-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 0 10px 0;
+        }
+
+        .section-heading { font-size: 14px; font-weight: 800; }
+
+        .btn-small {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid;
+        }
+
+        .card-box {
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .summary-card {
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 16px;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-right: 6px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 11px;
+            border-radius: 6px;
+            font-size: 14.5px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 16px;
+            text-align: center;
+            box-sizing: border-box;
+            border: 1px solid;
+        }
+
+        /* -------------------------------------------------------------
+           THEME 1: DARK RUBY GOLD (Shade Rules: Main #100, Card #201, Header #301)
+           ------------------------------------------------------------- */
+        .t-ruby-gold { background: #100; color: #FFF; border: 1.5px solid #D12; }
+        .t-ruby-gold .form-nav { border-color: #301; color: #FA0; background: #301; padding: 8px 12px; border-radius: 6px; }
+        .t-ruby-gold .form-title { color: #FA0; }
+        .t-ruby-gold .form-subtext { color: #AAA; }
+        .t-ruby-gold .form-label { color: #FA0; }
+        .t-ruby-gold .form-input { background: #100; border: 1px solid #411; color: #FFF; }
+        .t-ruby-gold .form-input:focus { border-color: #FA0; }
+        .t-ruby-gold .section-heading { color: #FA0; }
+        .t-ruby-gold .btn-small { background: #301; border-color: #D12; color: #FD0; }
+        .t-ruby-gold .card-box { background: #201; border: 1px solid #D12; }
+        .t-ruby-gold .summary-card { background: #201; border: 1px solid #D12; color: #FFF; }
+        .t-ruby-gold .status-badge { background: #301; color: #F99; border: 1px solid #D12; }
+        .t-ruby-gold .btn-submit { background: #D12; border-color: #FA0; color: #FFF; }
+
+        /* -------------------------------------------------------------
+           THEME 2: DARK GARNET AMBER (Shade Rules: Main #101, Card #211, Header #311)
+           ------------------------------------------------------------- */
+        .t-garnet-amber { background: #101; color: #FFF; border: 1.5px solid #E02; }
+        .t-garnet-amber .form-nav { border-color: #311; color: #F80; background: #311; padding: 8px 12px; border-radius: 6px; }
+        .t-garnet-amber .form-title { color: #FA0; }
+        .t-garnet-amber .form-subtext { color: #AAA; }
+        .t-garnet-amber .form-label { color: #F80; }
+        .t-garnet-amber .form-input { background: #101; border: 1px solid #512; color: #FFF; }
+        .t-garnet-amber .form-input:focus { border-color: #F80; }
+        .t-garnet-amber .section-heading { color: #FA0; }
+        .t-garnet-amber .btn-small { background: #311; border-color: #E02; color: #FA0; }
+        .t-garnet-amber .card-box { background: #211; border: 1px solid #E02; }
+        .t-garnet-amber .summary-card { background: #211; border: 1px solid #E02; color: #FFF; }
+        .t-garnet-amber .status-badge { background: #311; color: #FBA; border: 1px solid #E02; }
+        .t-garnet-amber .btn-submit { background: #E02; border-color: #F80; color: #FFF; }
+
+        /* -------------------------------------------------------------
+           THEME 3: DARK CITRINE CRIMSON (Shade Rules: Main #110, Card #210, Header #320)
+           ------------------------------------------------------------- */
+        .t-citrine-crimson { background: #110; color: #FFF; border: 1.5px solid #FB0; }
+        .t-citrine-crimson .form-nav { border-color: #320; color: #FD0; background: #320; padding: 8px 12px; border-radius: 6px; }
+        .t-citrine-crimson .form-title { color: #FD0; }
+        .t-citrine-crimson .form-subtext { color: #BA9; }
+        .t-citrine-crimson .form-label { color: #FE9; }
+        .t-citrine-crimson .form-input { background: #110; border: 1px solid #541; color: #FFF; }
+        .t-citrine-crimson .form-input:focus { border-color: #FD0; }
+        .t-citrine-crimson .section-heading { color: #FD0; }
+        .t-citrine-crimson .btn-small { background: #320; border-color: #C02; color: #FD0; }
+        .t-citrine-crimson .card-box { background: #210; border: 1px solid #C02; }
+        .t-citrine-crimson .summary-card { background: #210; border: 1px solid #FB0; color: #FFF; }
+        .t-citrine-crimson .status-badge { background: #320; color: #FE9; border: 1px solid #FD0; }
+        .t-citrine-crimson .btn-submit { background: #C02; border-color: #FD0; color: #FFF; }
+
+        /* -------------------------------------------------------------
+           THEME 4: DARK TOPAZ AMBER (Shade Rules: Main #000, Card #210, Header #320)
+           ------------------------------------------------------------- */
+        .t-topaz-amber { background: #000; color: #FFF; border: 1.5px solid #D70; }
+        .t-topaz-amber .form-nav { border-color: #320; color: #FB0; background: #320; padding: 8px 12px; border-radius: 6px; }
+        .t-topaz-amber .form-title { color: #FB0; }
+        .t-topaz-amber .form-subtext { color: #CBA; }
+        .t-topaz-amber .form-label { color: #FE9; }
+        .t-topaz-amber .form-input { background: #000; border: 1px solid #531; color: #FFF; }
+        .t-topaz-amber .form-input:focus { border-color: #FB0; }
+        .t-topaz-amber .section-heading { color: #FB0; }
+        .t-topaz-amber .btn-small { background: #320; border-color: #D70; color: #FE9; }
+        .t-topaz-amber .card-box { background: #210; border: 1px solid #D70; }
+        .t-topaz-amber .summary-card { background: #210; border: 1px solid #D70; color: #FFF; }
+        .t-topaz-amber .status-badge { background: #320; color: #FE9; border: 1px solid #FB0; }
+        .t-topaz-amber .btn-submit { background: #D70; border-color: #FB0; color: #FFF; }
+
+        /* -------------------------------------------------------------
+           THEME 5: DARK ONYX CRIMSON (Shade Rules: Main #000, Card #200, Header #300)
+           ------------------------------------------------------------- */
+        .t-onyx-crimson { background: #000; color: #FFF; border: 1.5px solid #E03; }
+        .t-onyx-crimson .form-nav { border-color: #300; color: #F24; background: #300; padding: 8px 12px; border-radius: 6px; }
+        .t-onyx-crimson .form-title { color: #F24; }
+        .t-onyx-crimson .form-subtext { color: #AAA; }
+        .t-onyx-crimson .form-label { color: #FCD; }
+        .t-onyx-crimson .form-input { background: #000; border: 1px solid #444; color: #FFF; }
+        .t-onyx-crimson .form-input:focus { border-color: #F24; }
+        .t-onyx-crimson .section-heading { color: #F57; }
+        .t-onyx-crimson .btn-small { background: #300; border-color: #E03; color: #FCD; }
+        .t-onyx-crimson .card-box { background: #200; border: 1px solid #E03; }
+        .t-onyx-crimson .summary-card { background: #200; border: 1px solid #E03; color: #FFF; }
+        .t-onyx-crimson .status-badge { background: #300; color: #FCD; border: 1px solid #F24; }
+        .t-onyx-crimson .btn-submit { background: #E03; border-color: #F24; color: #FFF; }
+
+        pre.tsv-code {
+            background: #011;
+            border: 1px solid #0FF;
+            color: #0FF;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            overflow-x: auto;
+            max-height: 380px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =============================================================
+         1ST ACCORDION: SAMPLE FORMS ROTATOR (OPEN BY DEFAULT)
+         ============================================================= -->
+    <div class="custom-accordion" id="acc_rotator" data-acc-id="rotator" data-default="open">
+        <div class="accordion-header">
+            <span>🎠 1. Euro Parts West Live Form Rotator (Red, Black &amp; Gold)</span>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+            
+            <!-- Controls Bar: Play/Pause Toggle & Horizontal Speed Slider -->
+            <div class="carousel-controls-bar">
+                <div class="control-group">
+                    <button type="button" class="toggle-btn" id="playPauseBtn" onclick="toggleAutoRotate()">
+                        <span id="playPauseIcon">▶</span>
+                        <span id="playPauseText">Auto-Rotate Slideshow</span>
+                    </button>
+                    <div class="speed-slider-wrap">
+                        <span>Speed:</span>
+                        <input type="range" class="speed-slider" id="speedSlider" min="1.0" max="8.0" step="0.5" value="3.5" oninput="updateSpeed(this.value)">
+                        <span class="speed-display" id="speedVal">3.5s</span>
+                    </div>
+                </div>
+                <div class="arrow-nav-group">
+                    <button type="button" class="arrow-btn" title="Previous (Left Arrow)" onclick="prevSlide()">‹</button>
+                    <button type="button" class="arrow-btn" title="Next (Right Arrow)" onclick="nextSlide()">›</button>
+                </div>
+            </div>
+
+            <!-- Theme Selector Quick-Jump Tabs -->
+            <div class="theme-pill-tabs" id="themeTabs">
+                <button type="button" class="theme-pill-btn active" onclick="goToSlide(0)">1. DARK RUBY GOLD</button>
+                <button type="button" class="theme-pill-btn" onclick="goToSlide(1)">2. DARK GARNET AMBER</button>
+                <button type="button" class="theme-pill-btn" onclick="goToSlide(2)">3. DARK CITRINE CRIMSON</button>
+                <button type="button" class="theme-pill-btn" onclick="goToSlide(3)">4. DARK TOPAZ AMBER</button>
+                <button type="button" class="theme-pill-btn" onclick="goToSlide(4)">5. DARK ONYX CRIMSON</button>
+            </div>
+
+            <!-- Carousel Viewport & Sliding Track -->
+            <div class="carousel-viewport">
+                <div class="carousel-track" id="carouselTrack">
+                    
+                    <!-- Slide 1: DARK RUBY GOLD -->
+                    <div class="carousel-slide">
+                        <div class="form-canvas t-ruby-gold">
+                            <div class="form-nav">
+                                <span>🏁 Euro Parts West &bull; <strong>DARK RUBY GOLD</strong></span>
+                                <span>Home &bull; Products &bull; eBay Store &bull; <u>Inquiry</u> &bull; Contact</span>
+                            </div>
+                            <div class="form-title">Product Inquiry Form</div>
+                            <div class="form-subtext">Main BG: #100 &bull; Card BG: #201 &bull; Header BG: #301</div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-input" value="Brian">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-input" value="Yoda">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" class="form-input" value="Yoda Force LLC">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">PO Number</label>
+                                    <input type="text" class="form-input" value="260922-17">
+                                </div>
+                            </div>
+
+                            <div class="section-header-bar">
+                                <span class="section-heading">Vehicles &amp; Parts Inquiry</span>
+                                <button type="button" class="btn-small">+ Add Another Vehicle</button>
+                            </div>
+
+                            <div class="card-box">
+                                <div class="form-row">
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Vehicle Name (Make, Model, Year)</label>
+                                        <input type="text" class="form-input" value="2024 Porsche 911">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">VIN</label>
+                                        <input type="text" class="form-input" value="123123123">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <label class="form-label">Part No.</label>
+                                        <input type="text" class="form-input" value="234234234">
+                                    </div>
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Part Description</label>
+                                        <input type="text" class="form-input" value="Rims 20 Inch Chrome">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">Brand</label>
+                                        <input type="text" class="form-input" value="BBS">
+                                    </div>
+                                    <div class="form-col" style="flex:0.5;">
+                                        <label class="form-label">Qty</label>
+                                        <input type="text" class="form-input" value="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <strong>📑 Inquiry Summary</strong><br>
+                                🚗 <strong>Vehicle: 2024 Porsche 911</strong> | VIN: 123123123<br>
+                                <span class="status-badge">QTY: 4</span> <strong>Rims 20 Inch Chrome BBS</strong> &nbsp;(Part #: 234234234)
+                            </div>
+
+                            <button type="button" class="btn-submit">Submit Inquiry</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: DARK GARNET AMBER -->
+                    <div class="carousel-slide">
+                        <div class="form-canvas t-garnet-amber">
+                            <div class="form-nav">
+                                <span>🔥 Euro Parts West &bull; <strong>DARK GARNET AMBER</strong></span>
+                                <span>Home &bull; Products &bull; eBay Store &bull; <u>Inquiry</u> &bull; Contact</span>
+                            </div>
+                            <div class="form-title">Product Inquiry Form</div>
+                            <div class="form-subtext">Main BG: #101 &bull; Card BG: #211 &bull; Header BG: #311</div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-input" value="Brian">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-input" value="Yoda">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" class="form-input" value="Yoda Force LLC">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">PO Number</label>
+                                    <input type="text" class="form-input" value="260922-17">
+                                </div>
+                            </div>
+
+                            <div class="section-header-bar">
+                                <span class="section-heading">Vehicles &amp; Parts Inquiry</span>
+                                <button type="button" class="btn-small">+ Add Another Vehicle</button>
+                            </div>
+
+                            <div class="card-box">
+                                <div class="form-row">
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Vehicle Name (Make, Model, Year)</label>
+                                        <input type="text" class="form-input" value="2024 Porsche 911">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">VIN</label>
+                                        <input type="text" class="form-input" value="123123123">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <label class="form-label">Part No.</label>
+                                        <input type="text" class="form-input" value="234234234">
+                                    </div>
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Part Description</label>
+                                        <input type="text" class="form-input" value="Rims 20 Inch Chrome">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">Brand</label>
+                                        <input type="text" class="form-input" value="BBS">
+                                    </div>
+                                    <div class="form-col" style="flex:0.5;">
+                                        <label class="form-label">Qty</label>
+                                        <input type="text" class="form-input" value="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <strong>📑 Inquiry Summary</strong><br>
+                                🚗 <strong>Vehicle: 2024 Porsche 911</strong> | VIN: 123123123<br>
+                                <span class="status-badge">QTY: 4</span> <strong>Rims 20 Inch Chrome BBS</strong> &nbsp;(Part #: 234234234)
+                            </div>
+
+                            <button type="button" class="btn-submit">Submit Inquiry</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: DARK CITRINE CRIMSON -->
+                    <div class="carousel-slide">
+                        <div class="form-canvas t-citrine-crimson">
+                            <div class="form-nav">
+                                <span>✨ Euro Parts West &bull; <strong>DARK CITRINE CRIMSON</strong></span>
+                                <span>Home &bull; Products &bull; eBay Store &bull; <u>Inquiry</u> &bull; Contact</span>
+                            </div>
+                            <div class="form-title">Product Inquiry Form</div>
+                            <div class="form-subtext">Main BG: #110 &bull; Card BG: #210 &bull; Header BG: #320</div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-input" value="Brian">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-input" value="Yoda">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" class="form-input" value="Yoda Force LLC">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">PO Number</label>
+                                    <input type="text" class="form-input" value="260922-17">
+                                </div>
+                            </div>
+
+                            <div class="section-header-bar">
+                                <span class="section-heading">Vehicles &amp; Parts Inquiry</span>
+                                <button type="button" class="btn-small">+ Add Another Vehicle</button>
+                            </div>
+
+                            <div class="card-box">
+                                <div class="form-row">
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Vehicle Name (Make, Model, Year)</label>
+                                        <input type="text" class="form-input" value="2024 Porsche 911">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">VIN</label>
+                                        <input type="text" class="form-input" value="123123123">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <label class="form-label">Part No.</label>
+                                        <input type="text" class="form-input" value="234234234">
+                                    </div>
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Part Description</label>
+                                        <input type="text" class="form-input" value="Rims 20 Inch Chrome">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">Brand</label>
+                                        <input type="text" class="form-input" value="BBS">
+                                    </div>
+                                    <div class="form-col" style="flex:0.5;">
+                                        <label class="form-label">Qty</label>
+                                        <input type="text" class="form-input" value="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <strong>📑 Inquiry Summary</strong><br>
+                                🚗 <strong>Vehicle: 2024 Porsche 911</strong> | VIN: 123123123<br>
+                                <span class="status-badge">QTY: 4</span> <strong>Rims 20 Inch Chrome BBS</strong> &nbsp;(Part #: 234234234)
+                            </div>
+
+                            <button type="button" class="btn-submit">Submit Inquiry</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: DARK TOPAZ AMBER -->
+                    <div class="carousel-slide">
+                        <div class="form-canvas t-topaz-amber">
+                            <div class="form-nav">
+                                <span>⚙️ Euro Parts West &bull; <strong>DARK TOPAZ AMBER</strong></span>
+                                <span>Home &bull; Products &bull; eBay Store &bull; <u>Inquiry</u> &bull; Contact</span>
+                            </div>
+                            <div class="form-title">Product Inquiry Form</div>
+                            <div class="form-subtext">Main BG: #000 &bull; Card BG: #210 &bull; Header BG: #320</div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-input" value="Brian">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-input" value="Yoda">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" class="form-input" value="Yoda Force LLC">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">PO Number</label>
+                                    <input type="text" class="form-input" value="260922-17">
+                                </div>
+                            </div>
+
+                            <div class="section-header-bar">
+                                <span class="section-heading">Vehicles &amp; Parts Inquiry</span>
+                                <button type="button" class="btn-small">+ Add Another Vehicle</button>
+                            </div>
+
+                            <div class="card-box">
+                                <div class="form-row">
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Vehicle Name (Make, Model, Year)</label>
+                                        <input type="text" class="form-input" value="2024 Porsche 911">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">VIN</label>
+                                        <input type="text" class="form-input" value="123123123">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <label class="form-label">Part No.</label>
+                                        <input type="text" class="form-input" value="234234234">
+                                    </div>
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Part Description</label>
+                                        <input type="text" class="form-input" value="Rims 20 Inch Chrome">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">Brand</label>
+                                        <input type="text" class="form-input" value="BBS">
+                                    </div>
+                                    <div class="form-col" style="flex:0.5;">
+                                        <label class="form-label">Qty</label>
+                                        <input type="text" class="form-input" value="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <strong>📑 Inquiry Summary</strong><br>
+                                🚗 <strong>Vehicle: 2024 Porsche 911</strong> | VIN: 123123123<br>
+                                <span class="status-badge">QTY: 4</span> <strong>Rims 20 Inch Chrome BBS</strong> &nbsp;(Part #: 234234234)
+                            </div>
+
+                            <button type="button" class="btn-submit">Submit Inquiry</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 5: DARK ONYX CRIMSON -->
+                    <div class="carousel-slide">
+                        <div class="form-canvas t-onyx-crimson">
+                            <div class="form-nav">
+                                <span>🏎️ Euro Parts West &bull; <strong>DARK ONYX CRIMSON</strong></span>
+                                <span>Home &bull; Products &bull; eBay Store &bull; <u>Inquiry</u> &bull; Contact</span>
+                            </div>
+                            <div class="form-title">Product Inquiry Form</div>
+                            <div class="form-subtext">Main BG: #000 &bull; Card BG: #200 &bull; Header BG: #300</div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-input" value="Brian">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-input" value="Yoda">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Business Name</label>
+                                    <input type="text" class="form-input" value="Yoda Force LLC">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">PO Number</label>
+                                    <input type="text" class="form-input" value="260922-17">
+                                </div>
+                            </div>
+
+                            <div class="section-header-bar">
+                                <span class="section-heading">Vehicles &amp; Parts Inquiry</span>
+                                <button type="button" class="btn-small">+ Add Another Vehicle</button>
+                            </div>
+
+                            <div class="card-box">
+                                <div class="form-row">
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Vehicle Name (Make, Model, Year)</label>
+                                        <input type="text" class="form-input" value="2024 Porsche 911">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">VIN</label>
+                                        <input type="text" class="form-input" value="123123123">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-col">
+                                        <label class="form-label">Part No.</label>
+                                        <input type="text" class="form-input" value="234234234">
+                                    </div>
+                                    <div class="form-col" style="flex:2;">
+                                        <label class="form-label">Part Description</label>
+                                        <input type="text" class="form-input" value="Rims 20 Inch Chrome">
+                                    </div>
+                                    <div class="form-col">
+                                        <label class="form-label">Brand</label>
+                                        <input type="text" class="form-input" value="BBS">
+                                    </div>
+                                    <div class="form-col" style="flex:0.5;">
+                                        <label class="form-label">Qty</label>
+                                        <input type="text" class="form-input" value="4">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <strong>📑 Inquiry Summary</strong><br>
+                                🚗 <strong>Vehicle: 2024 Porsche 911</strong> | VIN: 123123123<br>
+                                <span class="status-badge">QTY: 4</span> <strong>Rims 20 Inch Chrome BBS</strong> &nbsp;(Part #: 234234234)
+                            </div>
+
+                            <button type="button" class="btn-submit">Submit Inquiry</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =============================================================
+         2ND ACCORDION: HTML COLOR TABLE (CRITERIA COMPLIANT)
+         ============================================================= -->
+    <div class="custom-accordion" id="acc_table" data-acc-id="table">
+        <div class="accordion-header">
+            <span>📊 2. Euro Parts West Themes - Color Shades Matrix</span>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="table-wrap">
+                <table class="dark-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Theme Name</th>
+                            <th>Main BG (&le;1)</th>
+                            <th>Card BG (&le;2)</th>
+                            <th>Title/Hdr BG (&le;3)</th>
+                            <th>Vivid Highlights</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2"><strong>Motorsport Flagship</strong></td>
+                            <td>DARK RUBY GOLD</td>
+                            <td><span class="swatch-pill" style="background:#100; color:#FA0;">#100</span></td>
+                            <td><span class="swatch-pill" style="background:#201; color:#FFF;">#201</span></td>
+                            <td><span class="swatch-pill" style="background:#301; color:#FD0;">#301</span></td>
+                            <td>Gold #FA0 &bull; Ruby #D12</td>
+                        </tr>
+                        <tr>
+                            <td>DARK ONYX CRIMSON</td>
+                            <td><span class="swatch-pill" style="background:#000; color:#F24;">#000</span></td>
+                            <td><span class="swatch-pill" style="background:#200; color:#FFF;">#200</span></td>
+                            <td><span class="swatch-pill" style="background:#300; color:#FCD;">#300</span></td>
+                            <td>Redline #E03 &bull; Crimson #F24</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2"><strong>Amber &amp; Gold Flare</strong></td>
+                            <td>DARK GARNET AMBER</td>
+                            <td><span class="swatch-pill" style="background:#101; color:#F80;">#101</span></td>
+                            <td><span class="swatch-pill" style="background:#211; color:#FFF;">#211</span></td>
+                            <td><span class="swatch-pill" style="background:#311; color:#FA0;">#311</span></td>
+                            <td>Amber #F80 &bull; Garnet #E02</td>
+                        </tr>
+                        <tr>
+                            <td>DARK CITRINE CRIMSON</td>
+                            <td><span class="swatch-pill" style="background:#110; color:#FD0;">#110</span></td>
+                            <td><span class="swatch-pill" style="background:#210; color:#FFF;">#210</span></td>
+                            <td><span class="swatch-pill" style="background:#320; color:#FE9;">#320</span></td>
+                            <td>Citrine #FD0 &bull; Crimson #C02</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mechanical Spec</strong></td>
+                            <td>DARK TOPAZ AMBER</td>
+                            <td><span class="swatch-pill" style="background:#000; color:#FB0;">#000</span></td>
+                            <td><span class="swatch-pill" style="background:#210; color:#FFF;">#210</span></td>
+                            <td><span class="swatch-pill" style="background:#320; color:#FE9;">#320</span></td>
+                            <td>Topaz #D70 &bull; Gold #FB0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Required Nested List Elements -->
+            <div class="info-card">
+                <h3>🔍 Color Shades Logic Compliance</h3>
+                <ul>
+                    <li>Depth Calibration
+                        <ol>
+                            <li>MAIN Body BG strictly uses values with hex digits &le; 1 (#000, #100, #101, #110)</li>
+                            <li>CARD Body BG slightly elevated with hex digits &le; 2 (#200, #201, #210, #211)</li>
+                        </ol>
+                    </li>
+                    <li>Navigation &amp; Header Luster
+                        <ol>
+                            <li>TITLE / HEADER BG stands noticeably lighter with hex digits &le; 3 (#300, #301, #311, #320)</li>
+                            <li>Table row hover tones restricted to maximum brightness of 3</li>
+                        </ol>
+                    </li>
+                </ul>
+
+                <ol>
+                    <li>Deployment Rules
+                        <ul>
+                            <li>Copy the TSV columns from Accordion 3</li>
+                            <li>Paste directly into Row 1 of STYLE_SETTINGS on Google Sheets</li>
+                        </ul>
+                    </li>
+                    <li>Ergonomics &amp; Legibility
+                        <ul>
+                            <li>High-contrast yellow and red borders eliminate visual muddiness on OLED &amp; LCD displays</li>
+                            <li>Consistent 100% shorthand 3-digit HEX tokens</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- =============================================================
+         3RD ACCORDION: GOOGLE SHEETS PASTE-SAFE TSV CODE BLOCK
+         ============================================================= -->
+    <div class="custom-accordion" id="acc_tsv" data-acc-id="tsv">
+        <div class="accordion-header">
+            <span>📋 3. Paste-Safe TSV Column Code Block (5 Columns)</span>
+            <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+            <p style="font-size: 12px; color: #9AB; margin-top: 0;">Copy the code block below and paste into <strong>Row 1</strong> across 5 new columns in your Globals Hub <code>STYLE_SETTINGS</code> tab:</p>
+            <pre class="tsv-code">THEME	THEME	THEME	THEME	THEME
+
+DARK RUBY GOLD	DARK GARNET AMBER	DARK CITRINE CRIMSON	DARK TOPAZ AMBER	DARK ONYX CRIMSON
+
+DARK RUBY GOLD	DARK GARNET AMBER	DARK CITRINE CRIMSON	DARK TOPAZ AMBER	DARK ONYX CRIMSON
+
+DARK RUBY GOLD	DARK GARNET AMBER	DARK CITRINE CRIMSON	DARK TOPAZ AMBER	DARK ONYX CRIMSON
+
+Arial, sans-serif	Arial, sans-serif	Arial, sans-serif	Arial, sans-serif	Arial, sans-serif
+#100	#101	#110	#000	#000
+#FFF	#FFF	#FFF	#FFF	#FFF
+#999	#AAA	#BA9	#CBA	#AAA
+14px	14px	14px	14px	14px
+#FA0	#FA0	#FD0	#FB0	#F24
+#FFF	#FFF	#FFF	#FFF	#FFF
+20px	20px	20px	20px	20px
+#FA0	#F80	#FD0	#FA0	#F24
+#FD0	#FA0	#FE9	#FD0	#F57
+underline	underline	underline	underline	underline
+#D12	#E02	#FB0	#D70	#E03
+8px	8px	8px	8px	8px
+20px	20px	20px	20px	20px
+
+#FA0	#FA0	#FD0	#FB0	#F57
+18px	18px	18px	18px	18px
+#301	#311	#320	#320	#300
+solid	solid	solid	solid	solid
+
+#D12	#E02	#C02	#D70	#E03
+8px	8px	8px	8px	8px
+16px	16px	16px	16px	16px
+#301	#311	#320	#320	#300
+#FD0	#FA0	#FD0	#FE9	#FCD
+#FFF	#FFF	#FFF	#FFF	#FFF
+16px	16px	16px	16px	16px
+#201	#211	#210	#210	#200
+#FFF	#FFF	#FFF	#FFF	#FFF
+#FA0	#F80	#FE9	#FB0	#FCD
+#FFF	#FFF	#FFF	#FFF	#FFF
+
+#100	#101	#110	#000	#000
+#201	#211	#210	#210	#200
+#FFF	#FFF	#FFF	#FFF	#FFF
+#999	#AAA	#BA9	#CBA	#AAA
+13px	13px	13px	13px	13px
+#411	#512	#541	#531	#444
+#FA0	#F80	#FD0	#FB0	#F24
+6px	6px	6px	6px	6px
+7px 10px	7px 10px	7px 10px	7px 10px	7px 10px
+
+#201	#211	#210	#210	#200
+#D12	#E02	#C02	#D70	#E03
+#FD0	#FA0	#FD0	#FE9	#FFF
+#411	#512	#541	#531	#444
+#FA0	#F80	#FD0	#FB0	#F57
+
+16px	16px	16px	16px	16px
+#084	#084	#084	#084	#084
+#FFF	#FFF	#FFF	#FFF	#FFF
+#0F8	#0F8	#0F8	#0F8	#0F8
+#063	#063	#063	#063	#063
+#FFF	#FFF	#FFF	#FFF	#FFF
+#0D6	#0D6	#0D6	#0D6	#0D6
+
+#D12	#E02	#C02	#D70	#E03
+#FFF	#FFF	#FFF	#FFF	#FFF
+#FA0	#F80	#FD0	#FB0	#F57
+
+#201	#211	#210	#210	#200
+#999	#AAA	#BA9	#CBA	#AAA
+#411	#512	#541	#531	#444
+
+#500	#500	#500	#500	#500
+#FAA	#FAA	#FAA	#FAA	#FAA
+#F33	#F33	#F33	#F33	#F33
+
+0.5	0.5	0.5	0.5	0.5
+
+13px	13px	13px	13px	13px
+4px	4px	4px	4px	4px
+6px 12px	6px 12px	6px 12px	6px 12px	6px 12px
+
+2px 8px	2px 8px	2px 8px	2px 8px	2px 8px
+11px	11px	11px	11px	11px
+#201	#211	#210	#210	#200
+#301	#311	#320	#320	#300
+#FA0	#F80	#FE9	#FB0	#FCD
+#FFF	#FFF	#FFF	#FFF	#FFF
+#D12	#E02	#FB0	#D70	#E03
+#FA0	#F80	#FD0	#FB0	#F57
+12px	12px	12px	12px	12px
+
+#301	#311	#320	#320	#300
+#401	#411	#420	#420	#400
+#F99	#FBA	#FE9	#FE9	#FCD
+#D12	#E02	#C02	#D70	#E03
+
+#031	#031	#031	#031	#031
+#052	#052	#052	#052	#052
+#0F8	#0F8	#0F8	#0F8	#0F8
+#0F8	#0F8	#0F8	#0F8	#0F8
+
+#320	#320	#320	#320	#320
+#430	#430	#430	#430	#430
+#FA0	#FA0	#FA0	#FA0	#FA0
+#FA0	#FA0	#FA0	#FA0	#FA0
+
+#024	#024	#024	#024	#024
+#036	#036	#036	#036	#036
+#0BF	#0BF	#0BF	#0BF	#0BF
+#0BF	#0BF	#0BF	#0BF	#0BF
+
+TRUE	TRUE	TRUE	TRUE	TRUE
+#100	#101	#110	#000	#000
+#210	#211	#220	#110	#100
+#301	#311	#320	#320	#300
+#D12	#E02	#FB0	#D70	#E03
+6px 12px	6px 12px	6px 12px	6px 12px	6px 12px
+#FFF	#FFF	#FFF	#FFF	#FFF
+14px	14px	14px	14px	14px
+#FD0	#FA0	#FD0	#FE9	#F57
+12px	12px	12px	12px	12px
+
+Thick	Thick	Thick	Thick	Thick
+#100	#101	#110	#000	#000
+#301	#311	#320	#320	#300
+#FA0	#F80	#FD0	#FB0	#F24
+4px	4px	4px	4px	4px
+
+#301	#311	#320	#320	#300
+#FFF	#FFF	#FFF	#FFF	#FFF
+#FA0	#F80	#FD0	#FB0	#F57
+#FD0	#FA0	#FE9	#FE9	#FCD
+
+8px 8px	8px 8px	8px 8px	8px 8px	8px 8px
+13px	13px	13px	13px	13px
+#201	#211	#210	#210	#200
+#301	#311	#320	#320	#300
+#999	#AAA	#BA9	#CBA	#AAA
+#FD0	#FA0	#FD0	#FE9	#FCD
+#411	#512	#541	#531	#444
+#FA0	#F80	#FD0	#FB0	#F24
+6px	6px	6px	6px	6px
+
+#100	#101	#110	#000	#000
+#301	#311	#320	#320	#300
+#D12	#E02	#C02	#D70	#E03
+#FA0	#F80	#FD0	#FB0	#F24
+#FD0	#FA0	#FE9	#FE9	#FCD
+#FFF	#FFF	#FFF	#FFF	#FFF
+#100F	#101F	#110F	#000F	#000F
+#301	#311	#320	#320	#300
+#411	#512	#541	#531	#444
+#FA0	#F80	#FD0	#FB0	#F24
+#EA9	#FBA	#EDB	#EDB	#CCC
+#FD0	#FA0	#FE9	#FE9	#FCD
+
+#FA0	#FA0	#FD0	#FB0	#F57
+14px	14px	14px	14px	14px
+#FFF	#FFF	#FFF	#FFF	#FFF
+14px	14px	14px	14px	14px
+#FA0	#F80	#FD0	#FA0	#F24
+13px	13px	13px	13px	13px
+
+5555	5555	5555	5555	5555
+450px	450px	450px	450px	450px
+#100	#101	#110	#000	#000
+#D12	#E02	#FB0	#D70	#E03
+AGENT WEST	AGENT WEST	AGENT WEST	AGENT WEST	AGENT WEST
+#F34	#F80	#FD0	#FB0	#F57
+18px	18px	18px	18px	18px
+#FFF	#FFF	#FFF	#FFF	#FFF
+16px	16px	16px	16px	16px
+#301	#311	#320	#320	#300
+#D12	#E02	#C02	#D70	#E03
+
+CALLER	CALLER	CALLER	CALLER	CALLER
+#FD0	#FA0	#FE9	#FE9	#FD0
+18px	18px	18px	18px	18px
+#FFF	#FFF	#FFF	#FFF	#FFF
+16px	16px	16px	16px	16px
+#320	#320	#320	#320	#320
+#FA0	#FA0	#FA0	#FA0	#FA0
+8px	8px	8px	8px	8px
+10px 14px	10px 14px	10px 14px	10px 14px	10px 14px
+
+#311	#311	#320	#320	#300
+#FAA	#FBA	#FE9	#FE9	#FCD
+#D12	#E02	#C02	#D70	#E03
+#400	#400	#400	#400	#400
+#FAA	#FAA	#FAA	#FAA	#FAA
+#F33	#F33	#F33	#F33	#F33
+
+#301	#311	#320	#320	#300
+#D12	#E02	#C02	#D70	#E03
+#FA0	#F80	#FD0	#FB0	#F24
+#FD0	#FA0	#FE9	#FE9	#F89
+
+#D12	#E02	#C02	#D70	#E03
+#FA0	#F80	#FD0	#FB0	#F24</pre>
+        </div>
+    </div>
+
+    <!-- JavaScript: Carousel Slideshow, Speed Slider & Accordion State Memory -->
+    <script>
+        // -------------------------------------------------------------
+        // CAROUSEL SLIDESHOW ENGINE
+        // -------------------------------------------------------------
+        let currentSlide = 0;
+        const totalSlides = 5;
+        let isPlaying = false;
+        let rotateInterval = null;
+        let slideDurationSeconds = 3.5;
+
+        const track = document.getElementById('carouselTrack');
+        const tabBtns = document.querySelectorAll('.theme-pill-btn');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const playPauseText = document.getElementById('playPauseText');
+        const speedVal = document.getElementById('speedVal');
+
+        function updateCarouselUI() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            tabBtns.forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            currentSlide = (index + totalSlides) % totalSlides;
+            updateCarouselUI();
+        }
+
+        function nextSlide() { goToSlide(currentSlide + 1); }
+        function prevSlide() { goToSlide(currentSlide - 1); }
+
+        function toggleAutoRotate() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playPauseBtn.classList.add('playing');
+                playPauseIcon.textContent = '⏸';
+                playPauseText.textContent = 'Pause Slideshow';
+                startInterval();
+            } else {
+                playPauseBtn.classList.remove('playing');
+                playPauseIcon.textContent = '▶';
+                playPauseText.textContent = 'Auto-Rotate Slideshow';
+                clearInterval(rotateInterval);
+            }
+        }
+
+        function startInterval() {
+            clearInterval(rotateInterval);
+            rotateInterval = setInterval(() => {
+                nextSlide();
+            }, slideDurationSeconds * 1000);
+        }
+
+        function updateSpeed(newSeconds) {
+            slideDurationSeconds = parseFloat(newSeconds);
+            speedVal.textContent = slideDurationSeconds.toFixed(1) + 's';
+            if (isPlaying) {
+                startInterval(); // Restarts interval with new rate immediately
+            }
+        }
+
+        // Keyboard arrows
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // -------------------------------------------------------------
+        // ACCORDION ENGINE (1st Open by Default + LocalStorage Memory)
+        // -------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const accordions = document.querySelectorAll('.custom-accordion');
+
+            accordions.forEach((acc) => {
+                const accId = acc.getAttribute('data-acc-id');
+                const isDefaultOpen = acc.getAttribute('data-default') === 'open';
+                const header = acc.querySelector('.accordion-header');
+                const body = acc.querySelector('.accordion-body');
+                const storageKey = `epw_acc_pref_${accId}`;
+
+                const savedState = localStorage.getItem(storageKey);
+
+                if (savedState === 'open' || (savedState === null && isDefaultOpen)) {
+                    acc.classList.add('open');
+                    body.style.display = 'block';
+                } else {
+                    acc.classList.remove('open');
+                    body.style.display = 'none';
+                }
+
+                header.addEventListener('click', () => {
+                    const isOpen = acc.classList.toggle('open');
+                    body.style.display = isOpen ? 'block' : 'none';
+                    localStorage.setItem(storageKey, isOpen ? 'open' : 'closed');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
