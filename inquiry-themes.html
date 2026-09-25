@@ -63,7 +63,6 @@
                 
 <style id="epwThemeStyles">
     :root {
-        /* Default Fallback Tokens (DARK RUBY GOLD) */
         --page-bg: #100;
         --form-bg: #100;
         --form-border: #D12;
@@ -121,7 +120,6 @@
         transition: padding 0.2s ease, background 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Confirmation State: Zero padding removes awkward double-box effect */
     .inquiry-form-container.submitted {
         padding: 0 !important;
         background: transparent !important;
@@ -316,7 +314,6 @@
         line-height: 1.2;
     }
 
-    /* Inquiry Summary Preview Container */
     .inquiry-form-container .summary-preview-wrap {
         margin-top: 10px;
         border-radius: 8px;
@@ -410,7 +407,6 @@
         z-index: -10 !important;
     }
 
-    /* Success Message Styling */
     .success-message {
         display: none;
         background: var(--card-box-bg);
@@ -442,7 +438,6 @@
         flex-wrap: wrap;
     }
 
-    /* Responsive Adjustments */
     @media (max-width: 768px) {
         .inquiry-content { padding: 10px 0; }
         .container { padding: 0 10px; }
@@ -590,7 +585,8 @@
         // DYNAMIC GOOGLE SHEETS LIVE THEME HYDRATION
         // ==========================================
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
-        const SETTINGS_WORKER_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}`;
+        // Cache-busting refresh=1 forces Apps Script & Cloudflare to serve fresh GSheet values
+        const SETTINGS_WORKER_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}&refresh=1`;
 
         async function fetchAndApplyLiveTheme() {
             try {
@@ -599,13 +595,25 @@
                 const data = await response.json();
                 if (!data || !data.success || !Array.isArray(data.styles)) return;
 
-                // 1. Identify Active Theme Name
+                // 1. Identify Active Theme Name (Checks STYLE_SETTINGS cell C5 first, then settings tab)
                 let activeThemeName = "DARK RUBY GOLD";
-                if (Array.isArray(data.settings)) {
-                    const themeSetting = data.settings.find(r => String(r[1] || r[0]).trim().toUpperCase() === "ACTIVE_THEME_NAME");
+
+                // Check in STYLE_SETTINGS rows (Row 5 cell C5 in Google Sheets)
+                const styleActiveRow = data.styles.find(r => String(r[1] || r[0] || '').trim().toUpperCase() === "ACTIVE_THEME_NAME");
+                if (styleActiveRow && (styleActiveRow[2] || styleActiveRow[1])) {
+                    activeThemeName = String(styleActiveRow[2] || styleActiveRow[1]).trim().toUpperCase();
+                } else if (Array.isArray(data.settings)) {
+                    const themeSetting = data.settings.find(r => String(r[1] || r[0] || '').trim().toUpperCase() === "ACTIVE_THEME_NAME");
                     if (themeSetting && (themeSetting[2] || themeSetting[1])) {
                         activeThemeName = String(themeSetting[2] || themeSetting[1]).trim().toUpperCase();
                     }
+                }
+
+                // Check URL query override (?theme=DARK_RUBY_GOLD)
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryTheme = urlParams.get('theme') || urlParams.get('active_theme');
+                if (queryTheme) {
+                    activeThemeName = queryTheme.replace(/_/g, () => ' ').trim().toUpperCase();
                 }
 
                 // 2. Locate Active Theme Column in STYLE_SETTINGS Matrix
@@ -628,71 +636,126 @@
                 const tokens = {};
                 for (let r = 0; r < sRows.length; r++) {
                     const k = String(sRows[r][1] || sRows[r][0] || '').trim().toUpperCase();
-                    if (!k || k === "SETTING NAME" || k.startsWith("<--")) continue;
+                    if (!k || k === "SETTING NAME" || k.startsWith("<--") || k.startsWith("<~~")) continue;
                     const val = sRows[r][activeColIdx];
                     if (val !== undefined && val !== null && String(val).trim() !== "") {
                         tokens[k] = String(val).trim();
                     }
                 }
 
-                // 4. Map Sheet Tokens to CSS Variables
-                const mainBg      = tokens["MAIN_BG_COLOR"] || "#100";
-                const cardBodyBg  = tokens["CARD_BODY_BG_COLOR"] || "#201";
-                const headerBg    = tokens["CARD_TITLE_BG_COLOR"] || "#301";
-                const borderClr   = tokens["CARD_BORDER_COLOR"] || tokens["MAIN_BORDER_COLOR"] || "#D12";
-                const titleClr    = tokens["MAIN_TITLE_TEXT_COLOR_1"] || "#FA0";
-                const textPrimary = tokens["MAIN_TEXT_COLOR_1"] || "#FFF";
-                const textMuted   = tokens["MAIN_TEXT_COLOR_2"] || "#AAA";
-                const inputBg     = tokens["INPUT_BG_COLOR_1"] || "#100";
-                const inputBorder = tokens["INPUT_BORDER_COLOR"] || "#411";
-                const inputFocus  = tokens["INPUT_FOCUS_BORDER_COLOR"] || "#FA0";
-                const submitBg    = tokens["BTN_SAVE_BG_COLOR"] || tokens["ACCENT_COLOR_1"] || "#D12";
-                const submitBorder= tokens["MAIN_LINK_COLOR_1"] || "#FA0";
-                const pillBg      = tokens["PILL_INQUIRY_BG_COLOR_1"] || "#301";
-                const pillText    = tokens["PILL_INQUIRY_TEXT_COLOR"] || "#F99";
-                const pillBorder  = tokens["PILL_INQUIRY_BORDER_COLOR"] || "#D12";
+                // 4. Map Sheet Tokens to Concrete Style Overrides
+                const mainBg       = tokens["MAIN_BG_COLOR"] || "#100";
+                const cardBodyBg   = tokens["CARD_BODY_BG_COLOR"] || "#201";
+                const headerBg     = tokens["CARD_TITLE_BG_COLOR"] || "#301";
+                const borderClr    = tokens["CARD_BORDER_COLOR"] || tokens["MAIN_BORDER_COLOR"] || "#D12";
+                const titleClr     = tokens["MAIN_TITLE_TEXT_COLOR_1"] || "#FA0";
+                const textPrimary  = tokens["MAIN_TEXT_COLOR_1"] || "#FFF";
+                const textMuted    = tokens["MAIN_TEXT_COLOR_2"] || "#AAA";
+                const inputBg      = tokens["INPUT_BG_COLOR_1"] || "#100";
+                const inputBorder  = tokens["INPUT_BORDER_COLOR"] || "#411";
+                const inputFocus   = tokens["INPUT_FOCUS_BORDER_COLOR"] || "#FA0";
+                const submitBg     = tokens["BTN_SAVE_BG_COLOR"] || tokens["ACCENT_COLOR_1"] || "#D12";
+                const submitBorder = tokens["MAIN_LINK_COLOR_1"] || "#FA0";
+                const pillBg       = tokens["PILL_INQUIRY_BG_COLOR_1"] || "#301";
+                const pillText     = tokens["PILL_INQUIRY_TEXT_COLOR"] || "#F99";
+                const pillBorder   = tokens["PILL_INQUIRY_BORDER_COLOR"] || "#D12";
 
+                // High-specificity CSS that decisively overrides any default light/dark mode sheet rules
                 const generatedCss = `
-                    :root {
-                        --page-bg: ${mainBg};
-                        --form-bg: ${mainBg};
-                        --form-border: ${borderClr};
-                        --form-text: ${textPrimary};
-                        --form-subtext: ${textMuted};
-                        --form-title-color: ${titleClr};
+                    :root, [data-theme="dark"], [data-theme="light"], body {
+                        --page-bg: ${mainBg} !important;
+                        --form-bg: ${mainBg} !important;
+                        --form-border: ${borderClr} !important;
+                        --form-text: ${textPrimary} !important;
+                        --form-subtext: ${textMuted} !important;
+                        --form-title-color: ${titleClr} !important;
 
-                        --input-label-color: ${titleClr};
-                        --input-bg-color: ${inputBg};
-                        --input-font-color: ${textPrimary};
-                        --input-border-color: ${inputBorder};
-                        --input-border-color-focused: ${inputFocus};
+                        --input-label-color: ${titleClr} !important;
+                        --input-bg-color: ${inputBg} !important;
+                        --input-font-color: ${textPrimary} !important;
+                        --input-border-color: ${inputBorder} !important;
+                        --input-border-color-focused: ${inputFocus} !important;
 
-                        --card-box-bg: ${cardBodyBg};
-                        --card-box-border: ${borderClr};
+                        --card-box-bg: ${cardBodyBg} !important;
+                        --card-box-border: ${borderClr} !important;
 
-                        --btn-action-bg: ${headerBg};
-                        --btn-action-border: ${borderClr};
-                        --btn-action-text: ${titleClr};
+                        --btn-action-bg: ${headerBg} !important;
+                        --btn-action-border: ${borderClr} !important;
+                        --btn-action-text: ${titleClr} !important;
 
-                        --submit-button-bg-color: ${submitBg};
-                        --submit-button-border-color: ${submitBorder};
-                        --submit-button-text-color: #FFF;
+                        --submit-button-bg-color: ${submitBg} !important;
+                        --submit-button-border-color: ${submitBorder} !important;
+                        --submit-button-text-color: #FFF !important;
 
-                        --summary-card-bg: ${cardBodyBg};
-                        --summary-card-border: ${borderClr};
-                        --summary-card-header: ${headerBg};
-                        --summary-card-title: ${titleClr};
-                        --summary-pill-bg: ${pillBg};
-                        --summary-pill-text: ${pillText};
-                        --summary-pill-border: ${pillBorder};
+                        --summary-card-bg: ${cardBodyBg} !important;
+                        --summary-card-border: ${borderClr} !important;
+                        --summary-card-header: ${headerBg} !important;
+                        --summary-card-title: ${titleClr} !important;
+                        --summary-pill-bg: ${pillBg} !important;
+                        --summary-pill-text: ${pillText} !important;
+                        --summary-pill-border: ${pillBorder} !important;
 
-                        --diy-bg: rgba(69, 10, 10, 0.4);
-                        --diy-border: ${borderClr};
-                        --diy-text: ${textPrimary};
+                        --diy-bg: rgba(69, 10, 10, 0.4) !important;
+                        --diy-border: ${borderClr} !important;
+                        --diy-text: ${textPrimary} !important;
 
-                        --terms-bg: rgba(69, 10, 10, 0.25);
-                        --terms-border: ${inputBorder};
-                        --terms-text: ${textMuted};
+                        --terms-bg: rgba(69, 10, 10, 0.25) !important;
+                        --terms-border: ${inputBorder} !important;
+                        --terms-text: ${textMuted} !important;
+                    }
+
+                    body, .inquiry-content {
+                        background-color: ${mainBg} !important;
+                    }
+                    .inquiry-form-container {
+                        background: ${mainBg} !important;
+                        border: 1.5px solid ${borderClr} !important;
+                        color: ${textPrimary} !important;
+                    }
+                    .inquiry-form-container h1, .inquiry-form-container .section-title {
+                        color: ${titleClr} !important;
+                        border-bottom-color: ${borderClr} !important;
+                    }
+                    .inquiry-form-container .header p {
+                        color: ${textMuted} !important;
+                    }
+                    .inquiry-form-container label {
+                        color: ${titleClr} !important;
+                    }
+                    .inquiry-form-container input[type="text"],
+                    .inquiry-form-container input[type="email"],
+                    .inquiry-form-container input[type="tel"],
+                    .inquiry-form-container input[type="number"],
+                    .inquiry-form-container select,
+                    .inquiry-form-container textarea {
+                        background-color: ${inputBg} !important;
+                        border-color: ${inputBorder} !important;
+                        color: ${textPrimary} !important;
+                    }
+                    .inquiry-form-container input:focus,
+                    .inquiry-form-container select:focus,
+                    .inquiry-form-container textarea:focus {
+                        border-color: ${inputFocus} !important;
+                        box-shadow: 0 0 0 3px ${inputFocus}44 !important;
+                    }
+                    .inquiry-form-container .vehicle-block {
+                        background: ${cardBodyBg} !important;
+                        border-color: ${borderClr} !important;
+                    }
+                    .inquiry-form-container .part-block {
+                        background: ${inputBg} !important;
+                        border-left-color: ${borderClr} !important;
+                    }
+                    .inquiry-form-container .btn-blue,
+                    .inquiry-form-container .btn-add-part {
+                        background: ${headerBg} !important;
+                        border: 1px solid ${borderClr} !important;
+                        color: ${titleClr} !important;
+                    }
+                    .inquiry-form-container .submit-btn {
+                        background-color: ${submitBg} !important;
+                        border-color: ${submitBorder} !important;
+                        color: #FFF !important;
                     }
                 `;
 
@@ -1193,7 +1256,7 @@
             phoneInput.addEventListener('input', function(e) {
                 let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
                 if (e.target.value.startsWith('+')) {
-                    e.target.value = '+' + e.target.value.replace(/\D/g, '');
+                    e.target.value = '+' + e.target.value.replace(/\D/g, () => '');
                 } else {
                     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
                 }
@@ -1238,13 +1301,11 @@
             vehicles.forEach((v, index) => {
                 const vehicleName = v.name || `Vehicle ${index + 1}`;
                 
-                // Ensure at least one part name
                 const hasPartName = v.parts.some(p => p.name && p.name.trim().length > 0);
                 if (!hasPartName) {
                     errors.push(`Please enter at least one part name for ${vehicleName}.`);
                 }
                 
-                // Quantity bounds
                 v.parts.forEach((p) => {
                     if (p.qty < 1) {
                         errors.push(`Quantity for part "${p.name || 'Unnamed'}" in ${vehicleName} must be at least 1.`);
@@ -1254,7 +1315,6 @@
                     }
                 });
 
-                // VIN Length & Character Check
                 const rawVin = (v.vin || '').trim();
                 if (rawVin.length > 0) {
                     const cleanVin = rawVin.replace(/[\s-]/g, () => '');
@@ -1309,7 +1369,6 @@
             }
         });
 
-        // Handle "Submit Another" button
         if (btnSubmitAnother) {
             btnSubmitAnother.addEventListener('click', function() {
                 document.querySelector('.inquiry-form-container').classList.remove('submitted');
