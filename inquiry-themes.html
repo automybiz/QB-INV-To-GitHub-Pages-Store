@@ -79,6 +79,12 @@
         --card-box-bg: #201;
         --card-box-border: #D12;
 
+        /* Table Style Tokens for Parts Block */
+        --table-bg-1: #100;
+        --table-bg-2: #210;
+        --table-bg-3: #301;
+        --table-border: #D12;
+
         --btn-action-bg: #301;
         --btn-action-border: #D12;
         --btn-action-text: #FD0;
@@ -112,7 +118,7 @@
         margin: 0px auto;
         background: var(--form-bg);
         border: 1.5px solid var(--form-border);
-        padding: 30px 24px;
+        padding: 30px 20px 0px; /* Streamlined bottom padding */
         border-radius: 8px;
         box-shadow: var(--shadow);
         color: var(--form-text);
@@ -238,14 +244,28 @@
         min-width: 260px;
     }
 
+    /* Luxury Form Parts Block: 11px Radius, Zero Margin, Curved Border, Table Alternation & Hover */
     .inquiry-form-container .part-block {
-        border-left: 3px solid var(--form-border);
-        padding: 14px;
-        margin: 14px 0 14px 18px;
-        background: var(--input-bg-color);
-        border-radius: 0 6px 6px 0;
+        border-left: 3px solid var(--table-border, var(--form-border));
+        padding: 14px 16px 8px 16px;
+        margin: 0;
+        border-radius: 11px;
         position: relative;
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .inquiry-form-container .part-block:nth-child(odd) {
+        background: var(--table-bg-1, #100) !important;
+    }
+
+    .inquiry-form-container .part-block:nth-child(even) {
+        background: var(--table-bg-2, #210) !important;
+    }
+
+    .inquiry-form-container .part-block:hover {
+        background: var(--table-bg-3, #301) !important;
+        border-left-color: var(--form-title-color) !important;
     }
 
     .inquiry-form-container .btn {
@@ -441,7 +461,7 @@
     @media (max-width: 768px) {
         .inquiry-content { padding: 10px 0; }
         .container { padding: 0 10px; }
-        .inquiry-form-container { padding: 20px 14px; }
+        .inquiry-form-container { padding: 20px 14px 0px; }
         .inquiry-form-container.submitted { padding: 0 !important; }
         .inquiry-form-container .row {
             flex-direction: column;
@@ -451,8 +471,9 @@
         .inquiry-form-container .row > .form-group { width: 100%; }
         .inquiry-form-container .vehicle-block { padding: 16px 12px; }
         .inquiry-form-container .part-block {
-            margin-left: 5px;
-            padding: 14px 10px 10px 10px;
+            margin: 0 !important;
+            border-radius: 11px !important;
+            padding: 14px 10px 8px 10px;
         }
         .inquiry-form-container .btn-add-part {
             float: none;
@@ -582,8 +603,8 @@
 <script>
     (function() {
         // =========================================================================
-        // HIGH-VELOCITY 30ms CLOUDFLARE EDGE THEME HYDRATION
-        // Leverages Cloudflare global edge caching with sub-35ms delivery
+        // HIGH-VELOCITY EDGE THEME HYDRATION
+        // Sub-35ms response directly through Cloudflare Edge Gateway
         // =========================================================================
         const GLOBALS_HUB_SHEET_ID = "1u_mZhsYM3J7in_8clshqbRYzHuCC83i15OMz2i3aAHQ";
         const SETTINGS_GATEWAY_URL = `https://ghl-custom-workflow-settings.automybiz.workers.dev/?action=styles&gsheet_globals_id=${GLOBALS_HUB_SHEET_ID}`;
@@ -591,11 +612,9 @@
         async function fetchAndApplyLiveTheme() {
             const startTimestamp = Date.now();
             try {
-                // Check if user explicitly requested a fresh bypass (?refresh=1)
                 const urlParams = new URLSearchParams(window.location.search);
                 const isForceRefresh = urlParams.has('refresh') && urlParams.get('refresh') !== '0' && urlParams.get('refresh') !== 'false';
                 
-                // On regular visits, hits Cloudflare Edge Cache in ~25-40ms!
                 const fetchUrl = `${SETTINGS_GATEWAY_URL}${isForceRefresh ? '&refresh=1' : ''}&t=${Date.now()}`;
 
                 const response = await fetch(fetchUrl);
@@ -607,7 +626,7 @@
                 let activeThemeName = "DARK RUBY GOLD";
                 let tokens = {};
 
-                // Path A: Fast action=styles tokens payload (fastest)
+                // Path A: Direct action=styles tokens payload (fastest)
                 if (data.tokens && typeof data.tokens === 'object') {
                     tokens = data.tokens;
                     if (data.active_theme_name) activeThemeName = data.active_theme_name;
@@ -676,6 +695,12 @@
                 const pillText     = tokens["PILL_INQUIRY_TEXT_COLOR"] || "#F99";
                 const pillBorder   = tokens["PILL_INQUIRY_BORDER_COLOR"] || "#D12";
 
+                // Table Style Tokens
+                const tableBg1     = tokens["TABLE_BG_COLOR_1"] || "#100";
+                const tableBg2     = tokens["TABLE_BG_COLOR_2"] || "#210";
+                const tableBg3     = tokens["TABLE_BG_COLOR_3"] || "#301";
+                const tableBorder  = tokens["TABLE_BORDER_COLOR"] || borderClr;
+
                 const generatedCss = `
                     :root, [data-theme="dark"], [data-theme="light"], body {
                         --page-bg: ${mainBg} !important;
@@ -693,6 +718,11 @@
 
                         --card-box-bg: ${cardBodyBg} !important;
                         --card-box-border: ${borderClr} !important;
+
+                        --table-bg-1: ${tableBg1} !important;
+                        --table-bg-2: ${tableBg2} !important;
+                        --table-bg-3: ${tableBg3} !important;
+                        --table-border: ${tableBorder} !important;
 
                         --btn-action-bg: ${headerBg} !important;
                         --btn-action-border: ${borderClr} !important;
@@ -726,6 +756,7 @@
                         background: ${mainBg} !important;
                         border: 1.5px solid ${borderClr} !important;
                         color: ${textPrimary} !important;
+                        padding: 30px 20px 0px !important;
                     }
                     .inquiry-form-container h1, .inquiry-form-container .section-title {
                         color: ${titleClr} !important;
@@ -757,10 +788,25 @@
                         background: ${cardBodyBg} !important;
                         border-color: ${borderClr} !important;
                     }
+
+                    /* Luxury Curved Bookmark Parts Block with Alternating & Hover Backgrounds */
                     .inquiry-form-container .part-block {
-                        background: ${inputBg} !important;
-                        border-left-color: ${borderClr} !important;
+                        margin: 0 !important;
+                        border-radius: 11px !important;
+                        border-left: 3px solid ${tableBorder} !important;
+                        transition: background-color 0.2s ease, border-color 0.2s ease !important;
                     }
+                    .inquiry-form-container .part-block:nth-child(odd) {
+                        background-color: ${tableBg1} !important;
+                    }
+                    .inquiry-form-container .part-block:nth-child(even) {
+                        background-color: ${tableBg2} !important;
+                    }
+                    .inquiry-form-container .part-block:hover {
+                        background-color: ${tableBg3} !important;
+                        border-left-color: ${titleClr} !important;
+                    }
+
                     .inquiry-form-container .btn-blue,
                     .inquiry-form-container .btn-add-part {
                         background: ${headerBg} !important;
