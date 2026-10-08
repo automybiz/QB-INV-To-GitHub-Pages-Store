@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PartsTech Integration & Multi-Vendor Gateway Architecture</title>
+    <style>
+        body {
+            background-color: #011;
+            color: #FFF;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 24px;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            color: #0FF;
+            margin-top: 0;
+        }
+
+        /* HTML Table Criteria */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #0FF;
+            border-radius: 11px;
+            overflow: hidden;
+            background-color: #301;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);
+        }
+
+        th {
+            background-color: #022;
+            color: #0FF;
+            padding: 12px 16px;
+            font-weight: 600;
+            text-align: left;
+            border-bottom: 1px solid #0FF;
+            border-right: 1px solid #0FF;
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            background-color: #301;
+            color: #FFF;
+            padding: 12px 16px;
+            border-bottom: 1px solid #0FF;
+            border-right: 1px solid #0FF;
+            vertical-align: middle;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Accordion Criteria */
+        .accordion {
+            margin-bottom: 14px;
+        }
+
+        .accordion-header {
+            background-color: #022;
+            color: #0FF;
+            padding: 14px 20px;
+            border: 1px solid #0FF;
+            border-radius: 11px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease-in-out;
+            user-select: none;
+        }
+
+        .accordion-header.active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 1px dashed #0FF;
+        }
+
+        .accordion-icon {
+            color: #0FF;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            background-color: #301;
+            color: #FFF;
+            padding: 18px 20px;
+            border: 1px solid #0FF;
+            border-top: none;
+            border-bottom-left-radius: 11px;
+            border-bottom-right-radius: 11px;
+            display: none; /* Collapsed on load */
+        }
+
+        /* List Styles */
+        ul, ol {
+            margin-top: 8px;
+            margin-bottom: 12px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        code {
+            background-color: #022;
+            color: #0FF;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+
+        pre {
+            background-color: #011;
+            border: 1px solid #0FF;
+            border-radius: 8px;
+            padding: 14px;
+            color: #0FF;
+            overflow-x: auto;
+            font-family: Consolas, monospace;
+            font-size: 0.90rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .alert-box {
+            background-color: #301;
+            border: 1px solid #0FF;
+            border-radius: 11px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            color: #FFF;
+        }
+
+        .alert-box strong {
+            color: #0FF;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background-color: #022;
+            color: #0FF;
+            border: 1px solid #0FF;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>PartsTech Integration: The "OpenRouter" of Auto Parts</h1>
+
+    <div class="alert-box">
+        <strong>Your OpenRouter Analogy is 100% Accurate!</strong>
+        <br><br>
+        Just like OpenRouter routes one prompt across OpenAI, Anthropic, and Google with a single API key, <strong>PartsTech routes one parts search across Worldpac, SSF, AutoZone Pro, Advance, NAPA, and local dealership networks</strong> simultaneously with Day's commercial wholesale buy rates.
+        <br><br>
+        <strong>Do you need a new MCP connector in GHL?</strong> <strong>NO!</strong> The smartest approach is to add PartsTech tools directly into your <strong>existing Cloudflare Worker</strong>. Because GHL Ask AI already completed the OAuth 2.1 + PKCE handshake with your worker, GHL will automatically inherit the PartsTech tools with zero new setup screens!
+    </div>
+
+    <!-- Architectural Route Comparison Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Architecture Route</th>
+                    <th>Implementation Method</th>
+                    <th>GHL Connector Setup</th>
+                    <th>Strategic Advantage for Euro Parts West</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2"><strong>Unified Parts Gateway</strong><br><span class="badge">Recommended</span></td>
+                    <td>Add PartsTech API endpoints directly into your existing <code>mcp-turn14</code> Cloudflare Worker.</td>
+                    <td><strong>ZERO GHL changes required.</strong> GHL instantly detects the new <code>partstech_search</code> tool upon next reload.</td>
+                    <td>Bypasses repeated OAuth/PKCE configuration. Turns your worker into a unified multi-distributor procurement gateway.</td>
+                </tr>
+                <tr>
+                    <td>Worker handles both Turn14 credentials and PartsTech API keys in one secure place.</td>
+                    <td>Same live URL: <code>https://mcp-turn14.automybiz.workers.dev</code></td>
+                    <td>Can query Turn14 and PartsTech simultaneously to fill <strong>VEN A</strong> (Turn14) and <strong>VEN B</strong> (Worldpac/SSF) side-by-side!</td>
+                </tr>
+                <tr>
+                    <td rowspan="2"><strong>Separate MCP Server</strong><br><em>(Stand-Alone Route)</em></td>
+                    <td>Create a second Cloudflare Worker (e.g. <code>mcp-partstech</code>).</td>
+                    <td>Requires creating a 2nd Custom MCP in GHL, re-doing the OAuth form, and re-linking accounts.</td>
+                    <td>Total codebase isolation, but doubles your maintenance overhead and adds connector clutter in GHL.</td>
+                </tr>
+                <tr>
+                    <td>Separate URL: <code>https://mcp-partstech.automybiz.workers.dev</code></td>
+                    <td>Requires assigning two distinct custom connectors inside your GHL Skill.</td>
+                    <td>Agents must coordinate tool calls across two separate remote MCP endpoints.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Accordion 1: Why PartsTech is a Game-Changer -->
+    <div class="accordion">
+        <div class="accordion-header" id="acc-partstech-power-header">
+            <span>1. Why PartsTech is a Massive Upgrade for Day</span>
+            <span class="accordion-icon">&#9660;</span>
+        </div>
+        <div class="accordion-body" id="acc-partstech-power-body">
+            <p>PartsTech solves the single biggest headache in automotive repair estimating:</p>
+            <ol>
+                <li>One Single Search Queries All Local Suppliers:
+                    <ul>
+                        <li>Instead of Day opening 5 separate browser tabs (one for Worldpac SpeedDial, one for SSF, one for AutoZone, one for Porsche North Scottsdale), PartsTech queries all of Day's linked vendor accounts at once.</li>
+                        <li>It returns live <strong>on-shelf inventory at local Phoenix/Scottsdale hubs</strong> and estimated delivery times (e.g., <em>"In stock: 30-min delivery"</em> vs. <em>"Turn14 Reno: 2-day ground"</em>).</li>
+                    </ul>
+                </li>
+                <li>Fills Day's Admin Columns (VEN A vs. VEN B):
+                    <ul>
+                        <li>Remember Day's spreadsheet from Screenshot 2? It has <strong>VEN A</strong>, <strong>VEN B</strong>, and <strong>VEN C</strong>.</li>
+                        <li>Ask AI can put Turn14 in <strong>VEN A</strong> (Cols AZ–BD) and the cheapest local supplier from PartsTech (e.g. Worldpac) into <strong>VEN B</strong> (Cols BF–BK)!</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Accordion 2: Why You Don't Need a New GHL Connector -->
+    <div class="accordion">
+        <div class="accordion-header" id="acc-no-new-mcp-header">
+            <span>2. Why You Don't Need to Create a New MCP in GHL</span>
+            <span class="accordion-icon">&#9660;</span>
+        </div>
+        <div class="accordion-body" id="acc-no-new-mcp-body">
+            <p>Look at how the Model Context Protocol (MCP) works under the hood:</p>
+            <ul>
+                <li>How GHL Discovers Tools:
+                    <ol>
+                        <li>When GHL connects to your Cloudflare Worker URL, it requests <code>tools/list</code>.</li>
+                        <li>Currently, your worker tells GHL: <em>"I have 2 tools: <code>turn14_search_items</code> and <code>turn14_get_pricing_and_stock</code>."</em></li>
+                        <li>If you add a 3rd tool, <code>partstech_search_parts</code>, to your existing worker's script, GHL Ask AI will <strong>automatically discover and display it</strong> under your connected tools!</li>
+                        <li>You avoid having to click "+ Add custom MCP", paste URLs, enter accounts, and satisfy PKCE (S256) all over again!</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Accordion 3: How PartsTech Integrates into Cloudflare -->
+    <div class="accordion">
+        <div class="accordion-header" id="acc-cf-partstech-header">
+            <span>3. How to Wire PartsTech Into Your Existing Worker</span>
+            <span class="accordion-icon">&#9660;</span>
+        </div>
+        <div class="accordion-body" id="acc-cf-partstech-body">
+            <p>Integrating PartsTech into your Cloudflare Worker takes two quick steps:</p>
+            <ol>
+                <li>Step 1: Save PartsTech API Keys in Cloudflare Secrets:
+                    <ul>
+                        <li>Go to your <code>mcp-turn14</code> worker in Cloudflare &rarr; <strong>Settings &gt; Variables and Secrets</strong>.</li>
+                        <li>Click <strong>Add</strong> and store your PartsTech credentials:
+                            <br>• <code>PARTSTECH_API_KEY</code> &rarr; <em>(paste your PartsTech API Key)</em>
+                            <br>• <code>PARTSTECH_USER_ID</code> &rarr; <em>(your PartsTech username/account ID if required by your tier)</em>
+                        </li>
+                    </ul>
+                </li>
+                <li>Step 2: Add the `partstech_search_parts` Tool Definition:
+                    <ul>
+                        <li>In your worker's <code>tools/list</code>, add:
+                            <pre>{
+  name: "partstech_search_parts",
+  description: "Search PartsTech unified network across Worldpac, SSF, NAPA, and local dealers by vehicle and part name.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      search_query: { type: "string", description: "Part name e.g. 'Water Pump'" },
+      year: { type: "string", description: "Vehicle Year e.g. '2024'" },
+      make: { type: "string", description: "Vehicle Make e.g. 'Porsche'" },
+      model: { type: "string", description: "Vehicle Model e.g. '911'" },
+      vin: { type: "string", description: "Optional VIN number" }
+    },
+    required: ["search_query", "year", "make", "model"]
+  }
+}</pre>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Accordion 4: Multi-Vendor Workflow Evolution -->
+    <div class="accordion">
+        <div class="accordion-header" id="acc-multivendor-future-header">
+            <span>4. How Your Prompts &amp; Sheet Columns Evolve</span>
+            <span class="accordion-icon">&#9660;</span>
+        </div>
+        <div class="accordion-body" id="acc-multivendor-future-body">
+            <p>Once PartsTech is added to the worker, you can support prompts like:</p>
+            <pre>Do Auto-Fill comparing Turn14 and PartsTech on Invoice 260915-1</pre>
+            <ul>
+                <li>The Multi-Vendor Autonomous Advantage:
+                    <ol>
+                        <li>Ask AI checks Turn14 &rarr; Records buy cost in <strong>VEN A (Column BB)</strong>.</li>
+                        <li>Ask AI checks PartsTech (Worldpac/SSF) &rarr; Records buy cost in <strong>VEN B (Column BI)</strong>.</li>
+                        <li>The agent compares both, picks the lowest wholesale price, sets customer List Price in <strong>Column AK</strong>, and tags the winning supplier in <strong>Column K</strong>!</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const accordions = [
+                { headerId: 'acc-partstech-power-header', bodyId: 'acc-partstech-power-body', storageKey: 'ghl_pt_power' },
+                { headerId: 'acc-no-new-mcp-header', bodyId: 'acc-no-new-mcp-body', storageKey: 'ghl_pt_no_new' },
+                { headerId: 'acc-cf-partstech-header', bodyId: 'acc-cf-partstech-body', storageKey: 'ghl_pt_cf_wire' },
+                { headerId: 'acc-multivendor-future-header', bodyId: 'acc-multivendor-future-body', storageKey: 'ghl_pt_multivendor' }
+            ];
+
+            accordions.forEach(item => {
+                const header = document.getElementById(item.headerId);
+                const body = document.getElementById(item.bodyId);
+
+                // Initial State: All accordions collapsed on page load
+                // Check if user previously saved an open state in localStorage
+                const savedState = localStorage.getItem(item.storageKey);
+                if (savedState === 'open') {
+                    body.style.display = 'block';
+                    header.classList.add('active');
+                } else {
+                    body.style.display = 'none';
+                    header.classList.remove('active');
+                }
+
+                // Toggle click listener
+                header.addEventListener('click', function () {
+                    const isOpen = body.style.display === 'block';
+                    if (isOpen) {
+                        body.style.display = 'none';
+                        header.classList.remove('active');
+                        localStorage.setItem(item.storageKey, 'closed');
+                    } else {
+                        body.style.display = 'block';
+                        header.classList.add('active');
+                        localStorage.setItem(item.storageKey, 'open');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
