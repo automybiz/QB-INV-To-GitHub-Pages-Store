@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wisdom - EPW Knowledge Base</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #f2f2f2;
+            background-color: #202426;
+            background-image:
+                radial-gradient(rgba(0, 0, 0, 0.75) 15%, transparent 16%),
+                radial-gradient(rgba(0, 0, 0, 0.75) 15%, transparent 16%),
+                radial-gradient(rgba(255, 255, 255, 0.08) 15%, transparent 20%),
+                radial-gradient(rgba(255, 255, 255, 0.08) 15%, transparent 20%);
+            background-size: 16px 16px;
+            background-position: 0 0, 8px 8px, 0 1px, 8px 9px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        a {
+            color: #e52521;
+            text-decoration: none;
+            transition: color 0.15s ease-in-out;
+        }
+
+        a:hover {
+            color: #ff4d4a;
+            text-decoration: underline;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .nav-back:hover {
+            color: #e52521;
+        }
+
+        .file-list {
+            list-style: none;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: background-color 0.15s ease;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-item:hover {
+            background-color: rgba(229, 37, 33, 0.08);
+        }
+
+        .file-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(229, 37, 33, 0.12);
+            border-radius: 8px;
+            color: #e52521;
+            font-size: 16px;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            display: block;
+            font-weight: 600;
+            font-size: 15px;
+            color: #f2f2f2;
+            word-break: break-word;
+        }
+
+        .file-name:hover {
+            color: #e52521;
+        }
+
+        .file-meta {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 3px;
+        }
+
+        .file-type {
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        footer {
+            margin-top: 48px;
+            text-align: center;
+            font-size: 12px;
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Wisdom</h1>
+            <p class="subtitle">EPW Knowledge Base &amp; AI Playbooks</p>
+        </header>
+
+        <a href="../index.html" class="nav-back">← Back to Home</a>
+
+        <ul class="file-list">
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <div class="file-info">
+                    <a href="EPW%20Distributor%20Relations%20AI%20Playbook%20=%20ai_studio_code.html" class="file-name">
+                        EPW Distributor Relations AI Playbook
+                    </a>
+                    <span class="file-meta">AI Studio Code — Distributor API Strategy</span>
+                </div>
+                <span class="file-type">HTML</span>
+            </li>
+            <li class="file-item">
+                <div class="file-icon">📄</div>
+                <div class="file-info">
+                    <a href="PartsTech%20API%20To%20AutoMyBiz%20Ask%20AI%20=%20ai_studio_code.html" class="file-name">
+                        PartsTech API To AutoMyBiz Ask AI
+                    </a>
+                    <span class="file-meta">AI Studio Code — Parts Integration</span>
+                </span>
+                <div class="file-type">HTML</div>
+            </li>
+        </ul>
+
+        <footer>
+            EuroPartsWest &mdash; European Parts Distribution and Design
+        </footer>
+    </div>
+</body>
+</html>
